@@ -43,6 +43,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(HazelcastParallelClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
@@ -83,7 +84,7 @@ public class MemberCompatibilityTest_2_7 {
     @Test
     public void test_ClientAuthenticationCodec_encodeResponse() {
         int fileClientMessageIndex = 1;
-        ClientMessage encoded = ClientAuthenticationCodec.encodeResponse(aByte, anAddress, aUUID, aByte, aString, anInt, aUUID, aBoolean);
+        ClientMessage encoded = ClientAuthenticationCodec.encodeResponse(aByte, anAddress, aUUID, aByte, aString, anInt, aUUID, aBoolean, aListOfIntegers, aByteArray);
         ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
         compareClientMessages(fromFile, encoded);
     }
@@ -106,7 +107,7 @@ public class MemberCompatibilityTest_2_7 {
     @Test
     public void test_ClientAuthenticationCustomCodec_encodeResponse() {
         int fileClientMessageIndex = 3;
-        ClientMessage encoded = ClientAuthenticationCustomCodec.encodeResponse(aByte, anAddress, aUUID, aByte, aString, anInt, aUUID, aBoolean);
+        ClientMessage encoded = ClientAuthenticationCustomCodec.encodeResponse(aByte, anAddress, aUUID, aByte, aString, anInt, aUUID, aBoolean, aListOfIntegers, aByteArray);
         ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
         compareClientMessages(fromFile, encoded);
     }
@@ -450,6 +451,23 @@ public class MemberCompatibilityTest_2_7 {
     }
 
     @Test
+    public void test_ClientTpcAuthenticationCodec_decodeRequest() {
+        int fileClientMessageIndex = 49;
+        ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
+        ClientTpcAuthenticationCodec.RequestParameters parameters = ClientTpcAuthenticationCodec.decodeRequest(fromFile);
+        assertTrue(isEqual(aUUID, parameters.uuid));
+        assertTrue(isEqual(aByteArray, parameters.token));
+    }
+
+    @Test
+    public void test_ClientTpcAuthenticationCodec_encodeResponse() {
+        int fileClientMessageIndex = 50;
+        ClientMessage encoded = ClientTpcAuthenticationCodec.encodeResponse();
+        ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
+        compareClientMessages(fromFile, encoded);
+    }
+
+    @Test
     public void test_MapPutCodec_decodeRequest() {
         int fileClientMessageIndex = 51;
         ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
@@ -611,7 +629,7 @@ public class MemberCompatibilityTest_2_7 {
     @Test
     public void test_MapDeleteCodec_encodeResponse() {
         int fileClientMessageIndex = 68;
-        ClientMessage encoded = MapDeleteCodec.encodeResponse();
+        ClientMessage encoded = MapDeleteCodec.encodeResponse(aBoolean);
         ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
         compareClientMessages(fromFile, encoded);
     }
@@ -6848,6 +6866,25 @@ public class MemberCompatibilityTest_2_7 {
     public void test_DynamicConfigAddDataConnectionConfigCodec_encodeResponse() {
         int fileClientMessageIndex = 762;
         ClientMessage encoded = DynamicConfigAddDataConnectionConfigCodec.encodeResponse();
+        ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
+        compareClientMessages(fromFile, encoded);
+    }
+
+    @Test
+    public void test_DynamicConfigAddWanReplicationConfigCodec_decodeRequest() {
+        int fileClientMessageIndex = 763;
+        ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
+        DynamicConfigAddWanReplicationConfigCodec.RequestParameters parameters = DynamicConfigAddWanReplicationConfigCodec.decodeRequest(fromFile);
+        assertTrue(isEqual(aString, parameters.name));
+        assertTrue(isEqual(aWanConsumerConfigHolder, parameters.consumerConfig));
+        assertTrue(isEqual(aListOfWanCustomPublisherConfigsHolders, parameters.customPublisherConfigs));
+        assertTrue(isEqual(aListOfWanBatchPublisherConfigHolders, parameters.batchPublisherConfigs));
+    }
+
+    @Test
+    public void test_DynamicConfigAddWanReplicationConfigCodec_encodeResponse() {
+        int fileClientMessageIndex = 764;
+        ClientMessage encoded = DynamicConfigAddWanReplicationConfigCodec.encodeResponse();
         ClientMessage fromFile = clientMessages.get(fileClientMessageIndex);
         compareClientMessages(fromFile, encoded);
     }
