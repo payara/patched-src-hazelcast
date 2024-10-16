@@ -27,22 +27,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MixTestAnnotationsCondition extends ArchCondition<JavaClass> {
-    private static final Set<Class<? extends Annotation>> JUNIT_4_ANNOTATION_CLASSES = Set.of(
-            Test.class,
-            Before.class,
-            After.class,
-            BeforeClass.class,
-            AfterClass.class);
-    private static final Set<Class<? extends Annotation>> JUNIT_5_ANNOTATION_CLASSES = Set.of(
-            org.junit.jupiter.api.Test.class,
-            org.junit.jupiter.api.BeforeEach.class,
-            org.junit.jupiter.api.AfterEach.class,
-            org.junit.jupiter.api.BeforeAll.class,
-            org.junit.jupiter.api.AfterAll.class
-    );
+    private static final Set<Class<? extends Annotation>> JUNIT_4_ANNOTATION_CLASSES;
+    private static final Set<Class<? extends Annotation>> JUNIT_5_ANNOTATION_CLASSES;
+
+    static {
+        JUNIT_4_ANNOTATION_CLASSES = new HashSet();
+        JUNIT_4_ANNOTATION_CLASSES.add(Test.class);
+        JUNIT_4_ANNOTATION_CLASSES.add(Before.class);
+        JUNIT_4_ANNOTATION_CLASSES.add(After.class);
+        JUNIT_4_ANNOTATION_CLASSES.add(BeforeClass.class);
+        JUNIT_4_ANNOTATION_CLASSES.add(AfterClass.class);
+
+        JUNIT_5_ANNOTATION_CLASSES = new HashSet();
+        JUNIT_5_ANNOTATION_CLASSES.add(org.junit.jupiter.api.Test.class);
+        JUNIT_5_ANNOTATION_CLASSES.add(org.junit.jupiter.api.BeforeEach.class);
+        JUNIT_5_ANNOTATION_CLASSES.add(org.junit.jupiter.api.AfterEach.class);
+        JUNIT_5_ANNOTATION_CLASSES.add(org.junit.jupiter.api.BeforeAll.class);
+        JUNIT_5_ANNOTATION_CLASSES.add(org.junit.jupiter.api.AfterAll.class);
+    }
 
     public MixTestAnnotationsCondition() {
         super("Do not mix Junit4 and Junit5 annotations");
