@@ -18,10 +18,13 @@ package com.hazelcast.test.archunit;
 
 import org.junit.BeforeClass;
 
+import java.lang.reflect.Method;
+
 import static org.assertj.core.api.Assumptions.assumeThat;
 
 public abstract class ArchUnitTestSupport {
 
+    private static final int DEFAULT_JDK = 8;
     private static final int HIGHEST_JDK = 22;
 
     // ArchUnit releases lag behind the JDK releases.
@@ -34,6 +37,15 @@ public abstract class ArchUnitTestSupport {
     }
 
     private static int getMajorJavaVersion() {
-        return Runtime.version().feature();
+        Class runtimeClass = Runtime.class;
+        try {
+            Class versionClass = Class.forName("java.lang.Runtime$Version");
+            Method versionMethod = runtimeClass.getDeclaredMethod("version");
+            Object versionObj = versionMethod.invoke(Runtime.getRuntime());
+            Method majorMethod = versionClass.getDeclaredMethod("major");
+            return (int) majorMethod.invoke(versionObj);
+        } catch (Exception e) {
+            return DEFAULT_JDK;
+        }
     }
 }
