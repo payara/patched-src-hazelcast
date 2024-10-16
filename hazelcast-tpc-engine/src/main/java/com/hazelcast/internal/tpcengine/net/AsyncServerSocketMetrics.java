@@ -16,8 +16,10 @@
 
 package com.hazelcast.internal.tpcengine.net;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
+import com.hazelcast.internal.tpcengine.util.UnsafeLocator;
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
 
 /**
  * Contains the metrics for an {@link AsyncServerSocket}.
@@ -25,18 +27,22 @@ import java.lang.invoke.VarHandle;
 @SuppressWarnings("checkstyle:ConstantName")
 public class AsyncServerSocketMetrics {
 
-    private static final VarHandle ACCEPTED;
+    private static final Unsafe UNSAFE = UnsafeLocator.UNSAFE;
+    private static final long OFFSET_accepted;
+    private volatile long accepted;
 
     static {
         try {
-            MethodHandles.Lookup l = MethodHandles.lookup();
-            ACCEPTED = l.findVarHandle(AsyncServerSocketMetrics.class, "accepted", long.class);
-        } catch (ReflectiveOperationException e) {
+            OFFSET_accepted = getOffset("accepted");
+        } catch (NoSuchFieldException e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
-    private volatile long accepted;
+    private static long getOffset(String fieldName) throws NoSuchFieldException {
+        Field field = AsyncServerSocketMetrics.class.getDeclaredField(fieldName);
+        return UNSAFE.objectFieldOffset(field);
+    }
 
     /**
      * Returns the number of accepted sockets.
@@ -44,13 +50,13 @@ public class AsyncServerSocketMetrics {
      * @return the number of accepted sockets.
      */
     public long accepted() {
-        return (long) ACCEPTED.getOpaque(this);
+        return accepted;
     }
 
     /**
      * Increases the number of accepted sockets by 1.
      */
     public void incAccepted() {
-         ACCEPTED.setOpaque(this, (long) ACCEPTED.getOpaque(this) + 1);
+        UNSAFE.putOrderedLong(this, OFFSET_accepted, accepted + 1);
     }
 }
