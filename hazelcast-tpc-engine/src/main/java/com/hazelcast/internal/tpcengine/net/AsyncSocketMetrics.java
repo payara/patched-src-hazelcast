@@ -45,7 +45,7 @@ public class AsyncSocketMetrics {
             OFFSET_writeEvents = getOffset("writeEvents");
             OFFSET_readEvents = getOffset("readEvents");
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+            throw new ExceptionInInitializerError(e);
         }
     }
 
