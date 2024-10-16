@@ -25,16 +25,26 @@ import java.io.UncheckedIOException;
 import java.net.SocketOption;
 import java.net.StandardSocketOptions;
 import java.nio.channels.ServerSocketChannel;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.hazelcast.internal.tpcengine.util.Preconditions.checkNotNull;
+import static com.hazelcast.internal.tpcengine.util.ReflectionUtil.findStaticFieldValue;
 
 /**
  * The AsyncSocketOptions for the {@link NioAsyncServerSocket}.
  */
 public class NioAsyncServerSocketOptions implements AsyncSocketOptions {
 
-    private static final Set<SocketOption<?>> WINDOWS_UNSUPPORTED_OPTIONS = Set.of(StandardSocketOptions.SO_REUSEPORT);
+    private static final SocketOption<Boolean> STD_SOCK_OPT_SO_REUSEPORT
+            = findStaticFieldValue(StandardSocketOptions.class, "SO_REUSEPORT");
+    private static final Set<SocketOption<?>> WINDOWS_UNSUPPORTED_OPTIONS;
+
+    static {
+        WINDOWS_UNSUPPORTED_OPTIONS = new HashSet<>();
+        WINDOWS_UNSUPPORTED_OPTIONS.add(STD_SOCK_OPT_SO_REUSEPORT);
+    }
+
     private final ServerSocketChannel serverSocketChannel;
 
     NioAsyncServerSocketOptions(ServerSocketChannel serverSocketChannel) {
@@ -47,7 +57,7 @@ public class NioAsyncServerSocketOptions implements AsyncSocketOptions {
         } else if (SO_REUSEADDR.equals(option)) {
             return StandardSocketOptions.SO_REUSEADDR;
         } else if (SO_REUSEPORT.equals(option)) {
-            return StandardSocketOptions.SO_REUSEPORT;
+            return STD_SOCK_OPT_SO_REUSEPORT;
         } else {
             return null;
         }
