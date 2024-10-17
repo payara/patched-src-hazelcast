@@ -48,12 +48,16 @@ public final class CPObjectInfoImpl implements CPObjectInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
         CPObjectInfoImpl that = (CPObjectInfoImpl) obj;
-        return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.serviceName, that.serviceName) &&
-                Objects.equals(this.groupId, that.groupId);
+        return Objects.equals(this.name, that.name)
+                && Objects.equals(this.serviceName, that.serviceName)
+                && Objects.equals(this.groupId, that.groupId);
     }
 
     @Override
