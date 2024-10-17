@@ -254,8 +254,8 @@ public class JobCoordinationService implements DynamicMetricsProvider {
                 Object jobDefinition = deserializeJobDefinition(jobId, jobConfig, serializedJobDefinition);
                 DAG dag;
                 Data serializedDag;
-                if (jobDefinition instanceof PipelineImpl pipelineImpl) {
-                    dag = pipelineImpl.toDag(pipelineToDagContext);
+                if (jobDefinition instanceof PipelineImpl) {
+                    dag = ((PipelineImpl) jobDefinition).toDag(pipelineToDagContext);
                     serializedDag = nodeEngine().getSerializationService().toData(dag);
                 } else {
                     dag = (DAG) jobDefinition;
@@ -326,8 +326,8 @@ public class JobCoordinationService implements DynamicMetricsProvider {
         }
 
         DAG dag;
-        if (deserializedJobDefinition instanceof DAG dagInstance) {
-            dag = dagInstance;
+        if (deserializedJobDefinition instanceof DAG) {
+            dag = (DAG) deserializedJobDefinition;
         } else {
             dag = ((PipelineImpl) deserializedJobDefinition).toDag(pipelineToDagContext);
         }
