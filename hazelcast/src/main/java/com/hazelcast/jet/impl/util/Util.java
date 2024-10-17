@@ -251,7 +251,7 @@ public final class Util {
         if (!(object instanceof Serializable)) {
             throw new IllegalArgumentException('"' + objectName + "\" must implement Serializable");
         }
-        try (ObjectOutputStream os = new ObjectOutputStream(OutputStream.nullOutputStream())) {
+        try (ObjectOutputStream os = new ObjectOutputStream(new NullOutputStream())) {
             os.writeObject(object);
         } catch (NotSerializableException | InvalidClassException e) {
             throw new IllegalArgumentException("\"" + objectName + "\" must be serializable", e);
@@ -359,6 +359,13 @@ public final class Util {
         return res;
     }
 
+    private static class NullOutputStream extends OutputStream {
+        @Override
+        public void write(int b) {
+            // do nothing
+        }
+    }
+
     public static String jobNameAndExecutionId(String jobName, long executionId) {
         return "job '" + jobName + "', execution " + idToString(executionId);
     }
@@ -436,7 +443,8 @@ public final class Util {
         if (!logger.isInfoEnabled()) {
             return;
         }
-        if (item instanceof JetEvent event) {
+        if (item instanceof JetEvent) {
+            JetEvent event = (JetEvent) item;
             logger.info(
                     format("Event dropped, late by %d ms. currentWatermark=%s, eventTime=%s, event=%s",
                             currentWm - event.timestamp(), toLocalTime(currentWm), toLocalTime(event.timestamp()),
@@ -490,7 +498,7 @@ public final class Util {
      * Returns list of integers from begin (inclusive) to end (exclusive).
      */
     public static List<Integer> range(final int begin, final int end) {
-        return new AbstractList<>() {
+        return new AbstractList<Integer>() {
             @Override
             public Integer get(int index) {
                 return begin + index;
@@ -769,14 +777,14 @@ public final class Util {
     }
 
     public static InternalSerializationService getSerializationService(HazelcastInstance instance) {
-        if (instance instanceof HazelcastInstanceImpl hazelcastInstanceImpl) {
-            return hazelcastInstanceImpl.getSerializationService();
-        } else if (instance instanceof HazelcastInstanceProxy hazelcastInstanceProxy) {
-            return hazelcastInstanceProxy.getSerializationService();
-        } else if (instance instanceof HazelcastClientInstanceImpl hazelcastClientInstanceImpl) {
-            return hazelcastClientInstanceImpl.getSerializationService();
-        } else if (instance instanceof HazelcastClientProxy hazelcastClientProxy) {
-            return hazelcastClientProxy.getSerializationService();
+        if (instance instanceof HazelcastInstanceImpl) {
+            return ((HazelcastInstanceImpl) instance).getSerializationService();
+        } else if (instance instanceof HazelcastInstanceProxy) {
+            return ((HazelcastInstanceProxy) instance).getSerializationService();
+        } else if (instance instanceof HazelcastClientInstanceImpl) {
+            return ((HazelcastClientInstanceImpl) instance).getSerializationService();
+        } else if (instance instanceof HazelcastClientProxy) {
+            return ((HazelcastClientProxy) instance).getSerializationService();
         } else {
             throw new IllegalArgumentException("Could not access serialization service." +
                     " Unsupported HazelcastInstance type:" + instance);
@@ -788,10 +796,10 @@ public final class Util {
     }
 
     public static HazelcastInstanceImpl getHazelcastInstanceImpl(HazelcastInstance instance) {
-        if (instance instanceof HazelcastInstanceImpl hazelcastInstanceImpl) {
-            return hazelcastInstanceImpl;
-        } else if (instance instanceof HazelcastInstanceProxy hazelcastInstanceProxy) {
-            return hazelcastInstanceProxy.getOriginal();
+        if (instance instanceof HazelcastInstanceImpl) {
+            return ((HazelcastInstanceImpl) instance);
+        } else if (instance instanceof HazelcastInstanceProxy) {
+            return ((HazelcastInstanceProxy) instance).getOriginal();
         } else {
             throw new IllegalArgumentException("This method can be called only with member" +
                     " instances such as HazelcastInstanceImpl and HazelcastInstanceProxy, but not " + instance.getClass());
@@ -843,7 +851,7 @@ public final class Util {
      * @return heap data payload
      */
     public static byte[] heapDataWithHash(int hash) {
-        var data = new byte[HeapData.HEAP_DATA_OVERHEAD];
+        byte[] data = new byte[HeapData.HEAP_DATA_OVERHEAD];
         Bits.writeIntB(data, 0, hash);
         return data;
     }
