@@ -345,14 +345,21 @@ public abstract class AbstractJsonGetter extends Getter {
 
     private static Object convertJsonTokenToValue(JsonParser parser) throws IOException {
         int token = parser.currentTokenId();
-        return switch (token) {
-            case JsonTokenId.ID_STRING -> parser.getValueAsString();
-            case JsonTokenId.ID_NUMBER_INT -> parser.getLongValue();
-            case JsonTokenId.ID_NUMBER_FLOAT -> parser.getValueAsDouble();
-            case JsonTokenId.ID_TRUE -> true;
-            case JsonTokenId.ID_FALSE -> false;
-            case JsonTokenId.ID_NULL -> null;
-            default -> NonTerminalJsonValue.INSTANCE;
-        };
+        switch (token) {
+            case JsonTokenId.ID_STRING:
+                return parser.getValueAsString();
+            case JsonTokenId.ID_NUMBER_INT:
+                return parser.getLongValue();
+            case JsonTokenId.ID_NUMBER_FLOAT:
+                return parser.getValueAsDouble();
+            case JsonTokenId.ID_TRUE:
+                return true;
+            case JsonTokenId.ID_FALSE:
+                return false;
+            case JsonTokenId.ID_NULL:
+                return null;
+            default:
+                return NonTerminalJsonValue.INSTANCE;
+        }
     }
 }
