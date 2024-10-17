@@ -144,7 +144,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public int getPortableVersion() {
         return portableVersion;
     }
@@ -156,7 +156,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig setPortableVersion(int portableVersion) {
         if (portableVersion < 0) {
             throw new IllegalArgumentException("Portable version cannot be negative!");
@@ -246,7 +246,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public Map<Integer, String> getPortableFactoryClasses() {
         return portableFactoryClasses;
     }
@@ -259,7 +259,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig setPortableFactoryClasses(Map<Integer, String> portableFactoryClasses) {
         isNotNull(portableFactoryClasses, "portableFactoryClasses");
         this.portableFactoryClasses.clear();
@@ -276,7 +276,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig addPortableFactoryClass(int factoryId, Class<? extends PortableFactory> portableFactoryClass) {
         String portableFactoryClassName = isNotNull(portableFactoryClass, "portableFactoryClass").getName();
         return addPortableFactoryClass(factoryId, portableFactoryClassName);
@@ -291,7 +291,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig addPortableFactoryClass(int factoryId, String portableFactoryClass) {
         getPortableFactoryClasses().put(factoryId, portableFactoryClass);
         return this;
@@ -304,7 +304,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public Map<Integer, PortableFactory> getPortableFactories() {
         return portableFactories;
     }
@@ -317,7 +317,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig setPortableFactories(Map<Integer, PortableFactory> portableFactories) {
         isNotNull(portableFactories, "portableFactories");
         this.portableFactories.clear();
@@ -334,7 +334,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig addPortableFactory(int factoryId, PortableFactory portableFactory) {
         getPortableFactories().put(factoryId, portableFactory);
         return this;
@@ -347,7 +347,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public Set<ClassDefinition> getClassDefinitions() {
         return classDefinitions;
     }
@@ -360,7 +360,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig addClassDefinition(ClassDefinition classDefinition) {
         if (!getClassDefinitions().add(classDefinition)) {
             throw new IllegalArgumentException("ClassDefinition for class-id[" + classDefinition.getClassId()
@@ -377,7 +377,7 @@ public class SerializationConfig {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     public SerializationConfig setClassDefinitions(Set<ClassDefinition> classDefinitions) {
         isNotNull(classDefinitions, "classDefinitions");
         this.classDefinitions.clear();

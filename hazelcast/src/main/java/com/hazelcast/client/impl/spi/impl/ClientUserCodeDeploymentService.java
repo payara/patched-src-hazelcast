@@ -48,7 +48,7 @@ import java.util.jar.JarInputStream;
  * @deprecated since 5.4, "User Code Deployment" is replaced by the "User Code Namespaces" feature
  * @see UserCodeNamespaceService
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public class ClientUserCodeDeploymentService {
     private final ClientUserCodeDeploymentConfig clientUserCodeDeploymentConfig;
     private final ClassLoader configClassLoader;

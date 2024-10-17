@@ -35,7 +35,7 @@ public enum FieldType {
      *  @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      *  Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     PORTABLE(0, MAX_VALUE),
 
     BYTE(1, BYTE_SIZE_IN_BYTES),
@@ -52,7 +52,7 @@ public enum FieldType {
      *  @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      *  Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     PORTABLE_ARRAY(10, MAX_VALUE),
 
     BYTE_ARRAY(11, MAX_VALUE),

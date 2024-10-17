@@ -33,7 +33,7 @@ import static com.hazelcast.internal.util.Preconditions.isNotNull;
  * @deprecated since 5.4, "User Code Deployment" is replaced by the "User Code Namespaces" feature
  * @see UserCodeNamespacesConfig
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public class ClientUserCodeDeploymentConfig {
 
     private boolean enabled;

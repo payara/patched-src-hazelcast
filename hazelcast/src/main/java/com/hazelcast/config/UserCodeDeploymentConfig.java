@@ -28,7 +28,7 @@ import java.util.Objects;
  * @deprecated since 5.4, "User Code Deployment" is replaced by the "User Code Namespaces" feature
  * @see UserCodeNamespacesConfig
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public class UserCodeDeploymentConfig {
 
     /**

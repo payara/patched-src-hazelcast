@@ -45,7 +45,7 @@ public enum FieldKind {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = false)
+    @Deprecated
     CHAR(5),
 
     /**
@@ -54,7 +54,7 @@ public enum FieldKind {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = false)
+    @Deprecated
     ARRAY_OF_CHAR(6),
 
     INT16(7),
@@ -96,7 +96,7 @@ public enum FieldKind {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     PORTABLE(31),
 
     /**
@@ -105,7 +105,7 @@ public enum FieldKind {
      * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable
      * Serialization will be removed as of version 7.0.
      */
-    @Deprecated(since = "5.4", forRemoval = true)
+    @Deprecated
     ARRAY_OF_PORTABLE(32),
 
     /**

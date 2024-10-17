@@ -23,7 +23,7 @@ import com.hazelcast.logging.Logger;
  * @deprecated since 5.4, "User Code Deployment" is replaced by the "User Code Namespaces" feature
  * @see com.hazelcast.internal.namespace.impl.NamespaceAwareClassLoader
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public class UserCodeDeploymentClassLoader extends ClassLoader {
 
     private static final ILogger LOG = Logger.getLogger(UserCodeDeploymentClassLoader.class);

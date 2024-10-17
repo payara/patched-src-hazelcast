@@ -43,7 +43,7 @@ import static java.lang.String.format;
  * @deprecated since 5.4, "User Code Deployment" is replaced by the "User Code Namespaces" feature
  * @see UserCodeNamespaceService
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public final class UserCodeDeploymentService implements ManagedService {
 
     public static final String SERVICE_NAME = "user-code-deployment-service";

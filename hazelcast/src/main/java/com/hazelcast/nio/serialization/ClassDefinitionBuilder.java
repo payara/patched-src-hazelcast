@@ -37,7 +37,7 @@ import java.util.Set;
  * @deprecated Portable Serialization has been deprecated. We recommend you use Compact Serialization as Portable Serialization
  * will be removed as of version 7.0.
  */
-@Deprecated(since = "5.4", forRemoval = true)
+@Deprecated
 public final class ClassDefinitionBuilder {
     private final PortableId portableId;
     private final List<FieldDefinitionImpl> fieldDefinitions = new ArrayList<>();
