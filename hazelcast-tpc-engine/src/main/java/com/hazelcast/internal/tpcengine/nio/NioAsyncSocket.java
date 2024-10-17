@@ -142,12 +142,12 @@ public final class NioAsyncSocket extends AsyncSocket {
     private void setReadable0(boolean readable) {
         if (readable) {
             // Signal that we are interested in OP_READ events.
-            key.interestOpsOr(OP_READ);
+            key.interestOps(key.interestOps() | OP_READ);
         } else {
             // Signal that we are not interesting in OP_READ events.
             // So even if data is received or still available on the socket,
             // we will not get further events.
-            key.interestOpsAnd(~OP_READ);
+            key.interestOps(key.interestOps() & ~OP_READ);
         }
 
         // We are not running on the eventloop thread. We need to notify the
