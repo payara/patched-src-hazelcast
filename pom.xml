@@ -484,6 +484,13 @@
                                             -->
                                         <exclude>com.tngtech.archunit:archunit</exclude>
                                     </excludes>
+                                    <ignoreClasses>
+                                        <!--
+                                        Some dependencies contain JDK9 specific classes with JDK9 in the name
+                                        e.g. wiremock.org.eclipse.jetty.alpn.java.server.JDK9ServerALPNProcessor
+                                        -->
+                                        <ignoreClass>*JDK9*</ignoreClass>
+                                    </ignoreClasses>
                                 </enforceBytecodeVersion>
                             </rules>
                         </configuration>
