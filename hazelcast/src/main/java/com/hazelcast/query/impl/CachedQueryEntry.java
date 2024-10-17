@@ -69,16 +69,16 @@ public class CachedQueryEntry<K, V> extends QueryableEntry<K, V> implements Iden
             throw new IllegalArgumentException("keyData cannot be null");
         }
 
-        if (key instanceof Data data) {
-            this.keyData = data;
+        if (key instanceof Data) {
+            this.keyData = (Data) key;
             this.keyObject = null;
         } else {
             this.keyObject = (K) key;
             this.keyData = null;
         }
 
-        if (value instanceof Data data) {
-            this.valueData = data;
+        if (value instanceof Data) {
+            this.valueData = (Data) value;
             this.valueObject = null;
         } else {
             this.valueObject = (V) value;
@@ -165,7 +165,7 @@ public class CachedQueryEntry<K, V> extends QueryableEntry<K, V> implements Iden
 
         Object possiblyData = record.getValue();
 
-        return possiblyData instanceof Data data ? data : null;
+        return possiblyData instanceof Data ? (Data) possiblyData : null;
     }
 
     public Object getByPrioritizingDataValue() {
