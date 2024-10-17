@@ -16,12 +16,16 @@
 
 package com.hazelcast.internal.tpcengine.util;
 
+import java.lang.reflect.Method;
+
+import static java.lang.Runtime.getRuntime;
+
 /**
  * Various JVM utility functions.
  */
 public final class JVM {
 
-    private static final int MAJOR_VERSION = Runtime.version().feature();
+    private static final int MAJOR_VERSION = getMajorVersion0();
 
     private JVM() {
     }
@@ -33,6 +37,38 @@ public final class JVM {
      */
     public static int getMajorVersion() {
         return MAJOR_VERSION;
+    }
+
+    private static int getMajorVersion0() {
+        // First try the Runtime version (Java 9+)
+        try {
+            Method versionMethod = Runtime.class.getDeclaredMethod("version");
+            if (versionMethod != null) {
+                Class<?> versionClazz = Class.forName("java.lang.Runtime$Version");
+                Method majorMethod = versionClazz.getDeclaredMethod("major");
+                Object versionObject = versionMethod.invoke(getRuntime());
+                return (Integer) majorMethod.invoke(versionObject);
+            }
+        } catch (Exception e) {
+            // fall back to parsing the java.version system property
+        }
+
+        return parseVersionString(System.getProperty("java.version"));
+    }
+
+    static int parseVersionString(String javaVersion) {
+        String majorVersion;
+        if (javaVersion.startsWith("1.")) {
+            majorVersion = javaVersion.substring(2, 3);
+        } else {
+            int dotIndex = javaVersion.indexOf(".");
+            if (dotIndex == -1) {
+                majorVersion = javaVersion;
+            } else {
+                majorVersion = javaVersion.substring(0, dotIndex);
+            }
+        }
+        return Integer.parseInt(majorVersion);
     }
 
     /**
