@@ -218,7 +218,8 @@ public class MapKeyLoader {
         switch (newRole) {
             case SENDER:
                 return sendKeys(mapStoreContext, false);
-            case SENDER_BACKUP, RECEIVER:
+            case SENDER_BACKUP:
+            case RECEIVER:
                 return triggerLoading();
             default:
                 return keyLoadFinished;
@@ -472,8 +473,8 @@ public class MapKeyLoader {
         } finally {
             sendKeyLoadCompleted(clusterSize, loadError);
 
-            if (keys instanceof Closeable closeable) {
-                closeResource(closeable);
+            if (keys instanceof Closeable) {
+                closeResource((Closeable) keys);
             }
         }
     }
