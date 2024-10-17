@@ -19,9 +19,14 @@ package com.hazelcast.cp.internal;
 import com.hazelcast.cp.CPGroupId;
 import com.hazelcast.cp.CPObjectInfo;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
-public record CPObjectInfoImpl(String name, String serviceName, CPGroupId groupId) implements CPObjectInfo {
+public final class CPObjectInfoImpl implements CPObjectInfo {
+    private final String name;
+    private final String serviceName;
+    private final CPGroupId groupId;
 
     public CPObjectInfoImpl(String name, String serviceName, CPGroupId groupId) {
         this.name = requireNonNull(name, "name must not be null");
@@ -29,4 +34,37 @@ public record CPObjectInfoImpl(String name, String serviceName, CPGroupId groupI
         this.groupId = requireNonNull(groupId, "groupId must not be null");
     }
 
+    public String name() {
+        return name;
+    }
+
+    public String serviceName() {
+        return serviceName;
+    }
+
+    public CPGroupId groupId() {
+        return groupId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        CPObjectInfoImpl that = (CPObjectInfoImpl) obj;
+        return Objects.equals(this.name, that.name) &&
+                Objects.equals(this.serviceName, that.serviceName) &&
+                Objects.equals(this.groupId, that.groupId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, serviceName, groupId);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("CPObjectInfoImpl[name=").append(name)
+                .append(", serviceName=").append(serviceName)
+                .append(", groupId=").append(groupId).append(']').toString();
+    }
 }
