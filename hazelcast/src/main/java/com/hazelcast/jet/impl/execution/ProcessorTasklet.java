@@ -269,8 +269,8 @@ public class ProcessorTasklet implements Tasklet {
                 throw new IllegalArgumentException(String.format(
                         "The initialized object(%s) should be an instance of %s", initialized, Processor.class), e);
             }
-            if (processor instanceof ProcessorWrapper processorWrapper) {
-                processorWrapper.setWrapped(toInit);
+            if (processor instanceof ProcessorWrapper) {
+                ((ProcessorWrapper) processor).setWrapped(toInit);
             } else {
                 processor = toInit;
             }
@@ -582,13 +582,14 @@ public class ProcessorTasklet implements Tasklet {
             // handle special items
             while (inbox.queue().peek() instanceof SpecialBroadcastItem) {
                 Object item = inbox.queue().poll();
-                if (item instanceof Watermark wm) {
+                if (item instanceof Watermark) {
+                    Watermark wm = (Watermark) item;
                     if (!wm.equals(IDLE_MESSAGE)) {
                         pendingEdgeWatermark.add(wm);
                     }
                     pendingGlobalWatermarks.addAll(coalescers.observeWm(currInstream.ordinal(), wm));
-                } else if (item instanceof SnapshotBarrier snapshotBarrier) {
-                    observeBarrier(currInstream.ordinal(), snapshotBarrier);
+                } else if (item instanceof SnapshotBarrier) {
+                    observeBarrier(currInstream.ordinal(), (SnapshotBarrier) item);
                 } else {
                     assert false : "Unexpected item in inbox: " + item;
                 }
@@ -742,11 +743,11 @@ public class ProcessorTasklet implements Tasklet {
         //collect static metrics from processor
         mContext.collect(descriptor, this.processor);
         //collect dynamic metrics from processor
-        if (processor instanceof DynamicMetricsProvider dynamicMetricsProvider) {
-            dynamicMetricsProvider.provideDynamicMetrics(descriptor.copy(), mContext);
+        if (processor instanceof DynamicMetricsProvider) {
+            ((DynamicMetricsProvider) processor).provideDynamicMetrics(descriptor.copy(), mContext);
         }
-        if (context instanceof ProcCtx procCtx) {
-            procCtx.metricsContext().provideDynamicMetrics(descriptor, mContext);
+        if (context instanceof ProcCtx) {
+            ((ProcCtx) context).metricsContext().provideDynamicMetrics(descriptor, mContext);
         }
     }
 }
