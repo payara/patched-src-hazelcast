@@ -163,7 +163,22 @@ public class ClusterViewListenerService {
         return new MembersView(version, memberInfos);
     }
 
-    public record PartitionsView(Map<UUID, List<Integer>> partitions, int version) {
+    public static final class PartitionsView {
+        public final Map<UUID, List<Integer>> partitions;
+        public final int version;
+
+        public PartitionsView(Map<UUID, List<Integer>> partitions, int version) {
+            this.partitions = partitions;
+            this.version = version;
+        }
+
+        public Map<UUID, List<Integer>> partitions() {
+            return this.partitions;
+        }
+
+        public int version() {
+            return this.version;
+        }
     }
 
     public PartitionsView getPartitionsViewOrNull() {
