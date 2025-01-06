@@ -30,7 +30,63 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public record AllTypesRecord(
+public final class AllTypesRecord {
+    public final byte primitiveInt8;
+    public final Byte objectInt8;
+    public final char primitiveChar;
+    public final Character objectCharacter;
+    public final short primitiveInt16;
+    public final Short objectInt16;
+    public final int primitiveInt32;
+    public final Integer objectInt32;
+    public final long primitiveInt64;
+    public final Long objectInt64;
+    public final float primitiveFloat32;
+    public final Float objectFloat32;
+    public final double primitiveFloat64;
+    public final Double objectFloat64;
+    public final boolean primitiveBoolean;
+    public final Boolean objectBoolean;
+    public final String string;
+    public final BigDecimal decimal;
+    public final LocalTime time;
+    public final LocalDate date;
+    public final LocalDateTime timestamp;
+    public final OffsetDateTime timestampWithTimezone;
+    public final AnEnum anEnum;
+    public final NestedRecord nestedRecord;
+    public final byte[] primitiveInt8Array;
+    public final Byte[] objectInt8Array;
+    public final char[] primitiveCharArray;
+    public final Character[] objectCharacterArray;
+    public final short[] primitiveInt16Array;
+    public final Short[] objectInt16Array;
+    public final int[] primitiveInt32Array;
+    public final Integer[] objectInt32Array;
+    public final long[] primitiveInt64Array;
+    public final Long[] objectInt64Array;
+    public final float[] primitiveFloat32Array;
+    public final Float[] objectFloat32Array;
+    public final double[] primitiveFloat64Array;
+    public final Double[] objectFloat64Array;
+    public final boolean[] primitiveBooleanArray;
+    public final Boolean[] objectBooleanArray;
+    public final String[] stringArray;
+    public final BigDecimal[] decimalArray;
+    public final LocalTime[] timeArray;
+    public final LocalDate[] dateArray;
+    public final LocalDateTime[] timestampArray;
+    public final OffsetDateTime[] timestampWithTimezoneArray;
+    public final AnEnum[] anEnumArray;
+    public final NestedRecord[] nestedRecordArray;
+    public final List<BigDecimal> list;
+    public final ArrayList<String> arrayList;
+    public final Set<Byte> set;
+    public final HashSet<Integer> hashSet;
+    public final Map<Short, Character> map;
+    public final HashMap<Long, Boolean> hashMap;
+
+    public AllTypesRecord(
         byte primitiveInt8,
         Byte objectInt8,
         char primitiveChar,
@@ -85,14 +141,77 @@ public record AllTypesRecord(
         HashSet<Integer> hashSet,
         Map<Short, Character> map,
         HashMap<Long, Boolean> hashMap
-) {
+    ) {
+        this.primitiveInt8 = primitiveInt8;
+        this.objectInt8 = objectInt8;
+        this.primitiveChar = primitiveChar;
+        this.objectCharacter = objectCharacter;
+        this.primitiveInt16 = primitiveInt16;
+        this.objectInt16 = objectInt16;
+        this.primitiveInt32 = primitiveInt32;
+        this.objectInt32 = objectInt32;
+        this.primitiveInt64 = primitiveInt64;
+        this.objectInt64 = objectInt64;
+        this.primitiveFloat32 = primitiveFloat32;
+        this.objectFloat32 = objectFloat32;
+        this.primitiveFloat64 = primitiveFloat64;
+        this.objectFloat64 = objectFloat64;
+        this.primitiveBoolean = primitiveBoolean;
+        this.objectBoolean = objectBoolean;
+        this.string = string;
+        this.decimal = decimal;
+        this.time = time;
+        this.date = date;
+        this.timestamp = timestamp;
+        this.timestampWithTimezone = timestampWithTimezone;
+        this.anEnum = anEnum;
+        this.nestedRecord = nestedRecord;
+        this.primitiveInt8Array = primitiveInt8Array;
+        this.objectInt8Array = objectInt8Array;
+        this.primitiveCharArray = primitiveCharArray;
+        this.objectCharacterArray = objectCharacterArray;
+        this.primitiveInt16Array = primitiveInt16Array;
+        this.objectInt16Array = objectInt16Array;
+        this.primitiveInt32Array = primitiveInt32Array;
+        this.objectInt32Array = objectInt32Array;
+        this.primitiveInt64Array = primitiveInt64Array;
+        this.objectInt64Array = objectInt64Array;
+        this.primitiveFloat32Array = primitiveFloat32Array;
+        this.objectFloat32Array = objectFloat32Array;
+        this.primitiveFloat64Array = primitiveFloat64Array;
+        this.objectFloat64Array = objectFloat64Array;
+        this.primitiveBooleanArray = primitiveBooleanArray;
+        this.objectBooleanArray = objectBooleanArray;
+        this.stringArray = stringArray;
+        this.decimalArray = decimalArray;
+        this.timeArray = timeArray;
+        this.dateArray = dateArray;
+        this.timestampArray = timestampArray;
+        this.timestampWithTimezoneArray = timestampWithTimezoneArray;
+        this.anEnumArray = anEnumArray;
+        this.nestedRecordArray = nestedRecordArray;
+        this.list = list;
+        this.arrayList = arrayList;
+        this.set = set;
+        this.hashSet = hashSet;
+        this.map = map;
+        this.hashMap = hashMap;
+    }
 
-    enum AnEnum {
+    public enum AnEnum {
         VALUE0,
         VALUE1,
     }
 
-    record NestedRecord(int primitiveInt32, String string) {
+    public static final class NestedRecord {
+        public final int primitiveInt32;
+        public final String string;
+
+        private NestedRecord(int primitiveInt32, String string) {
+            this.primitiveInt32 = primitiveInt32;
+            this.string = string;
+        }
+
         public static NestedRecord create() {
             return new NestedRecord(42, "42");
         }
@@ -148,27 +267,27 @@ public record AllTypesRecord(
                 new OffsetDateTime[]{null, OffsetDateTime.now()},
                 new AnEnum[]{AnEnum.VALUE0, null, AnEnum.VALUE1},
                 new NestedRecord[]{null, NestedRecord.create()},
-                new ArrayList<>() {{
+                new ArrayList<BigDecimal>() {{
                     add(BigDecimal.ONE);
                     add(null);
                     add(BigDecimal.TEN);
                 }},
-                new ArrayList<>() {{
+                new ArrayList<String>() {{
                     add("a");
                     add("b");
                     add("c");
                 }},
-                new HashSet<>() {{
+                new HashSet<Byte>() {{
                     add((byte) 0);
                 }},
-                new HashSet<>() {{
+                new HashSet<Integer>() {{
                     add(42);
                     add(null);
                 }},
-                new HashMap<>() {{
+                new HashMap<Short, Character>() {{
                     put((short) 42, 'x');
                 }},
-                new HashMap<>() {{
+                new HashMap<Long, Boolean>() {{
                     put(0L, false);
                     put(1L, true);
                 }}
@@ -297,5 +416,221 @@ public record AllTypesRecord(
                 && Objects.equals(hashSet, that.hashSet)
                 && Objects.equals(map, that.map)
                 && Objects.equals(hashMap, that.hashMap);
+    }
+
+    public byte primitiveInt8() {
+        return this.primitiveInt8;
+    }
+
+    public Byte objectInt8() {
+        return this.objectInt8;
+    }
+
+    public char primitiveChar() {
+        return this.primitiveChar;
+    }
+
+    public Character objectCharacter() {
+        return this.objectCharacter;
+    }
+
+    public short primitiveInt16() {
+        return this.primitiveInt16;
+    }
+
+    public Short objectInt16() {
+        return this.objectInt16;
+    }
+
+    public int primitiveInt32() {
+        return this.primitiveInt32;
+    }
+
+    public Integer objectInt32() {
+        return this.objectInt32;
+    }
+
+    public long primitiveInt64() {
+        return this.primitiveInt64;
+    }
+
+    public Long objectInt64() {
+        return this.objectInt64;
+    }
+
+    public float primitiveFloat32() {
+        return this.primitiveFloat32;
+    }
+
+    public Float objectFloat32() {
+        return this.objectFloat32;
+    }
+
+    public double primitiveFloat64() {
+        return this.primitiveFloat64;
+    }
+
+    public Double objectFloat64() {
+        return this.objectFloat64;
+    }
+
+    public boolean primitiveBoolean() {
+        return this.primitiveBoolean;
+    }
+
+    public Boolean objectBoolean() {
+        return this.objectBoolean;
+    }
+
+    public String string() {
+        return this.string;
+    }
+
+    public BigDecimal decimal() {
+        return this.decimal;
+    }
+
+    public LocalTime time() {
+        return this.time;
+    }
+
+    public LocalDate date() {
+        return this.date;
+    }
+
+    public LocalDateTime timestamp() {
+        return this.timestamp;
+    }
+
+    public OffsetDateTime timestampWithTimezone() {
+        return this.timestampWithTimezone;
+    }
+
+    public AnEnum anEnum() {
+        return this.anEnum;
+    }
+
+    public NestedRecord nestedRecord() {
+        return this.nestedRecord;
+    }
+
+    public byte[] primitiveInt8Array() {
+        return this.primitiveInt8Array;
+    }
+
+    public Byte[] objectInt8Array() {
+        return this.objectInt8Array;
+    }
+
+    public char[] primitiveCharArray() {
+        return this.primitiveCharArray;
+    }
+
+    public Character[] objectCharacterArray() {
+        return this.objectCharacterArray;
+    }
+
+    public short[] primitiveInt16Array() {
+        return this.primitiveInt16Array;
+    }
+
+    public Short[] objectInt16Array() {
+        return this.objectInt16Array;
+    }
+
+    public int[] primitiveInt32Array() {
+        return this.primitiveInt32Array;
+    }
+
+    public Integer[] objectInt32Array() {
+        return this.objectInt32Array;
+    }
+
+    public long[] primitiveInt64Array() {
+        return this.primitiveInt64Array;
+    }
+
+    public Long[] objectInt64Array() {
+        return this.objectInt64Array;
+    }
+
+    public float[] primitiveFloat32Array() {
+        return this.primitiveFloat32Array;
+    }
+
+    public Float[] objectFloat32Array() {
+        return this.objectFloat32Array;
+    }
+
+    public double[] primitiveFloat64Array() {
+        return this.primitiveFloat64Array;
+    }
+
+    public Double[] objectFloat64Array() {
+        return this.objectFloat64Array;
+    }
+
+    public boolean[] primitiveBooleanArray() {
+        return this.primitiveBooleanArray;
+    }
+
+    public Boolean[] objectBooleanArray() {
+        return this.objectBooleanArray;
+    }
+
+    public String[] stringArray() {
+        return this.stringArray;
+    }
+
+    public BigDecimal[] decimalArray() {
+        return this.decimalArray;
+    }
+
+    public LocalTime[] timeArray() {
+        return this.timeArray;
+    }
+
+    public LocalDate[] dateArray() {
+        return this.dateArray;
+    }
+
+    public LocalDateTime[] timestampArray() {
+        return this.timestampArray;
+    }
+
+    public OffsetDateTime[] timestampWithTimezoneArray() {
+        return this.timestampWithTimezoneArray;
+    }
+
+    public AnEnum[] anEnumArray() {
+        return this.anEnumArray;
+    }
+
+    public NestedRecord[] nestedRecordArray() {
+        return this.nestedRecordArray;
+    }
+
+    public List<BigDecimal> list() {
+        return this.list;
+    }
+
+    public ArrayList<String> arrayList() {
+        return this.arrayList;
+    }
+
+    public Set<Byte> set() {
+        return this.set;
+    }
+
+    public HashSet<Integer> hashSet() {
+        return this.hashSet;
+    }
+
+    public Map<Short, Character> map() {
+        return this.map;
+    }
+
+    public HashMap<Long, Boolean> hashMap() {
+        return this.hashMap;
     }
 }
