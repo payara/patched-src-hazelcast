@@ -108,7 +108,7 @@ import static com.hazelcast.spi.properties.ClusterProperty.SEARCH_DYNAMIC_CONFIG
         "checkstyle:classdataabstractioncoupling"})
 public class DynamicConfigurationAwareConfig extends Config {
 
-    private final ConfigSupplier<MapConfig> mapConfigOrNullConfigSupplier = new ConfigSupplier<>() {
+    private final ConfigSupplier<MapConfig> mapConfigOrNullConfigSupplier = new ConfigSupplier<MapConfig>() {
         @Override
         public MapConfig getDynamicConfig(@Nonnull ConfigurationService configurationService, @Nonnull String name) {
             return configurationService.findMapConfig(name);
