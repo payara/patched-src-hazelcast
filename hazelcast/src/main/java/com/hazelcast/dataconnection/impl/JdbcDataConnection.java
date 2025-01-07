@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -56,12 +57,12 @@ public class JdbcDataConnection extends DataConnectionBase {
 
     public static final String OBJECT_TYPE_TABLE = "Table";
 
-    private static final List<String> H2_SYSTEM_SCHEMA_LIST = List.of("INFORMATION_SCHEMA");
+    private static final List<String> H2_SYSTEM_SCHEMA_LIST = Arrays.asList("INFORMATION_SCHEMA");
 
-    private static final List<String> MYSQL_SYSTEM_CATALOG_LIST = List.of("SYS");
+    private static final List<String> MYSQL_SYSTEM_CATALOG_LIST = Arrays.asList("SYS");
 
-    private static final List<String> MSSQL_SYSTEM_SCHEMA_LIST = List.of("sys", "INFORMATION_SCHEMA");
-    private static final List<String> MSSQL_SYSTEM_TABLE_LIST = List.of("MSreplication_options", "spt_fallback_db",
+    private static final List<String> MSSQL_SYSTEM_SCHEMA_LIST = Arrays.asList("sys", "INFORMATION_SCHEMA");
+    private static final List<String> MSSQL_SYSTEM_TABLE_LIST = Arrays.asList("MSreplication_options", "spt_fallback_db",
             "spt_fallback_dev", "spt_fallback_usg", "spt_monitor", "spt_values");
 
     private static final AtomicInteger DATA_SOURCE_COUNTER = new AtomicInteger();
