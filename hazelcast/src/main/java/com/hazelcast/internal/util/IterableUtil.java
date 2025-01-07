@@ -231,7 +231,7 @@ public final class IterableUtil {
         @Override
         public E next() {
             if (prependElement != null) {
-                var value = prependElement;
+                E value = prependElement;
                 prependElement = null;
                 return value;
             }
