@@ -40,8 +40,8 @@ import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -56,7 +56,7 @@ public class NoIndexLossAfterSplitBrainHealTest extends SplitBrainTestSupport {
     private static final String[] POSSIBLE_VALUES = new String[] {"A", "B", "C", "D"};
     /** Logically equivalent for the input dataset */
     private static final Collection<Predicate<Object, TestObject>> TEST_PREDICATES =
-            List.of(Predicates.alwaysTrue(), Predicates.not(Predicates.equal("value", "X")), Predicates.in("value", POSSIBLE_VALUES));
+            Arrays.asList(Predicates.alwaysTrue(), Predicates.not(Predicates.equal("value", "X")), Predicates.in("value", POSSIBLE_VALUES));
 
     // Trying to investigate flakey test https://github.com/hazelcast/hazelcast/issues/25725
     @ClassRule
@@ -67,7 +67,7 @@ public class NoIndexLossAfterSplitBrainHealTest extends SplitBrainTestSupport {
 
     @Parameterized.Parameters(name = "format:{0}")
     public static Collection<InMemoryFormat> parameters() {
-        return List.of(InMemoryFormat.BINARY, InMemoryFormat.OBJECT);
+        return Arrays.asList(InMemoryFormat.BINARY, InMemoryFormat.OBJECT);
     }
 
     @Override
@@ -121,18 +121,30 @@ public class NoIndexLossAfterSplitBrainHealTest extends SplitBrainTestSupport {
                 Collection<Object> inversedPredicateResult = testMap.keySet(inversedPredicate);
 
                 return MessageFormat.format(
-                        """
-                                Previous assertion established the size of testMap is {0}.
-                                It''s therefore impossible for the predicate "{1}" (which is functionally equivalent to "true") to return anything other than that same result.
-                                The inverse of this predicate ("{2}") (which is functionally equivalent to "false") returned {3} results ({4}).
-                                """,
+                        "Previous assertion established the size of testMap is {0}.\nIt''s therefore impossible for the predicate \"{1}\" (which is functionally equivalent to \"true\") to return anything other than that same result.\nThe inverse of this predicate (\"{2}\") (which is functionally equivalent to \"false\") returned {3} results ({4}).",
                         ENTRY_COUNT, predicate, inversedPredicate, inversedPredicateResult.size(), inversedPredicateResult);
             })
                     .hasSize(ENTRY_COUNT));
         }
     }
 
-    private record TestObject(Long id, String value) implements Serializable {
+    private static final class TestObject implements Serializable {
         private static final long serialVersionUID = 1L;
+
+        public final Long id;
+        public final String value;
+
+        TestObject(Long id, String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public Long id() {
+            return this.id;
+        }
+
+        public String value() {
+            return this.value;
+        }
     }
 }
