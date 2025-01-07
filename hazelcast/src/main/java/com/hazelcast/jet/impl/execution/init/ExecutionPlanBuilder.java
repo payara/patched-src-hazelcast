@@ -208,7 +208,7 @@ public final class ExecutionPlanBuilder {
             if (edge.getRoutingPolicy() == Edge.RoutingPolicy.PARTITIONED) {
                 assert edge.getPartitioner() != null : "PARTITIONED policy was used without partitioner";
                 // note that partitioned edge can be either distributed or local.
-                var maybeConstantPartition = edge.getPartitioner().getConstantPartitioningKey();
+                Object maybeConstantPartition = edge.getPartitioner().getConstantPartitioningKey();
                 if (maybeConstantPartition != null) {
                     // allToOne or other constant partitioning case
                     constantPartitionIds.add(partitionService.getPartitionId(maybeConstantPartition));
@@ -434,7 +434,7 @@ public final class ExecutionPlanBuilder {
                     // in dataPartitions, but can make some difference if there are many (e.g. half of them).
                     // This is not obvious where extra partitions should be assigned - maybe we should prefer members
                     // that do not store the data for the job because they will be less loaded?
-                    var member = requiredMembers.get(memberIndex++ % requiredMembers.size());
+                    MemberInfo member = requiredMembers.get(memberIndex++ % requiredMembers.size());
                     partitionsForMember.get(member).add(partitionId);
                 }
             }
