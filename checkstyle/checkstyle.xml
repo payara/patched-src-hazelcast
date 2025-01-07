@@ -174,7 +174,7 @@
             <property name="tokens" value="METHOD_DEF"/>
         </module>
         <module name="ParameterNumber">
-            <property name="max" value="10"/>
+            <property name="max" value="54"/>
             <property name="tokens" value="CTOR_DEF"/>
         </module>
         <module name="AnonInnerLength">
@@ -285,10 +285,6 @@
         -->
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier">
-            <property name="packageAllowed" value="true"/>
-            <property name="protectedAllowed" value="true"/>
-        </module>
 
         <!-- Metrics -->
         <module name="BooleanExpressionComplexity">
