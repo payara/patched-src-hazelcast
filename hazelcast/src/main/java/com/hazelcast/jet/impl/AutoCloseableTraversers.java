@@ -48,7 +48,7 @@ public class AutoCloseableTraversers {
      */
     @Nonnull
     public static <T> AutoCloseableTraverser<T> traverseAutoCloseableIterator(@Nonnull Iterator<? extends T> iterator) {
-        return new AutoCloseableTraverser<>() {
+        return new AutoCloseableTraverser<T>() {
             @Override
             public T next() {
                 return iterator.hasNext() ? requireNonNull(iterator.next(), "Iterator returned a null item") : null;
