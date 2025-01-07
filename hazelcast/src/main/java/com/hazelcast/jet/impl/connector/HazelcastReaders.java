@@ -72,7 +72,12 @@ public final class HazelcastReaders {
 
     @Nonnull
     public static ProcessorMetaSupplier readLocalCacheSupplier(@Nonnull String cacheName) {
-        return new LocalProcessorMetaSupplier<>(new LocalCacheReaderFunction(cacheName)) {
+        return new LocalProcessorMetaSupplier<
+            InternalCompletableFuture<CacheEntriesWithCursor>,
+            CacheEntriesWithCursor,
+            Entry<Data, Data>
+            >(
+            new LocalCacheReaderFunction(cacheName)) {
             private static final long serialVersionUID = 1L;
             @Override
             public Permission getRequiredPermission() {
@@ -176,7 +181,8 @@ public final class HazelcastReaders {
 
     @Nonnull
     public static ProcessorMetaSupplier readLocalMapSupplier(@Nonnull String mapName) {
-        return new LocalProcessorMetaSupplier<>(new LocalMapReaderFunction(mapName)) {
+        return new LocalProcessorMetaSupplier<InternalCompletableFuture<MapEntriesWithCursor>, MapEntriesWithCursor,
+            Entry<Data, Data>>(new LocalMapReaderFunction(mapName)) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -235,9 +241,8 @@ public final class HazelcastReaders {
         checkSerializable(Objects.requireNonNull(predicate), "predicate");
         checkSerializable(Objects.requireNonNull(projection), "projection");
 
-        return new LocalProcessorMetaSupplier<>(
-                new LocalMapQueryReaderFunction<>(mapName, predicate, projection)
-        ) {
+        return new LocalProcessorMetaSupplier<InternalCompletableFuture<ResultSegment>, ResultSegment, QueryResultRow>(
+            new LocalMapQueryReaderFunction<>(mapName, predicate, projection)) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -347,11 +352,11 @@ public final class HazelcastReaders {
     public static <T, K, V> ProcessorSupplier readRemoteMapSupplier(RemoteMapSourceConfiguration<K, V, T> config) {
         String clientXml = ImdgUtil.asXmlString(config.getClientConfig());
         if (config.hasPredicate()) {
-            var readerSupplier = new RemoteMapQueryReaderFunction<K, V, T>(
+            RemoteMapQueryReaderFunction<K, V, T> readerSupplier = new RemoteMapQueryReaderFunction<K, V, T>(
                     config.getName(), config.getPredicate(), config.getProjection());
             return new RemoteProcessorSupplier<>(config.getDataConnectionName(), clientXml, readerSupplier);
         } else {
-            var readerSupplier = new RemoteMapReaderFunction(config.getName());
+            RemoteMapReaderFunction readerSupplier = new RemoteMapReaderFunction(config.getName());
             return new RemoteProcessorSupplier<>(config.getDataConnectionName(), clientXml, readerSupplier);
         }
     }
