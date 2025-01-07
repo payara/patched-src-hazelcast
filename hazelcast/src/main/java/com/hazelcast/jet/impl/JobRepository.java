@@ -51,6 +51,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +76,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -353,7 +355,16 @@ public class JobRepository {
             String resourceName, Map<String, byte[]> map, InputStream in
     ) throws IOException {
         // ignore duplicates: the first resource in first jar takes precedence
-        map.putIfAbsent(classKeyName(resourceName), IOUtil.compress(in.readAllBytes()));
+        if (map.containsKey(resourceName)) {
+            return;
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (DeflaterOutputStream compressor = new DeflaterOutputStream(baos)) {
+            IOUtil.drainTo(in, compressor);
+        }
+
+        map.put(classKeyName(resourceName), baos.toByteArray());
     }
 
     /**
