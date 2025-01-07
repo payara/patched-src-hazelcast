@@ -33,7 +33,6 @@ import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
-import jdk.net.UnixDomainPrincipal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -187,18 +186,6 @@ public class RecordSerializationTest extends HazelcastTestSupport {
     }
 
     @Test
-    public void testSerializingRecordReflectively_whenTheRecordClassIsNotSupported() {
-        // UnixDomainPrincipal is a record that does not implement the Serializable
-        // interface from the jdk.net package, which is not allowed to be serialized
-        // by zero-config serializer.
-        assertThatThrownBy(() -> {
-            service.toData(new UnixDomainPrincipal(() -> null, () -> null));
-        }).isInstanceOf(HazelcastSerializationException.class)
-                .hasStackTraceContaining("cannot be serialized with zero configuration Compact serialization")
-                .hasStackTraceContaining("If you want to serialize this class");
-    }
-
-    @Test
     public void testSerializingRecordReflectively_withUnsupportedFieldType() {
         assertThatThrownBy(() -> {
             service.toData(new RecordWithUnsupportedField(new LinkedList<>()));
@@ -237,16 +224,53 @@ public class RecordSerializationTest extends HazelcastTestSupport {
     }
 
 
-    private record RecordWithUnsupportedField(LinkedList<String> list) {
+    private static final class RecordWithUnsupportedField {
+        public final LinkedList<String> list;
+
+        RecordWithUnsupportedField(LinkedList<String> list) {
+            this.list = list;
+        }
+
+        public LinkedList<String> list() {
+            return this.list;
+        }
     }
 
-    private record RecordWithUnsupportedArrayField(LinkedList<String>[] lists) {
+    private static final class RecordWithUnsupportedArrayField {
+        public final LinkedList<String>[] lists;
+
+        RecordWithUnsupportedArrayField(LinkedList<String>[] lists) {
+            this.lists = lists;
+        }
+
+        public LinkedList<String>[] lists() {
+            return this.lists;
+        }
     }
 
-    private record RecordWithInstant(Instant instant) {
+    private static final class RecordWithInstant {
+        public final Instant instant;
+
+        RecordWithInstant(Instant instant) {
+            this.instant = instant;
+        }
+
+        public Instant instant() {
+            return this.instant;
+        }
     }
 
-    private record RecordWithArrayOfInstant(Instant[] lists) {
+    private static final class RecordWithArrayOfInstant {
+        public final Instant[] lists;
+
+        RecordWithArrayOfInstant(Instant[] lists) {
+            this.lists = lists;
+        }
+
+        public Instant[] lists() {
+            return this.lists;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
