@@ -217,7 +217,7 @@ public class JetServiceBackend implements ManagedService, MembershipAwareService
 
     private void notifyNonMasterMembersWeAreShuttingDown(Address masterAddress) {
         Supplier<Operation> operationSupplier = NotifyMemberShutdownOperation::new;
-        var localAddress = nodeEngine.getThisAddress();
+        Address localAddress = nodeEngine.getThisAddress();
         InvocationUtil.invokeOnStableClusterParallel(
                 nodeEngine,
                 operationSupplier,
@@ -240,7 +240,7 @@ public class JetServiceBackend implements ManagedService, MembershipAwareService
     }
 
     private void notifyAllMembersWeAreShuttingDown(CompletableFuture<Void> future) {
-        var fixedMasterAddress = nodeEngine.getMasterAddress();
+        Address fixedMasterAddress = nodeEngine.getMasterAddress();
         // we not guarantee the delivery of information to non-master members
         // in order not to delay shutdown of this member. If the notification is lost
         // some light jobs coordinated by those members can fail.
