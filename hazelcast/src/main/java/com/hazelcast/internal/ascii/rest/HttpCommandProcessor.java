@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -174,7 +175,7 @@ public abstract class HttpCommandProcessor<T extends HttpCommand> extends Abstra
      *                                      parameters
      */
     private static @Nonnull
-    String[] decodeParams(HttpPostCommand command, int expectedParamCount) {
+    String[] decodeParams(HttpPostCommand command, int expectedParamCount) throws UnsupportedEncodingException {
         byte[] data = command.getData();
         if (data == null) {
             throw new HttpBadRequestException(
@@ -190,12 +191,13 @@ public abstract class HttpCommandProcessor<T extends HttpCommand> extends Abstra
         }
 
         for (int i = 0; i < expectedParamCount; i++) {
-            decoded[i] = URLDecoder.decode(encoded[i], StandardCharsets.UTF_8);
+            decoded[i] = URLDecoder.decode(encoded[i], StandardCharsets.UTF_8.name());
         }
         return decoded;
     }
 
-    protected String[] decodeParamsAndAuthenticate(HttpPostCommand cmd, int expectedParamCount) {
+    protected String[] decodeParamsAndAuthenticate(HttpPostCommand cmd, int expectedParamCount)
+    throws UnsupportedEncodingException {
         String[] params = decodeParams(cmd, expectedParamCount);
         if (!authenticate(cmd, params[0], params[1])) {
             throw new HttpForbiddenException();
@@ -216,8 +218,8 @@ public abstract class HttpCommandProcessor<T extends HttpCommand> extends Abstra
      */
     private boolean authenticate(@Nonnull HttpPostCommand command,
                                  @Nullable String userName,
-                                 @Nullable String pass) {
-        String decodedName = userName != null ? URLDecoder.decode(userName, StandardCharsets.UTF_8) : null;
+                                 @Nullable String pass) throws UnsupportedEncodingException {
+        String decodedName = userName != null ? URLDecoder.decode(userName, StandardCharsets.UTF_8.name()) : null;
         SecurityContext securityContext = getNode().getNodeExtension().getSecurityContext();
         String clusterName = getNode().getConfig().getClusterName();
         if (securityContext == null) {
@@ -226,7 +228,7 @@ public abstract class HttpCommandProcessor<T extends HttpCommand> extends Abstra
             }
             return clusterName.equals(decodedName);
         }
-        String decodedPass = pass != null ? URLDecoder.decode(pass, StandardCharsets.UTF_8) : null;
+        String decodedPass = pass != null ? URLDecoder.decode(pass, StandardCharsets.UTF_8.name()) : null;
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(decodedName, decodedPass);
         Boolean passed = Boolean.FALSE;
         try {
