@@ -755,6 +755,17 @@ public final class IOUtil {
         }
     }
 
+    public static byte[] toByteArray(InputStream is) throws IOException {
+        ByteArrayOutputStream os = null;
+        try {
+            os = new ByteArrayOutputStream();
+            drainTo(is, os);
+            return os.toByteArray();
+        } finally {
+            closeResource(os);
+        }
+    }
+
     public static void drainTo(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024];
         int n;

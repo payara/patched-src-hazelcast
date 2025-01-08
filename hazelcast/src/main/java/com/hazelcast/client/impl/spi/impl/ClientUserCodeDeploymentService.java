@@ -25,6 +25,7 @@ import com.hazelcast.client.impl.protocol.ClientMessage;
 import com.hazelcast.client.impl.protocol.codec.ClientDeployClassesCodec;
 import com.hazelcast.internal.namespace.UserCodeNamespaceService;
 import com.hazelcast.internal.nio.ClassLoaderUtil;
+import com.hazelcast.internal.nio.IOUtil;
 import com.hazelcast.jet.impl.util.ReflectionUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -76,7 +77,7 @@ public class ClientUserCodeDeploymentService {
                 if (is == null) {
                     throw new ClassNotFoundException(resource);
                 }
-                byte[] bytes = is.readAllBytes();
+                byte[] bytes = IOUtil.toByteArray(is);
                 classDefinitionList.add(new AbstractMap.SimpleEntry<>(className, bytes));
             } catch (IOException e) {
                 ignore(e);

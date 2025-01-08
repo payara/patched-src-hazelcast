@@ -19,6 +19,7 @@ package com.hazelcast.internal.namespace.impl;
 import com.hazelcast.client.impl.protocol.task.dynamicconfig.ResourceDefinitionHolder;
 import com.hazelcast.internal.config.ConfigDataSerializerHook;
 import com.hazelcast.internal.namespace.ResourceDefinition;
+import com.hazelcast.internal.nio.IOUtil;
 import com.hazelcast.jet.config.ResourceConfig;
 import com.hazelcast.jet.config.ResourceType;
 import com.hazelcast.nio.ObjectDataInput;
@@ -78,7 +79,7 @@ public class ResourceDefinitionImpl implements ResourceDefinition {
 
     private byte[] readPayloadFromUrl(String id, URL url) {
         try (InputStream is = url.openStream()) {
-            return is.readAllBytes();
+            return IOUtil.toByteArray(is);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not open stream for resource id " + id + " and URL " + url, e);
         }
