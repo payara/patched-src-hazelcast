@@ -35,6 +35,7 @@ import com.hazelcast.security.UsernamePasswordCredentials;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import java.security.Permission;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -256,7 +257,7 @@ public abstract class AuthenticationBaseMessageTask<P> extends AbstractMessageTa
             partitionsView = new ClusterViewListenerService.PartitionsView(Collections.EMPTY_MAP, -1);
         }
 
-        List<Map.Entry<UUID, List<Integer>>> partitions = partitionsView.partitions().entrySet().stream().toList();
+        List<Map.Entry<UUID, List<Integer>>> partitions = new ArrayList<>(partitionsView.partitions().entrySet());
 
         return encodeAuthenticationResponse(status, thisAddress, uuid, serializationVersion, serverVersion, partitionCount,
                 clusterId, failoverSupported, tpcPorts, tpcToken, membersView.getVersion(), membersView.getMembers(),
