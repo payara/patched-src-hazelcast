@@ -290,7 +290,8 @@ public final class ReflectionUtils {
             if (is == null) {
                 return null;
             } else {
-                return is.readAllBytes();
+                // Educated guess on intended behaviour, this entire method is not in 5.3.8.
+                return IOUtil.readFully(is);
             }
         }
     }
