@@ -30,9 +30,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.hazelcast.internal.serialization.impl.SerializationUtil.readNullableList;
 import static com.hazelcast.internal.serialization.impl.SerializationUtil.writeNullableList;
@@ -928,7 +928,7 @@ public class MapConfig implements IdentifiedDataSerializable, NamedConfig, Versi
         if (!getPartitionLostListenerConfigs().equals(that.getPartitionLostListenerConfigs())) {
             return false;
         }
-        if (!Set.copyOf(getIndexConfigs()).equals(Set.copyOf(that.getIndexConfigs()))) {
+        if (new HashSet<>(getIndexConfigs()).equals(new HashSet<>(that.getIndexConfigs()))) {
             return false;
         }
         if (!getAttributeConfigs().equals(that.getAttributeConfigs())) {
@@ -982,7 +982,7 @@ public class MapConfig implements IdentifiedDataSerializable, NamedConfig, Versi
         result = 31 * result + metadataPolicy.hashCode();
         result = 31 * result + (wanReplicationRef != null ? wanReplicationRef.hashCode() : 0);
         result = 31 * result + getEntryListenerConfigs().hashCode();
-        result = 31 * result + Set.copyOf(getIndexConfigs()).hashCode();
+        result = 31 * result + new HashSet<>(getIndexConfigs()).hashCode();
         result = 31 * result + getAttributeConfigs().hashCode();
         result = 31 * result + getQueryCacheConfigs().hashCode();
         result = 31 * result + getPartitionLostListenerConfigs().hashCode();
