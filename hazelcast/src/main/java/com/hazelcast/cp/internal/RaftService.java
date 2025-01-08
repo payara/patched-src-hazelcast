@@ -356,7 +356,7 @@ public class RaftService implements ManagedService, SnapshotAwareService<Metadat
                     + "Required: " + config.getCPMemberCount() + ", available: " + (members.size() + 1)));
         }
 
-        BiConsumer<Void, Throwable> callback = new BiConsumer<>() {
+        BiConsumer<Void, Throwable> callback = new BiConsumer<Void, Throwable>() {
             final AtomicInteger latch = new AtomicInteger(members.size());
             volatile Throwable failure;
 
