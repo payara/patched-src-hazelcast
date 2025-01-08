@@ -1548,7 +1548,7 @@ public class DefaultRecordStore extends AbstractEvictableRecordStore {
         ArrayList<Data> keys = new ArrayList<>();
         ArrayList<Record> records = new ArrayList<>();
         // we don't remove locked keys. These are clearable records.
-        forEach(new BiConsumer<>() {
+        forEach(new BiConsumer<Data, Record>() {
             final Set<Data> lockedKeySet = lockStore.getLockedKeys();
 
             @Override
@@ -1573,7 +1573,7 @@ public class DefaultRecordStore extends AbstractEvictableRecordStore {
         ArrayList<Data> keys = new ArrayList<>();
         ArrayList<Record> records = new ArrayList<>();
         // we don't remove locked keys. These are clearable records.
-        forEach(new BiConsumer<>() {
+        forEach(new BiConsumer<Data, Record>() {
             final Set<Data> lockedKeySet = lockStore.getLockedKeys();
 
             @Override
