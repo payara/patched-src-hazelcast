@@ -24,9 +24,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 
 import static com.hazelcast.internal.util.StringUtil.isNullOrEmpty;
 import static com.hazelcast.jet.Util.idToString;
@@ -87,7 +87,7 @@ public class JetClassLoader extends MapResourceClassLoader {
     protected Enumeration<URL> findResources(String name) {
         URL resourceUrl = findResource(name);
         return resourceUrl == null ? Collections.emptyEnumeration()
-                : Collections.enumeration(List.of(resourceUrl));
+                : Collections.enumeration(Arrays.asList(resourceUrl));
     }
 
     @Override
