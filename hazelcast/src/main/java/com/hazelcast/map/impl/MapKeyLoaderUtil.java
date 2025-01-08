@@ -91,7 +91,7 @@ public final class MapKeyLoaderUtil {
      */
     static Iterator<Map<Integer, List<Data>>> toBatches(final Iterator<Entry<Integer, Data>> entries,
                                                         final int maxBatch, Semaphore nodeWideLoadedKeyLimiter) {
-        return new UnmodifiableIterator<>() {
+        return new UnmodifiableIterator<Map<Integer, List<Data>>>() {
             @Override
             public boolean hasNext() {
                 return entries.hasNext();
