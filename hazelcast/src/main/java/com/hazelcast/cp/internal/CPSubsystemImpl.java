@@ -53,8 +53,8 @@ import com.hazelcast.spi.impl.NodeEngine;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -251,7 +251,7 @@ public class CPSubsystemImpl implements CPSubsystem {
                         returnTombstone,
                         serviceName,
                         ResourceRegistry::getDestroyedNames,
-                        (ResourceRegistry<?, ?> registry) -> Set.copyOf(registry.getResources().keySet())
+                        (ResourceRegistry<?, ?> registry) -> new HashSet<>(registry.getResources().keySet())
                 );
 
             case AtomicLongService.SERVICE_NAME:
