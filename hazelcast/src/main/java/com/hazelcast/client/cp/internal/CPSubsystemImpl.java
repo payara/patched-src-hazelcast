@@ -60,6 +60,7 @@ import com.hazelcast.cp.session.CPSessionManagementService;
 import com.hazelcast.internal.util.Clock;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.hazelcast.cp.internal.CPSubsystemImpl.CPMAP_LICENSE_MESSAGE;
 import static com.hazelcast.internal.util.ConcurrencyUtil.CALLER_RUNS;
@@ -177,7 +179,7 @@ public class CPSubsystemImpl implements CPSubsystem {
         ClientInvocationFuture future = invocation.invoke();
         try {
             return future.thenApplyAsync(cm ->
-                    List.<CPGroupId>copyOf(CPSubsystemGetCPGroupIdsCodec.decodeResponse(cm)),
+                    new ArrayList<CPGroupId>(CPSubsystemGetCPGroupIdsCodec.decodeResponse(cm)),
                     CALLER_RUNS
             ).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -214,7 +216,7 @@ public class CPSubsystemImpl implements CPSubsystem {
                     .get()
                     .stream()
                     .map(name -> (CPObjectInfo) new CPObjectInfoImpl(name, serviceName, groupId))
-                    .toList();
+                    .collect(Collectors.toList());
         } catch (InterruptedException | ExecutionException e) {
             throw new HazelcastException("Could not retrieve CP object infos", e);
         }
