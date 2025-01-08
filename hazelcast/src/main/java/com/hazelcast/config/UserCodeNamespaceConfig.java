@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -109,7 +110,7 @@ public class UserCodeNamespaceConfig
     }
 
     Set<ResourceDefinition> getResourceConfigs() {
-        return Set.copyOf(resourceDefinitions.values());
+        return new HashSet<>(resourceDefinitions.values());
     }
 
     @Override
