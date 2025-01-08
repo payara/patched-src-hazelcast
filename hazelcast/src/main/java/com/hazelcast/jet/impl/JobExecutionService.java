@@ -572,7 +572,8 @@ public class JobExecutionService implements DynamicMetricsProvider {
                           RawJobMetrics terminalMetrics;
                           if (collectMetrics) {
                               try (
-                                      var metricsRenderer = new JobMetricsCollector(nodeEngine.getLocalMember(), logger)
+                                      JobMetricsCollector metricsRenderer = new JobMetricsCollector(
+                                          nodeEngine.getLocalMember(), logger)
                               ) {
                                   nodeEngine.getMetricsRegistry().collectDynamicMetrics(metricsRenderer, singleton(execCtx));
                                   terminalMetrics = metricsRenderer.getMetrics();
