@@ -1112,7 +1112,7 @@ public class MasterJobContext {
         if (!mc.metricsEnabled()) {
             return;
         }
-        var executionMetrics = responses.stream()
+        List<RawJobMetrics> executionMetrics = responses.stream()
             .filter(e -> e.getValue() instanceof RawJobMetrics)
             .map(e -> (RawJobMetrics) e.getValue())
             .collect(toList());
@@ -1128,7 +1128,7 @@ public class MasterJobContext {
     }
 
     void collectMetrics(CompletableFuture<List<RawJobMetrics>> clientFuture) {
-        var executionManagerRef = executionManager;
+        MasterJobContext.ExecutionParticipantManager executionManagerRef = executionManager;
         if (mc.jobStatus() != RUNNING || executionManagerRef == null) {
             if (mc.jobStatus().isTerminal()) {
                 clientFuture.complete(persistentMetrics());
@@ -1138,7 +1138,7 @@ public class MasterJobContext {
             return;
         }
 
-        var runningParticipants = executionManagerRef.getRunningParticipants();
+        List<Address> runningParticipants = executionManagerRef.getRunningParticipants();
         if (runningParticipants.isEmpty()) {
             clientFuture.complete(
                 withJobMetrics(
@@ -1183,19 +1183,22 @@ public class MasterJobContext {
             return;
         }
 
-        var unexpectedExceptions = responses.stream().map(Entry::getValue).filter(Throwable.class::isInstance).findAny();
+        Optional<Object> unexpectedExceptions = responses.stream()
+            .map(Entry::getValue)
+            .filter(Throwable.class::isInstance)
+            .findAny();
         if (unexpectedExceptions.isPresent()) {
             clientFuture.completeExceptionally((Throwable) unexpectedExceptions.get());
             return;
         }
 
-        var executionResponses = executionManager.getSuccessfulResponses();
+        Map<Address, Object> executionResponses = executionManager.getSuccessfulResponses();
 
-        var inProcessParticipantMetricsStream = responses.stream()
-                .filter(entry -> nonNull(entry.getValue()) && !executionResponses.containsKey(entry.getKey().getAddress()))
-                .map((entry) -> (RawJobMetrics) entry.getValue());
+        Stream<RawJobMetrics> inProcessParticipantMetricsStream = responses.stream()
+            .filter(entry -> nonNull(entry.getValue()) && !executionResponses.containsKey(entry.getKey().getAddress()))
+            .map((entry) -> (RawJobMetrics) entry.getValue());
 
-        var metrics = Stream.concat(
+        List<RawJobMetrics> metrics = Stream.concat(
                 extractMetrics(executionResponses.values()).stream(),
                 inProcessParticipantMetricsStream
         ).collect(toList());
