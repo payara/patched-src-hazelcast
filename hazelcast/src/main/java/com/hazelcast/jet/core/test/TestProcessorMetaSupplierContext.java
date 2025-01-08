@@ -35,6 +35,7 @@ import javax.annotation.Nonnull;
 import java.net.UnknownHostException;
 import java.security.AccessControlException;
 import java.security.Permission;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -66,7 +67,8 @@ public class TestProcessorMetaSupplierContext implements ProcessorMetaSupplier.C
     @SuppressWarnings("java:S1313")
     public TestProcessorMetaSupplierContext() {
         try {
-            partitionAssignment = Map.of(new Address("1.2.3.4", 1), new int[]{0});
+            partitionAssignment = new HashMap<>();
+            partitionAssignment.put(new Address("1.2.3.4", 1), new int[]{0});
         } catch (UnknownHostException exception) {
             throw new RuntimeException(exception);
         }
