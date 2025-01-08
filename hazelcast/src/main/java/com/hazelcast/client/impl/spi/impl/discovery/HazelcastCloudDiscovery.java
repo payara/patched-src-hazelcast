@@ -180,7 +180,7 @@ public class HazelcastCloudDiscovery {
     }
 
     private static String readFrom(InputStream stream) {
-        Scanner scanner = (new Scanner(stream, StandardCharsets.UTF_8)).useDelimiter("\\A");
+        Scanner scanner = (new Scanner(stream, StandardCharsets.UTF_8.name())).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
 
