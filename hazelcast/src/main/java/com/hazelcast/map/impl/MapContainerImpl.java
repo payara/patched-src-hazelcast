@@ -192,7 +192,7 @@ public class MapContainerImpl implements MapContainer {
 
         @Override
         public Predicate<QueryableEntry> get() {
-            return new Predicate<>() {
+            return new Predicate<QueryableEntry>() {
                 private final long nowInMillis = Clock.currentTimeMillis();
 
                 @Override
