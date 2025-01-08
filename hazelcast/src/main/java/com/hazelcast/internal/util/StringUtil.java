@@ -90,7 +90,7 @@ public final class StringUtil {
         if (s == null) {
             return true;
         }
-        return s.isBlank();
+        return s.trim().isEmpty();
     }
 
     /**
