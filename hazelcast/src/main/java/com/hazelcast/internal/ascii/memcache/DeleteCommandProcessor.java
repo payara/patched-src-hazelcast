@@ -19,6 +19,7 @@ package com.hazelcast.internal.ascii.memcache;
 import com.hazelcast.internal.ascii.TextCommandConstants;
 import com.hazelcast.internal.ascii.TextCommandService;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -31,7 +32,11 @@ public class DeleteCommandProcessor extends MemcacheCommandProcessor<DeleteComma
     @Override
     public void handle(DeleteCommand command) {
         String key;
-        key = URLDecoder.decode(command.getKey(), StandardCharsets.UTF_8);
+        try {
+            key = URLDecoder.decode(command.getKey(), StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(String.format("failed to decode key [%s] using UTF-8", command.getKey()));
+        }
         String mapName = DEFAULT_MAP_NAME;
         int index = key.indexOf(':');
         if (index != -1) {
