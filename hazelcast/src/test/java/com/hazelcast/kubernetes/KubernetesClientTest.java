@@ -832,17 +832,17 @@ public class KubernetesClientTest {
 
     private static EndpointsList endpointsListResponse() {
         return endpointsList(
-                endpoints("my-release-hazelcast", new HashMap<>() {{
+                endpoints("my-release-hazelcast", new HashMap<String, String>() {{
                     put("192.168.0.25", "node-name-1");
                     put("172.17.0.5", "node-name-2");
                 }}),
-                endpoints("service-0", new HashMap<>() {{
+                endpoints("service-0", new HashMap<String, String>() {{
                     put("192.168.0.25", "node-name-1");
                 }}),
-                endpoints("hazelcast-0", new HashMap<>() {{
+                endpoints("hazelcast-0", new HashMap<String, String>() {{
                     put("192.168.0.25", "node-name-1");
                 }}),
-                endpoints("service-1", new HashMap<>() {{
+                endpoints("service-1", new HashMap<String, String>() {{
                     put("172.17.0.5", "node-name-2");
                 }}, Collections.singletonList(5702))
         );
@@ -850,17 +850,17 @@ public class KubernetesClientTest {
 
     private static String endpointsListResponseWithoutNodeName() throws JsonProcessingException {
         return WRITER.writeValueAsString(endpointsList(
-                endpoints("my-release-hazelcast", new HashMap<>() {{
+                endpoints("my-release-hazelcast", new HashMap<String, String>() {{
                     put("172.17.0.5", null);
                     put("192.168.0.25", null);
                 }}),
-                endpoints("service-0", new HashMap<>() {{
+                endpoints("service-0", new HashMap<String, String>() {{
                     put("192.168.0.25", null);
                 }}),
-                endpoints("hazelcast-0", new HashMap<>() {{
+                endpoints("hazelcast-0", new HashMap<String, String>() {{
                     put("192.168.0.25", null);
                 }}),
-                endpoints("service-1", new HashMap<>() {{
+                endpoints("service-1", new HashMap<String, String>() {{
                     put("172.17.0.5", null);
                 }}, Collections.singletonList(5702))
         ));
