@@ -21,7 +21,6 @@ import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.query.Predicate;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,6 +30,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Stream;
 
@@ -170,7 +170,7 @@ public class OrderedIndexStore extends BaseSingleValueIndexStore {
             boolean descending,
             Data lastEntryKeyData
     ) {
-        var entries = recordMap.get(value);
+        NavigableMap<Data, QueryableEntry> entries = recordMap.get(value);
 
         if (entries == null) {
             return emptyIterator();
@@ -277,17 +277,17 @@ public class OrderedIndexStore extends BaseSingleValueIndexStore {
             return emptyIterator();
         }
 
-        var subMap = descending
+        ConcurrentNavigableMap<Comparable, NavigableMap<Data, QueryableEntry>> subMap = descending
                 ? recordMap.subMap(from, fromInclusive, to, toInclusive).descendingMap()
                 : recordMap.subMap(from, fromInclusive, to, toInclusive);
 
 
-        var indexKeyForLastEntryKeyData = descending ? to : from;
+        Comparable indexKeyForLastEntryKeyData = descending ? to : from;
         return subMap.entrySet()
                 .stream()
                 .map(
                         (Entry<Comparable, NavigableMap<Data, QueryableEntry>> es) -> {
-                            var map = descending ? es.getValue().descendingMap() : es.getValue();
+                            NavigableMap<Data, QueryableEntry> map = descending ? es.getValue().descendingMap() : es.getValue();
                             if (useCursor && SPECIAL_AWARE_COMPARATOR.compare(indexKeyForLastEntryKeyData, es.getKey()) == 0) {
                                 map = map.tailMap(lastEntryKeyData, false);
                             }
@@ -505,7 +505,15 @@ public class OrderedIndexStore extends BaseSingleValueIndexStore {
         public int compare(Data o1, Data o2) {
             byte[] thisBytes = o1.toByteArray();
             byte[] thatBytes = o2.toByteArray();
-            return Arrays.compare(thisBytes, thatBytes);
+            int minLen = Math.min(thisBytes.length, thatBytes.length);
+            for (int i = 0; i < minLen; i++) {
+                int diff = thisBytes[i] - thatBytes[i];
+                if (diff == 0) {
+                    continue;
+                }
+                return diff;
+            }
+            return thisBytes.length - thatBytes.length;
         }
     }
 }
