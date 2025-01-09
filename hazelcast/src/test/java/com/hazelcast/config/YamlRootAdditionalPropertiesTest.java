@@ -48,11 +48,9 @@ public class YamlRootAdditionalPropertiesTest {
     @Test
     public void testMisIndentedMemberConfigProperty_failsValidation() {
         SchemaViolationConfigurationException actual = assertThrows(SchemaViolationConfigurationException.class,
-                () -> buildConfig("""
-                        hazelcast:
-                          instance-name: 'my-instance'
-                        cluster-name: 'my-cluster'
-                        """)
+                () -> buildConfig("hazelcast:"
+                    + "\n\tinstance-name: 'my-instance'"
+                    + "\ncluster-name: 'my-cluster'")
         );
         assertEquals(format("Mis-indented hazelcast configuration property found: [cluster-name]%n"
                 + "Note: you can disable this validation by passing the "
@@ -62,30 +60,24 @@ public class YamlRootAdditionalPropertiesTest {
     @Test
     public void misIndentedRootProperty_validationDisabled() {
         indentationCheckEnabled.setOrClearProperty("false");
-        buildConfig("""
-                hazelcast:
-                  instance-name: 'my-instance'
-                cluster-name: 'my-cluster'
-                """);
+        buildConfig("hazelcast:"
+            + "\n\tinstance-name: 'my-instance'"
+            + "\ncluster-name: 'my-cluster'");
     }
 
     @Test
     public void testMisIndented_NonConfigProperty_passes() {
-        buildConfig("""
-                hazelcast:
-                  instance-name: 'my-instance'
-                other-prop: ''
-                """);
+        buildConfig("hazelcast:"
+            + "\n\tinstance-name: 'my-instance'"
+            + "\nother-prop: ''");
     }
 
     @Test
     public void testMisIndented_ClientConfigProperty_failsValidation() {
         SchemaViolationConfigurationException actual = assertThrows(SchemaViolationConfigurationException.class,
-                () -> YamlClientConfigBuilderTest.buildConfig("""
-                        hazelcast-client:
-                          instance-name: 'my-instance'
-                        client-labels: 'my-lbl'
-                        """)
+                () -> YamlClientConfigBuilderTest.buildConfig("hazelcast-client:"
+                    + "\n\tinstance-name: 'my-instance'"
+                    + "\nclient-labels: 'my-lbl'")
         );
         assertEquals(format("Mis-indented hazelcast configuration property found: [client-labels]%n"
                 + "Note: you can disable this validation by passing the "
@@ -95,11 +87,9 @@ public class YamlRootAdditionalPropertiesTest {
     @Test
     public void multipleMisIndented_configProps() {
         SchemaViolationConfigurationException actual = assertThrows(SchemaViolationConfigurationException.class,
-                () -> YamlClientConfigBuilderTest.buildConfig("""
-                        hazelcast-client: {}
-                        instance-name: 'my-instance'
-                        client-labels: 'my-lbl'
-                        """)
+                () -> YamlClientConfigBuilderTest.buildConfig("hazelcast-client: {}"
+                    + "\ninstance-name: 'my-instance'"
+                    + "\nclient-labels: 'my-lbl'")
         );
         assertEquals(new SchemaViolationConfigurationException(format("2 schema violations found%n"
                 + "Note: you can disable this validation by passing the "
