@@ -24,11 +24,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.AbstractMap;
 import java.util.Map.Entry;
 
 import static com.hazelcast.test.HazelcastTestSupport.sleepMillis;
 import static java.util.Comparator.comparingLong;
-import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -48,50 +48,71 @@ public class ReadOptimizedLruCacheTest {
 
     @Test
     public void test_cleanup() {
-        assertEntries(entry(1, 1), entry(2, 2), entry(3, 3));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(1, 1),
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3));
 
         put(4, 4);
-        assertEntries(entry(3, 3), entry(4, 4));
+        assertEntries(new AbstractMap.SimpleImmutableEntry<>(3, 3), new AbstractMap.SimpleImmutableEntry<>(4, 4));
     }
 
     @Test
     public void test_changeAccessTime() {
         cache.get(1); // Access makes it the most recently used one
-        assertEntries(entry(2, 2), entry(3, 3), entry(1, 1));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3),
+            new AbstractMap.SimpleImmutableEntry<>(1, 1));
 
         put(4, 4);
-        assertEntries(entry(1, 1), entry(4, 4));
+        assertEntries(new AbstractMap.SimpleImmutableEntry<>(1, 1), new AbstractMap.SimpleImmutableEntry<>(4, 4));
     }
 
     @Test
     public void test_computeIfAbsent() {
         cache.computeIfAbsent(1, k -> 1); // Access makes it the most recently used one
-        assertEntries(entry(2, 2), entry(3, 3), entry(1, 1));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3),
+            new AbstractMap.SimpleImmutableEntry<>(1, 1));
 
         cache.computeIfAbsent(4, k -> 4);
-        assertEntries(entry(1, 1), entry(4, 4));
+        assertEntries(new AbstractMap.SimpleImmutableEntry<>(1, 1), new AbstractMap.SimpleImmutableEntry<>(4, 4));
 
         sleepMillis(20);
         cache.computeIfAbsent(2, k -> 2);
-        assertEntries(entry(1, 1), entry(4, 4), entry(2, 2));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(1, 1),
+            new AbstractMap.SimpleImmutableEntry<>(4, 4),
+            new AbstractMap.SimpleImmutableEntry<>(2, 2));
     }
 
     @Test
     public void when_nullValueIsProvided_then_reject() {
         assertThatThrownBy(() -> put(1, null)).hasMessage("Null values are disallowed");
-        assertEntries(entry(1, 1), entry(2, 2), entry(3, 3));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(1, 1),
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3));
 
         assertThatCode(() -> cache.computeIfAbsent(1, k -> null)).doesNotThrowAnyException();
-        assertEntries(entry(2, 2), entry(3, 3), entry(1, 1));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3),
+            new AbstractMap.SimpleImmutableEntry<>(1, 1));
 
         assertThatThrownBy(() -> cache.computeIfAbsent(4, k -> null)).hasMessage("Null values are disallowed");
-        assertEntries(entry(2, 2), entry(3, 3), entry(1, 1));
+        assertEntries(
+            new AbstractMap.SimpleImmutableEntry<>(2, 2),
+            new AbstractMap.SimpleImmutableEntry<>(3, 3),
+            new AbstractMap.SimpleImmutableEntry<>(1, 1));
     }
 
     @Test
     public void test_remove_getOrDefault() {
         cache.remove(2);
-        assertEntries(entry(1, 1), entry(3, 3));
+        assertEntries(new AbstractMap.SimpleImmutableEntry<>(1, 1), new AbstractMap.SimpleImmutableEntry<>(3, 3));
 
         assertThat(cache.get(2)).isNull();
         assertThat(cache.getOrDefault(2, 2)).isEqualTo(2);
@@ -105,10 +126,10 @@ public class ReadOptimizedLruCacheTest {
     }
 
     @SafeVarargs
-    private void assertEntries(Entry<Integer, Integer>... entries) {
+    private final void assertEntries(Entry<Integer, Integer>... entries) {
         assertThat(cache.cache.entrySet().stream()
                 .sorted(comparingLong(e -> e.getValue().timestamp))
-                .map(e -> entry(e.getKey(), e.getValue().value))
+                .map(e -> (Entry<Integer, Integer>) (new AbstractMap.SimpleImmutableEntry<>(e.getKey(), e.getValue().value)))
         ).containsExactly(entries);
     }
 }
