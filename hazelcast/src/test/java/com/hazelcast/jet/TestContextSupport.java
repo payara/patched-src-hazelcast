@@ -114,7 +114,8 @@ public final class TestContextSupport {
 
         @Override
         public void init(@Nonnull Context context) throws Exception {
-            if (context instanceof TestProcessorSupplierContext c) {
+            if (context instanceof TestProcessorSupplierContext) {
+                TestProcessorSupplierContext c = (TestProcessorSupplierContext) context;
                 NodeEngineImpl nodeEngine = Util.getNodeEngine(c.hazelcastInstance());
                 context = new ProcCtx(nodeEngine, c.jobId(), c.executionId(), c.jobConfig(),
                         c.logger(), c.vertexName(), 1, 1,

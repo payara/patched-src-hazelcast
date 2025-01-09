@@ -150,7 +150,8 @@ public abstract class JetTestSupport extends HazelcastTestSupport {
                     ditchJob(job, instances.toArray(new HazelcastInstance[0]));
                 }
 
-                if (instance instanceof HazelcastInstanceImpl hazelcastInstanceImpl) {
+                if (instance instanceof HazelcastInstanceImpl) {
+                    HazelcastInstanceImpl hazelcastInstanceImpl = (HazelcastInstanceImpl) instance;
                     JobClassLoaderService jobClassLoaderService = hazelcastInstanceImpl.node
                             .getNodeEngine()
                             .<JetServiceBackend>getService(SERVICE_NAME)
