@@ -23,6 +23,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -141,36 +142,36 @@ public class IterableUtilTest {
 
     @Test
     public void elementNotFound() {
-        var list = List.of(1, 2, 3, 4, 5, 6);
-        var actual = IterableUtil.skipFirst(list.iterator(), v -> v > 30);
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Iterator<Integer> actual = IterableUtil.skipFirst(list.iterator(), v -> v > 30);
         assertThatThrownBy(actual::next).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
     public void skipFirst() {
-        var list = List.of(1, 2, 3, 4, 5, 6);
-        var actual = IterableUtil.skipFirst(list.iterator(), v -> v > 3);
-        var expected = List.of(4, 5, 6);
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Iterator<Integer> actual = IterableUtil.skipFirst(list.iterator(), v -> v > 3);
+        List<Integer> expected = Arrays.asList(4, 5, 6);
         assertIteratorsEquals(expected, actual);
     }
 
     @Test
     public void skipFirstAll() {
-        var list = List.of(1, 2, 3, 4, 5, 6);
-        var actual = IterableUtil.skipFirst(list.iterator(), v -> v > 0);
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Iterator<Integer> actual = IterableUtil.skipFirst(list.iterator(), v -> v > 0);
         assertIteratorsEquals(list, actual);
     }
 
     @Test
     public void skipFirstNone() {
-        var list = List.of(1, 2, 3, 4, 5, 6);
-        var actual = IterableUtil.skipFirst(list.iterator(), v -> v > 10);
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Iterator<Integer> actual = IterableUtil.skipFirst(list.iterator(), v -> v > 10);
         assertIteratorsEquals(Collections.emptyList(), actual);
     }
 
     @Test
     public void skipFirstEmptyCollection() {
-        var actual = IterableUtil.skipFirst(Collections.emptyIterator(), v -> false);
+        Iterator<Object> actual = IterableUtil.skipFirst(Collections.emptyIterator(), v -> false);
         assertIteratorsEquals(Collections.emptyList(), actual);
     }
 
@@ -183,7 +184,7 @@ public class IterableUtilTest {
 
     @Test
     public void prependNullToEmptyIterator() {
-        var actual = IterableUtil.prepend(null, Collections.emptyIterator());
+        Iterator<Object> actual = IterableUtil.prepend(null, Collections.emptyIterator());
         assertIteratorsEquals(Collections.emptyList(), actual);
     }
 
@@ -196,22 +197,22 @@ public class IterableUtilTest {
 
     @Test
     public void prependNullElement() {
-        List<Integer> list = List.of(1, 2, 3);
-        var actual = IterableUtil.prepend(null, list.iterator());
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        Iterator<Integer> actual = IterableUtil.prepend(null, list.iterator());
         assertIteratorsEquals(list, actual);
     }
 
     @Test
     public void prependEmptyIterator() {
-        var actual = IterableUtil.prepend(1, Collections.emptyIterator());
-        assertIteratorsEquals(List.of(1), actual);
+        Iterator<Integer> actual = IterableUtil.prepend(1, Collections.emptyIterator());
+        assertIteratorsEquals(Arrays.asList(1), actual);
     }
 
     @Test
     public void prepend() {
-        List<Integer> list = List.of(1, 2, 3);
-        var actual = IterableUtil.prepend(0, list.iterator());
-        assertIteratorsEquals(List.of(0, 1, 2, 3), actual);
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        Iterator<Integer> actual = IterableUtil.prepend(0, list.iterator());
+        assertIteratorsEquals(Arrays.asList(0, 1, 2, 3), actual);
     }
 
     private <T> void assertIteratorsEquals(List<T> expected, Iterator<T> actual) {
