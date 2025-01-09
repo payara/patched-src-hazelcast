@@ -47,6 +47,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -182,7 +183,7 @@ public class ClientIndexStatsTest extends LocalIndexStatsTest {
                 .addIndexConfig(new IndexConfig(IndexType.SORTED, "this").setName("index"));
         member1.getConfig().addMapConfig(mapWithIndex);
 
-        var clientMap = instance.getMap(indexMapName);
+        IMap<Object, Object> clientMap = instance.getMap(indexMapName);
 
         // when
         actionBeforeTest.accept(indexMapName);
@@ -193,7 +194,7 @@ public class ClientIndexStatsTest extends LocalIndexStatsTest {
         for (int i = 0; i < 100; ++i) {
             assertThat(clientMap.entrySet(Predicates.equal("this", i)))
                     .hasSize(1)
-                    .containsOnly(Map.entry(i, i));
+                    .containsOnly(new AbstractMap.SimpleImmutableEntry<>(i, i));
         }
 
         // then
