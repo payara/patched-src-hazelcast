@@ -326,13 +326,14 @@ public class PagingPredicateTest extends HazelcastTestSupport {
             map.set(i, i);
         }
 
-        int resultSize = map.entrySet(new PagingPredicateImpl<>(Predicates.equal("this", size), pageSize) {
-            @Override
-            @SuppressWarnings("rawtypes")
-            public boolean apply(Map.Entry mapEntry) {
-                fail("full scan is not expected");
-                return false;
-            }
+        int resultSize = map.entrySet(
+            new PagingPredicateImpl<Integer, Integer>(Predicates.equal("this", size), pageSize) {
+                @Override
+                @SuppressWarnings("rawtypes")
+                public boolean apply(Map.Entry mapEntry) {
+                    fail("full scan is not expected");
+                    return false;
+                }
         }).size();
         assertEquals(0, resultSize);
     }
@@ -423,7 +424,7 @@ public class PagingPredicateTest extends HazelcastTestSupport {
 
         map.addIndex(IndexType.SORTED, "id");
 
-        var innerPredicate = Predicates.lessThan("id", 2);
+        Predicate<Object, Object> innerPredicate = Predicates.lessThan("id", 2);
         PagingPredicate<Integer, Employee> predicate = Predicates.pagingPredicate(innerPredicate, 2);
 
         Collection<Employee> values;
