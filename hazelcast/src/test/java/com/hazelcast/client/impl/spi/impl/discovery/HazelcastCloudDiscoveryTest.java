@@ -49,53 +49,51 @@ import static org.junit.Assert.assertEquals;
 @Category(QuickTest.class)
 public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
 
-    private static final String RESPONSE = """
-            [
-              {
-                "private-address": "10.47.0.8",
-                "public-address": "54.213.63.142:32298"
-              },
-              {
-                "private-address": "10.47.0.9",
-                "public-address": "54.245.77.185:32298"
-              },
-              {
-                "private-address": "10.47.0.10",
-                "public-address": "54.186.232.37:32298"
-              }
-            ]""";
+    private static final String RESPONSE = "["
+        + "\n\t{"
+        + "\n\t\t\"private-address\": \"10.47.0.8\","
+        + "\n\t\t\"public-address\": \"54.213.63.142:32298\""
+        + "\n\t},"
+        + "\n\t{"
+        + "\n\t\t\"private-address\": \"10.47.0.9\","
+        + "\n\t\t\"public-address\": \"54.245.77.185:32298\""
+        + "\n\t},"
+        + "\n\t{"
+        + "\n\t\t\"private-address\": \"10.47.0.10\","
+        + "\n\t\t\"public-address\": \"54.186.232.37:32298\""
+        + "\n\t}"
+        + "\n]";
 
-    private static final String TPC_ENABLED_RESPONSE = """
-            [
-              {
-                "private-address": "10.47.0.8:30000",
-                "public-address": "54.213.63.142:32298",
-                "tpc-ports": [
-                  {
-                    "private-port": 40000,
-                    "public-port": 42298
-                  },
-                  {
-                    "private-port": 40001,
-                    "public-port": 42299
-                  }
-                ]
-              },
-              {
-                "private-address": "10.47.0.9:30000",
-                "public-address": "54.245.77.185:32298",
-                "tpc-ports": [
-                  {
-                    "private-port": 32000,
-                    "public-port": 40250
-                  },
-                  {
-                    "private-port": 32001,
-                    "public-port": 40251
-                  }
-                ]
-              }
-            ]""";
+    private static final String TPC_ENABLED_RESPONSE = "["
+        + "\n\t{"
+        + "\n\t\t\"private-address\": \"10.47.0.8:30000\","
+        + "\n\t\t\"public-address\": \"54.213.63.142:32298\","
+        + "\n\t\t\"tpc-ports\": ["
+        + "\n\t\t\t{"
+        + "\n\t\t\t\t\"private-port\": 40000,"
+        + "\n\t\t\t\t\"public-port\": 42298"
+        + "\n\t\t\t},"
+        + "\n\t\t\t{"
+        + "\n\t\t\t\t\"private-port\": 40001,"
+        + "\n\t\t\t\t\"public-port\": 42299"
+        + "\n\t\t\t}"
+        + "\n\t\t]"
+        + "\n\t},"
+        + "\n\t{"
+        + "\n\t\t\"private-address\": \"10.47.0.9:30000\","
+        + "\n\t\t\"public-address\": \"54.245.77.185:32298\","
+        + "\n\t\t\"tpc-ports\": ["
+        + "\n\t\t\t{"
+        + "\n\t\t\t\t\"private-port\": 32000,"
+        + "\n\t\t\t\t\"public-port\": 40250"
+        + "\n\t\t\t},"
+        + "\n\t\t\t{"
+        + "\n\t\t\t\t\"private-port\": 32001,"
+        + "\n\t\t\t\t\"public-port\": 40251"
+        + "\n\t\t\t}"
+        + "\n\t\t]"
+        + "\n\t}"
+        + "\n]";
 
     private static final String NOT_FOUND_RESPONSE = "HTTP/1.1 404 Not Found\nContent-Length: 0\n\n";
     private static final String VALID_TOKEN = "validToken";
@@ -110,11 +108,17 @@ public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
             if (requestURI.getPath().equals("/cluster/discovery")) {
                 String[] split = requestURI.getQuery().split("=");
                 if ("token".equals(split[0])) {
-                    String response = switch (split[1]) {
-                        case VALID_TOKEN -> RESPONSE;
-                        case VALID_TPC_TOKEN -> TPC_ENABLED_RESPONSE;
-                        default -> throw new IllegalStateException("Unexpected token");
-                    };
+                    String response;
+                    switch (split[1]) {
+                        case VALID_TOKEN:
+                            response = RESPONSE;
+                            break;
+                        case VALID_TPC_TOKEN:
+                            response = TPC_ENABLED_RESPONSE;
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected token");
+                    }
 
                     t.sendResponseHeaders(200, response.getBytes().length);
                     try (OutputStream os = t.getResponseBody()) {
@@ -207,17 +211,16 @@ public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
 
     @Test
     public void testJsonResponseParse_withDifferentPortOnPrivateAddress() throws IOException {
-        JsonValue jsonResponse = Json.parse("""
-                [
-                  {
-                    "private-address": "100.96.5.1:5701",
-                    "public-address": "10.113.44.139:31115"
-                  },
-                  {
-                    "private-address": "100.96.4.2:5701",
-                    "public-address": "10.113.44.130:31115"
-                  }
-                ]""");
+        JsonValue jsonResponse = Json.parse("["
+                + "\n\t{"
+                + "\n\t\t\"private-address\": \"100.96.5.1:5701\","
+                + "\n\t\t\"public-address\": \"10.113.44.139:31115\""
+                + "\n\t},"
+                + "\n\t{"
+                + "\n\t\t\"private-address\": \"100.96.4.2:5701\","
+                + "\n\t\t\"public-address\": \"10.113.44.130:31115\""
+                + "\n\t}"
+                + "\n]");
         HazelcastCloudDiscovery.DiscoveryResponse response = HazelcastCloudDiscovery.parseJsonResponse(jsonResponse, false);
         Map<Address, Address> privateToPublic = response.getPrivateToPublicAddresses();
 
@@ -234,17 +237,16 @@ public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
 
     @Test
     public void testJsonResponseParse() throws IOException {
-        JsonValue jsonResponse = Json.parse("""
-                [
-                  {
-                    "private-address": "100.96.5.1",
-                    "public-address": "10.113.44.139:31115"
-                  },
-                  {
-                    "private-address": "100.96.4.2",
-                    "public-address": "10.113.44.130:31115"
-                  }
-                ]""");
+        JsonValue jsonResponse = Json.parse("["
+            + "\n\t{"
+            + "\n\t\t\"private-address\": \"100.96.5.1\","
+            + "\n\t\t\"public-address\": \"10.113.44.139:31115\""
+            + "\n\t},"
+            + "\n\t{"
+            + "\n\t\t\"private-address\": \"100.96.4.2\","
+            + "\n\t\t\"public-address\": \"10.113.44.130:31115\""
+            + "\n\t}"
+            + "\n]");
         HazelcastCloudDiscovery.DiscoveryResponse response = HazelcastCloudDiscovery.parseJsonResponse(jsonResponse, false);
         Map<Address, Address> privateToPublic = response.getPrivateToPublicAddresses();
 
@@ -261,19 +263,18 @@ public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
 
     @Test
     public void testJsonResponseParse_withTpc() throws IOException {
-        JsonValue jsonResponse = Json.parse("""
-                [
-                  {
-                    "private-address": "10.96.5.1:30000",
-                    "public-address": "100.113.44.139:31115",
-                    "tpc-ports": [
-                      {
-                        "private-port": 40000,
-                        "public-port": 32115
-                      }
-                    ]
-                  }
-                ]""");
+        JsonValue jsonResponse = Json.parse("["
+                + "\n\t{"
+                + "\n\t\t\"private-address\": \"10.96.5.1:30000\","
+                + "\n\t\t\"public-address\": \"100.113.44.139:31115\","
+                + "\n\t\t\"tpc-ports\": ["
+                + "\n\t\t\t{"
+                + "\n\t\t\t\t\"private-port\": 40000,"
+                + "\n\t\t\t\t\"public-port\": 32115"
+                + "\n\t\t\t}"
+                + "\n\t\t]"
+                + "\n\t}"
+                + "\n]");
         HazelcastCloudDiscovery.DiscoveryResponse response = HazelcastCloudDiscovery.parseJsonResponse(jsonResponse, true);
         Map<Address, Address> privateToPublic = response.getPrivateToPublicAddresses();
 
@@ -289,19 +290,18 @@ public class HazelcastCloudDiscoveryTest extends ClientTestSupport {
 
     @Test
     public void testJsonResponseParse_withTpc_whenTpcIsDisabled() throws IOException {
-        JsonValue jsonResponse = Json.parse("""
-                [
-                  {
-                    "private-address": "10.96.5.1:30000",
-                    "public-address": "100.113.44.139:31115",
-                    "tpc-ports": [
-                      {
-                        "private-port": 40000,
-                        "public-port": 32115
-                      }
-                    ]
-                  }
-                ]""");
+        JsonValue jsonResponse = Json.parse("["
+                + "\n\t{"
+                + "\n\t\t\"private-address\": \"10.96.5.1:30000\","
+                + "\n\t\t\"public-address\": \"100.113.44.139:31115\","
+                + "\n\t\t\"tpc-ports\": ["
+                + "\n\t\t\t{"
+                + "\n\t\t\t\t\"private-port\": 40000,"
+                + "\n\t\t\t\t\"public-port\": 32115"
+                + "\n\t\t\t}"
+                + "\n\t\t]"
+                + "\n\t}"
+                + "\n]");
         HazelcastCloudDiscovery.DiscoveryResponse response = HazelcastCloudDiscovery.parseJsonResponse(jsonResponse, false);
         Map<Address, Address> privateToPublic = response.getPrivateToPublicAddresses();
 
