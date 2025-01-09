@@ -72,7 +72,7 @@ public class MapConfigurationPassiveTest extends HazelcastTestSupport {
         MapConfig mapWithIndex = new MapConfig(mapWithIndexName)
                 .addIndexConfig(new IndexConfig(IndexType.SORTED, "this"));
         hz.getConfig().addMapConfig(mapWithIndex);
-        var map = hz.getMap(mapWithIndexName);
+        IMap<Object, Object> map = hz.getMap(mapWithIndexName);
 
         waitAllForSafeState(instances);
         changeClusterStateEventually(instances[0], ClusterState.PASSIVE);
