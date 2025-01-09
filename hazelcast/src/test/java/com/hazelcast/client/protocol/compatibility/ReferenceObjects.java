@@ -105,6 +105,7 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -992,16 +993,16 @@ public class ReferenceObjects {
     );
 
     public static WanConsumerConfigHolder aWanConsumerConfigHolder =
-            new WanConsumerConfigHolder(aBoolean, aString,aData, Map.of(aString, aData));
+            new WanConsumerConfigHolder(aBoolean, aString,aData, mapOf(aString, aData));
     public static List<WanCustomPublisherConfigHolder> aListOfWanCustomPublisherConfigsHolders =
-            Collections.singletonList(new WanCustomPublisherConfigHolder(aString, aString, aData, Map.of(aString, aData)));
+            Collections.singletonList(new WanCustomPublisherConfigHolder(aString, aString, aData, mapOf(aString, aData)));
     public static List<WanBatchPublisherConfigHolder> aListOfWanBatchPublisherConfigHolders =
             Collections.singletonList(
                     new WanBatchPublisherConfigHolder(
                             aString,
                             aString,
                             aData,
-                            Map.of(aString, aData),
+                            mapOf(aString, aData),
                             aString,
                             aBoolean,
                             aByte,
@@ -1018,13 +1019,13 @@ public class ReferenceObjects {
                             aLong,
                             aLong,
                             aString,
-                            new AwsConfig(aString, aBoolean, aBoolean, Map.of(aString, aString)),
-                            new GcpConfig(aString, aBoolean, aBoolean, Map.of(aString, aString)),
-                            new AzureConfig(aString, aBoolean, aBoolean, Map.of(aString, aString)),
-                            new KubernetesConfig(aString, aBoolean, aBoolean, Map.of(aString, aString)),
-                            new EurekaConfig(aString, aBoolean, aBoolean, Map.of(aString, aString)),
+                            new AwsConfig(aString, aBoolean, aBoolean, mapOf(aString, aString)),
+                            new GcpConfig(aString, aBoolean, aBoolean, mapOf(aString, aString)),
+                            new AzureConfig(aString, aBoolean, aBoolean, mapOf(aString, aString)),
+                            new KubernetesConfig(aString, aBoolean, aBoolean, mapOf(aString, aString)),
+                            new EurekaConfig(aString, aBoolean, aBoolean, mapOf(aString, aString)),
                             new DiscoveryConfigHolder(
-                                    Collections.singletonList(new DiscoveryStrategyConfigHolder(aString, Map.of(aString, aData))),
+                                    Collections.singletonList(new DiscoveryStrategyConfigHolder(aString, mapOf(aString, aData))),
                                     aData,
                                     aData,
                                     aString
@@ -1036,4 +1037,10 @@ public class ReferenceObjects {
 
     public static List<ResourceDefinitionHolder> aListOfResourceDefinitionHolders =
             Collections.singletonList(new ResourceDefinitionHolder(aString, anInt, aByteArray, aString));
+    
+    private static <K, V> Map<K, V> mapOf (K key, V value) {
+        Map<K,V> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
 }
