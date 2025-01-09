@@ -31,6 +31,7 @@ import com.hazelcast.instance.BuildInfoProvider;
 import com.hazelcast.instance.impl.Node;
 import com.hazelcast.instance.impl.TestUtil;
 import com.hazelcast.internal.cluster.impl.ClusterServiceImpl;
+import com.hazelcast.internal.nio.IOUtil;
 import com.hazelcast.internal.nio.Packet;
 import com.hazelcast.internal.partition.IPartition;
 import com.hazelcast.internal.partition.InternalPartitionService;
@@ -67,15 +68,12 @@ import org.junit.function.ThrowingRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.StackWalker.Option;
-import java.lang.StackWalker.StackFrame;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -957,7 +955,7 @@ public abstract class HazelcastTestSupport {
             actualList.add(object);
         }
 
-        var expectedList = asList(expected);
+        List<Object> expectedList = asList(expected);
 
         assertEquals("size should match", expectedList.size(), actualList.size());
         assertEquals(expectedList, actualList);
@@ -1466,12 +1464,14 @@ public abstract class HazelcastTestSupport {
      * It may also fail on test class hierarchies (the annotated class has to be in the stack trace).
      */
     public static Collection<Class<?>> getTestCategories() {
-        Collection<Class<?>> testCategories = acceptOnStackTrace((frame, results) -> {
+        Collection<Class<?>> testCategories = acceptOnStackTrace((element, results) -> {
             try {
-                Class<?> clazz = frame.getDeclaringClass();
+                String className = element.getClassName();
+                Class<?> clazz = Class.forName(className);
                 Category annotation = clazz.getAnnotation(Category.class);
                 if (annotation != null) {
-                    Collections.addAll(results, annotation.value());
+                    List<Class<?>> categoryList = asList(annotation.value());
+                    results.addAll(categoryList);
                 }
             } catch (Exception ignored) {
             }
@@ -1613,10 +1613,12 @@ public abstract class HazelcastTestSupport {
      * result from the {@code BiConsumer} should be added to the {@code results} list which is
      * returned as the result of this method.
      */
-    private static <V> Collection<V> acceptOnStackTrace(BiConsumer<StackFrame, Collection<V>> consumer) {
+    private static <V> Collection<V> acceptOnStackTrace(BiConsumer<StackTraceElement, Collection<V>> consumer) {
         Collection<V> results = new ArrayList<>();
-        StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE)
-                .forEach(stackFrame -> consumer.accept(stackFrame, results));
+        StackTraceElement[] stackTrace = new Exception().getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            consumer.accept(stackTraceElement, results);
+        }
         return results;
     }
 
@@ -1635,7 +1637,7 @@ public abstract class HazelcastTestSupport {
      */
     protected static byte[] getTestFileBytes(File testFile) {
         try (InputStream is = testFile.toURI().toURL().openStream()) {
-            return is.readAllBytes();
+            return IOUtil.toByteArray(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
