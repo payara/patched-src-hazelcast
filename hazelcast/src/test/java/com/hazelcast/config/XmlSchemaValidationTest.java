@@ -45,14 +45,12 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicateNetworkConfig() {
         expectDuplicateElementError("network", () -> {
-            String networkConfig = """
-                        <network>
-                            <join>
-                                <multicast enabled="false"/>
-                                <tcp-ip enabled="true"/>
-                            </join>
-                        </network>
-                    """;
+            String networkConfig = "<network>"
+                + "\n\t<join>"
+                + "\n\t\t<multicast enabled=\"false\"/>"
+                + "\n\t\t<tcp-ip enabled=\"true\"/>"
+                + "\n\t</join>"
+                + "\n</network>";
             buildConfig(HAZELCAST_START_TAG + networkConfig + networkConfig + HAZELCAST_END_TAG);
         });
     }
@@ -68,11 +66,9 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicatePropertiesConfig() {
         expectDuplicateElementError("properties", () -> {
-            String propertiesConfig = """
-                        <properties>
-                            <property name='foo'>fooval</property>
-                        </properties>
-                    """;
+            String propertiesConfig = "<properties>"
+                + "\n\t<property name='foo'>fooval</property>"
+                + "\n</properties>";
             buildConfig(HAZELCAST_START_TAG + propertiesConfig + propertiesConfig + HAZELCAST_END_TAG);
         });
     }
@@ -80,13 +76,11 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicatePartitionGroupConfig() {
         expectDuplicateElementError("partition-group", () -> {
-            String partitionConfig = """
-                       <partition-group>
-                          <member-group>
-                              <interface>foo</interface>
-                          </member-group>
-                       </partition-group>
-                    """;
+            String partitionConfig = "<partition-group>"
+                + "\n\t<member-group>"
+                + "\n\t\t<interface>foo</interface>"
+                + "\n\t</member-group>"
+                + "\n</partition-group>";
             buildConfig(HAZELCAST_START_TAG + partitionConfig + partitionConfig + HAZELCAST_END_TAG);
         });
     }
@@ -94,12 +88,9 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicateListenersConfig() {
         expectDuplicateElementError("listeners", () -> {
-            String listenersConfig = """
-                       <listeners>
-                            <listener>foo</listener>
-
-                       </listeners>
-                    """;
+            String listenersConfig = "<listeners>"
+                + "\n\t<listener>foo</listener>"
+                + "\n\n</listeners>";
             buildConfig(HAZELCAST_START_TAG + listenersConfig + listenersConfig + HAZELCAST_END_TAG);
         });
     }
@@ -107,24 +98,22 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicateSerializationConfig() {
         expectDuplicateElementError("serialization", () -> {
-            String serializationConfig = """
-                           <serialization>
-                            <portable-version>0</portable-version>
-                            <data-serializable-factories>
-                                <data-serializable-factory factory-id="1">com.hazelcast.examples.DataSerializableFactory
-                                </data-serializable-factory>
-                            </data-serializable-factories>
-                            <portable-factories>
-                                <portable-factory factory-id="1">com.hazelcast.examples.PortableFactory</portable-factory>
-                            </portable-factories>
-                            <serializers>
-                                <global-serializer>com.hazelcast.examples.GlobalSerializerFactory</global-serializer>
-                                <serializer type-class="com.hazelcast.examples.DummyType"
-                                    class-name="com.hazelcast.examples.SerializerFactory"/>
-                            </serializers>
-                            <check-class-def-errors>true</check-class-def-errors>
-                        </serialization>
-                    """;
+            String serializationConfig = "<serialization>"
+                + "\n\t<portable-version>0</portable-version>"
+                + "\n\t<data-serializable-factories>"
+                + "\n\t\t<data-serializable-factory factory-id=\"1\">com.hazelcast.examples.DataSerializableFactory"
+                + "\n\t\t</data-serializable-factory>"
+                + "\n\t</data-serializable-factories>"
+                + "\n\t<portable-factories>"
+                + "\n\t\t<portable-factory factory-id=\"1\">com.hazelcast.examples.PortableFactory</portable-factory>"
+                + "\n\t</portable-factories>"
+                + "\n\t<serializers>"
+                + "\n\t\t<global-serializer>com.hazelcast.examples.GlobalSerializerFactory</global-serializer>"
+                + "\n\t\t<serializer type-class=\"com.hazelcast.examples.DummyType\""
+                + "\n\t\t\tclass-name=\"com.hazelcast.examples.SerializerFactory\"/>"
+                + "\n\t</serializers>"
+                + "\n\t<check-class-def-errors>true</check-class-def-errors>"
+                + "\n</serialization>";
             buildConfig(HAZELCAST_START_TAG + serializationConfig + serializationConfig + HAZELCAST_END_TAG);
         });
     }
@@ -140,11 +129,9 @@ public class XmlSchemaValidationTest {
     @Test
     public void testXmlDeniesDuplicateMemberAttributesConfig() {
         expectDuplicateElementError("member-attributes", () -> {
-            String memberAttConfig = """
-                        <member-attributes>
-                            <attribute name="attribute">1234.5678</attribute>
-                        </member-attributes>
-                    """;
+            String memberAttConfig = "<member-attributes>"
+                + "\n\t<attribute name=\"attribute\">1234.5678</attribute>"
+                + "\n</member-attributes>";
             buildConfig(HAZELCAST_START_TAG + memberAttConfig + memberAttConfig + HAZELCAST_END_TAG);
         });
     }
