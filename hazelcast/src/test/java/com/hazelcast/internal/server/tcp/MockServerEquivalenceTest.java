@@ -54,7 +54,7 @@ public class MockServerEquivalenceTest {
         factory = new TestHazelcastInstanceFactory();
         HazelcastInstance instance = factory.newHazelcastInstance();
 
-        var connection = Accessors.getNode(instance).getServer().getConnectionManager(MEMBER);
+        ServerConnectionManager connection = Accessors.getNode(instance).getServer().getConnectionManager(MEMBER);
         Packet packet = new Packet(Accessors.getSerializationService(instance).toBytes("dummy"))
                 .setPacketType(Packet.Type.NULL);
         assertThat(connection.transmit(packet, Accessors.getAddress(instance))).isFalse();
