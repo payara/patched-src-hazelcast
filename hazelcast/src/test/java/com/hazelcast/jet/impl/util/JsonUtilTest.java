@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,16 +58,16 @@ public class JsonUtilTest extends JetTestSupport {
     @BeforeClass
     public static void setup() throws Exception {
         Path file = Paths.get(JsonUtilTest.class.getResource("file.json").toURI());
-        jsonString = Files.readString(file);
+        jsonString = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
 
         Path fileList = Paths.get(JsonUtilTest.class.getResource("file_list.json").toURI());
-        jsonStringList = Files.readString(fileList);
+        jsonStringList = new String(Files.readAllBytes(fileList), StandardCharsets.UTF_8);
 
         Path filePrettyPrinted = Paths.get(JsonUtilTest.class.getResource("file_pretty_printed.json").toURI());
-        jsonStringPrettyPrinted = Files.readString(filePrettyPrinted);
+        jsonStringPrettyPrinted = new String(Files.readAllBytes(filePrettyPrinted));
 
         Path fileListPrettyPrinted = Paths.get(JsonUtilTest.class.getResource("file_list_pretty_printed.json").toURI());
-        jsonStringListPrettyPrinted = Files.readString(fileListPrettyPrinted);
+        jsonStringListPrettyPrinted = new String(Files.readAllBytes(fileListPrettyPrinted));
 
         testJsonObject = TestJsonObject.withDefaults();
     }
