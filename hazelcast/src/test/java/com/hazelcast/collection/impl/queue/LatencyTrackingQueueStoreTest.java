@@ -21,6 +21,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.internal.diagnostics.StoreLatencyPlugin;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Before;
@@ -89,7 +90,7 @@ public class LatencyTrackingQueueStoreTest extends HazelcastTestSupport {
 
     @Test
     public void loadAllKeys() {
-        Set<Long> keys = Set.of(1L, 2L);
+        Set<Long> keys = TestCollectionUtils.setOf(1L, 2L);
 
         when(delegate.loadAllKeys()).thenReturn(keys);
 
