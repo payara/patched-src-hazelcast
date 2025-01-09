@@ -54,42 +54,36 @@ public class YamlOnlyConfigBuilderTest {
 
     @Test(expected = InvalidConfigurationException.class)
     public void testMapQueryCachePredicateBothClassNameAndSql() {
-        String yaml = """
-                hazelcast:
-                  map:
-                    test:
-                      query-caches:
-                        cache-name:
-                          predicate:
-                            class-name: com.hazelcast.examples.SimplePredicate
-                            sql: "%age=40"
-                """;
+        String yaml = "hazelcast:"
+            + "\n\tmap:"
+            + "\n\t\ttest:"
+            + "\n\t\t\tquery-caches:"
+            + "\n\t\t\t\tcache-name:"
+            + "\n\t\t\t\t\tpredicate:"
+            + "\n\t\t\t\t\t\tclass-name: com.hazelcast.examples.SimplePredicate"
+            + "\n\t\t\t\t\t\tsql: \"%age=40\"";
 
         buildConfig(yaml);
     }
 
     @Test(expected = InvalidConfigurationException.class)
     public void testMapQueryCachePredicateNeitherClassNameNorSql() {
-        String yaml = """
-                hazelcast:
-                  map:
-                    test:
-                      query-caches:
-                        cache-name:
-                          predicate: {}
-                """;
+        String yaml = "hazelcast:"
+            + "\n\tmap:"
+            + "\n\ttest:"
+            + "\n\t\tquery-caches:"
+            + "\n\t\t\tcache-name:"
+            + "\n\t\t\t\tpredicate: {}";
 
         buildConfig(yaml);
     }
 
     @Test
     public void testNullInMapThrows() {
-        String yaml = """
-                hazelcast:
-                  map:
-                    test:
-                    query-caches: {}
-                """;
+        String yaml = "hazelcast:"
+            + "\n\tmap:"
+            + "\n\t\ttest:"
+            + "\n\t\tquery-caches: {}";
 
         assertThatThrownBy(() -> buildConfig(yaml))
                 .has(rootCause(InvalidConfigurationException.class, "hazelcast/map/test"));
@@ -97,12 +91,10 @@ public class YamlOnlyConfigBuilderTest {
 
     @Test
     public void testNullInSequenceThrows() {
-        String yaml = """
-                hazelcast:
-                  listeners:
-                    - com.package.SomeListener
-                    -
-                """;
+        String yaml = "hazelcast:"
+            + "\n\tlisteners:"
+            + "\n\t\t- com.package.SomeListener"
+            + "\n\t\t-";
 
         assertThatThrownBy(() -> buildConfig(yaml))
                 .has(rootCause(InvalidConfigurationException.class, "hazelcast/listeners"));
@@ -110,24 +102,20 @@ public class YamlOnlyConfigBuilderTest {
 
     @Test
     public void testExplicitNullScalarThrows() {
-        String yaml = """
-                hazelcast:
-                  instance-name: !!null
-                """;
+        String yaml = "hazelcast:\n\tinstance-name: !!null";
         assertThatThrownBy(() -> buildConfig(yaml))
                 .has(rootCause(InvalidConfigurationException.class, "hazelcast/instance-name"));
     }
 
     @Test
     public void testCPMapConfig() {
-        String yaml = """
-                hazelcast:
-                  cp-subsystem:
-                    maps:
-                      map1:
-                        max-size-mb: 50
-                      map2:
-                        max-size-mb: 25""";
+        String yaml = "hazelcast:"
+            + "\n\tcp-subsystem:"
+            + "\n\t\tmaps:"
+            + "\n\t\t\tmap1:"
+            + "\n\t\t\t\tmax-size-mb: 50"
+            + "\n\t\t\tmap2:"
+            + "\n\t\t\t\tmax-size-mb: 25";
         Config config = buildConfig(yaml);
         assertNotNull(config);
         CPSubsystemConfig cpSubsystemConfig = config.getCPSubsystemConfig();
