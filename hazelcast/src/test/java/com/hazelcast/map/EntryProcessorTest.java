@@ -76,7 +76,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
 import java.io.IOException;
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -1605,8 +1604,6 @@ public class EntryProcessorTest extends HazelcastTestSupport {
     }
 
     private static class Issue1764UpdatingEntryProcessor implements EntryProcessor<String, Issue1764Data, Boolean> {
-
-        @Serial
         private static final long serialVersionUID = 1L;
         private final String newValue;
 
