@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import javax.annotation.Nullable;
 import java.security.Permission;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.hazelcast.function.Functions.entryKey;
@@ -91,8 +92,8 @@ public class FunctionsTest extends HazelcastTestSupport {
 
     @Test
     public void when_composeFunctionExWithUnsecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var fun = new SecurableFunction(permission);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        SecurableFunction fun = new SecurableFunction(permission);
         assertThat(fun.compose(FunctionEx.identity()).permissions()).containsExactly(permission);
         assertThat(fun.andThen(FunctionEx.identity()).permissions()).containsExactly(permission);
         assertThat(FunctionEx.identity().compose(fun).permissions()).containsExactly(permission);
@@ -101,10 +102,10 @@ public class FunctionsTest extends HazelcastTestSupport {
 
     @Test
     public void when_composeFunctionExWithSecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var permission2 = new MapPermission("someothermap", ACTION_CREATE);
-        var fun = new SecurableFunction(permission);
-        var fun2 = new SecurableFunction(permission2);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        MapPermission permission2 = new MapPermission("someothermap", ACTION_CREATE);
+        SecurableFunction fun = new SecurableFunction(permission);
+        SecurableFunction fun2 = new SecurableFunction(permission2);
         assertThat(fun.compose(fun2).permissions()).containsExactlyInAnyOrder(permission, permission2);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission, permission2);
     }
@@ -119,25 +120,25 @@ public class FunctionsTest extends HazelcastTestSupport {
 
     @Test
     public void when_composeBiFunctionExWithUnsecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var fun = new SecurableBiFunction(permission);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        SecurableBiFunction fun = new SecurableBiFunction(permission);
         assertThat(fun.andThen(FunctionEx.identity()).permissions()).containsExactly(permission);
     }
 
     @Test
     public void when_composeBiFunctionExWithSecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var permission2 = new MapPermission("someothermap", ACTION_CREATE);
-        var fun = new SecurableBiFunction(permission);
-        var fun2 = new SecurableFunction(permission2);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        MapPermission permission2 = new MapPermission("someothermap", ACTION_CREATE);
+        SecurableBiFunction fun = new SecurableBiFunction(permission);
+        SecurableFunction fun2 = new SecurableFunction(permission2);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission, permission2);
     }
 
     @Test
     public void when_composeUnsecuredBiFunctionExWithSecured_then_propagatePermissions() {
         BiFunctionEx<Object, Object, Object> fun = (a, b) -> null;
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var fun2 = new SecurableFunction(permission);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        SecurableFunction fun2 = new SecurableFunction(permission);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission);
     }
     //endregion
@@ -150,18 +151,18 @@ public class FunctionsTest extends HazelcastTestSupport {
 
     @Test
     public void when_composeConsumerExWithUnsecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var fun = new SecurableConsumer(permission);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        SecurableConsumer fun = new SecurableConsumer(permission);
         assertThat(fun.andThen(ConsumerEx.noop()).permissions()).containsExactly(permission);
         assertThat(ConsumerEx.noop().andThen(fun).permissions()).containsExactly(permission);
     }
 
     @Test
     public void when_composeConsumerExWithSecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var permission2 = new MapPermission("someothermap", ACTION_CREATE);
-        var fun = new SecurableConsumer(permission);
-        var fun2 = new SecurableConsumer(permission2);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        MapPermission permission2 = new MapPermission("someothermap", ACTION_CREATE);
+        SecurableConsumer fun = new SecurableConsumer(permission);
+        SecurableConsumer fun2 = new SecurableConsumer(permission2);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission, permission2);
     }
     //endregion
@@ -175,25 +176,25 @@ public class FunctionsTest extends HazelcastTestSupport {
 
     @Test
     public void when_composeSupplierExWithUnsecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var fun = new SecurableSupplier(permission);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        SecurableSupplier fun = new SecurableSupplier(permission);
         assertThat(fun.andThen(FunctionEx.identity()).permissions()).containsExactly(permission);
     }
 
     @Test
     public void when_composeUnsecuredSupplierExWithSecured_then_propagatePermissions() {
         SupplierEx<String> fun = () -> "aaa";
-        var permission2 = new MapPermission("someothermap", ACTION_CREATE);
-        var fun2 = new SecurableFunction(permission2);
+        MapPermission permission2 = new MapPermission("someothermap", ACTION_CREATE);
+        SecurableFunction fun2 = new SecurableFunction(permission2);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission2);
     }
 
     @Test
     public void when_composeSupplierExWithSecured_then_propagatePermissions() {
-        var permission = new MapPermission("somemap", ACTION_CREATE);
-        var permission2 = new MapPermission("someothermap", ACTION_CREATE);
-        var fun = new SecurableSupplier(permission);
-        var fun2 = new SecurableFunction(permission2);
+        MapPermission permission = new MapPermission("somemap", ACTION_CREATE);
+        MapPermission permission2 = new MapPermission("someothermap", ACTION_CREATE);
+        SecurableSupplier fun = new SecurableSupplier(permission);
+        SecurableFunction fun2 = new SecurableFunction(permission2);
         assertThat(fun.andThen(fun2).permissions()).containsExactly(permission, permission2);
     }
     //endregion
@@ -207,7 +208,7 @@ public class FunctionsTest extends HazelcastTestSupport {
         }
 
         SecurableFunction(Permission permission) {
-            this(List.of(permission));
+            this(Arrays.asList(permission));
         }
 
         @Override
@@ -231,7 +232,7 @@ public class FunctionsTest extends HazelcastTestSupport {
         }
 
         SecurableBiFunction(Permission permission) {
-            this(List.of(permission));
+            this(Arrays.asList(permission));
         }
 
         @Override
@@ -255,7 +256,7 @@ public class FunctionsTest extends HazelcastTestSupport {
         }
 
         SecurableConsumer(Permission permission) {
-            this(List.of(permission));
+            this(Arrays.asList(permission));
         }
 
         @Override
@@ -278,7 +279,7 @@ public class FunctionsTest extends HazelcastTestSupport {
         }
 
         SecurableSupplier(Permission permission) {
-            this(List.of(permission));
+            this(Arrays.asList(permission));
         }
 
         @Override
