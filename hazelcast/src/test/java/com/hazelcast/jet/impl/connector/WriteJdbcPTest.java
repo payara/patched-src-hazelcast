@@ -399,7 +399,7 @@ public class WriteJdbcPTest extends JdbcDatabaseProviderTestSupport {
     }
 
     private static SupplierEx<DataSource> failTwiceDataSourceSupplier() {
-        return new SupplierEx<>() {
+        return new SupplierEx<DataSource>() {
             int remainingFailures = 2;
 
             @Override
@@ -418,7 +418,7 @@ public class WriteJdbcPTest extends JdbcDatabaseProviderTestSupport {
     }
 
     private static BiConsumerEx<PreparedStatement, Entry<Integer, String>> failOnceBindFn() {
-        return new BiConsumerEx<>() {
+        return new BiConsumerEx<PreparedStatement, Entry<Integer, String>>() {
             int remainingFailures = 1;
 
             @Override
