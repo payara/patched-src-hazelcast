@@ -970,7 +970,10 @@ public class YamlConfigBuilderTest extends AbstractConfigBuilderTest {
         assertTrue(mcConfig.isConsoleEnabled());
         assertFalse(mcConfig.isDataAccessEnabled());
         assertEquals(2, mcConfig.getTrustedInterfaces().size());
-        assertTrue(mcConfig.getTrustedInterfaces().containsAll(Set.of("127.0.0.1", "192.168.1.*")));
+        Set<String> set = new HashSet<>();
+        set.add("127.0.0.1");
+        set.add("192.168.1.*");
+        assertTrue(mcConfig.getTrustedInterfaces().containsAll(set));
     }
 
     @Override
@@ -1834,7 +1837,10 @@ public class YamlConfigBuilderTest extends AbstractConfigBuilderTest {
         assertEquals(4, multicastConfig.getMulticastTimeoutSeconds());
         assertEquals(42, multicastConfig.getMulticastTimeToLive());
         assertEquals(2, multicastConfig.getTrustedInterfaces().size());
-        assertTrue(multicastConfig.getTrustedInterfaces().containsAll(Set.of("127.0.0.1", "0.0.0.0")));
+        Set<String> set = new HashSet<>();
+        set.add("127.0.0.1");
+        set.add("0.0.0.0");
+        assertTrue(multicastConfig.getTrustedInterfaces().containsAll(set));
     }
 
     @Override
@@ -3882,7 +3888,7 @@ public class YamlConfigBuilderTest extends AbstractConfigBuilderTest {
     public void testAllPermissionsCovered() throws IOException {
         URL yamlResource = YamlConfigBuilderTest.class.getClassLoader().getResource("hazelcast-fullconfig.yaml");
         Config config = new YamlConfigBuilder(yamlResource).build();
-        Set<PermissionType> allPermissionTypes = Set.of(PermissionType.values());
+        Set<PermissionType> allPermissionTypes = new HashSet<>(asList(PermissionType.values()));
         Set<PermissionType> foundPermissionTypes = config.getSecurityConfig().getClientPermissionConfigs().stream()
                 .map(PermissionConfig::getType).collect(Collectors.toSet());
         Collection<PermissionType> difference = Sets.difference(allPermissionTypes, foundPermissionTypes);

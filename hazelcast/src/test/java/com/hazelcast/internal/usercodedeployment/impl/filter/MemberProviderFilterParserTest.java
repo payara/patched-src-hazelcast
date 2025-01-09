@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
@@ -63,9 +64,8 @@ public class MemberProviderFilterParserTest extends HazelcastTestSupport {
     @Test
     public void givenMemberAttributeFilterIsUsed_whenMemberAttributeIsPresent_thenFilterMatches() {
         Filter<Member> memberFilter = MemberProviderFilterParser.parseMemberFilter("HAS_ATTRIBUTE:foo");
-        Map<String, String> attributes = Map.of(
-                "foo", "bar"
-        );
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("foo", "bar");
         Member mockMember = createMockMemberWithAttributes(attributes);
         assertTrue(memberFilter.accept(mockMember));
     }
@@ -73,9 +73,8 @@ public class MemberProviderFilterParserTest extends HazelcastTestSupport {
     @Test
     public void givenMemberAttributeFilterIsUsed_whenMemberAttributeIsNotPresent_thenFilterDoesNotMatch() {
         Filter<Member> memberFilter = MemberProviderFilterParser.parseMemberFilter("HAS_ATTRIBUTE:foo");
-        Map<String, String> attributes = Map.of(
-                "bar", "other"
-        );
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("bar", "other");
         Member mockMember = createMockMemberWithAttributes(attributes);
         assertFalse(memberFilter.accept(mockMember));
     }

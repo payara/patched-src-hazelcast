@@ -22,6 +22,7 @@ import com.hazelcast.cluster.Member;
 import com.hazelcast.core.HazelcastInstance;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -33,9 +34,11 @@ public class TestProcessorContextTest {
     @Test
     public void test() throws Exception {
         Address a0 = new Address("1.2.3.4", 0);
+        Map<Address, int[]> map = new HashMap<>();
+        map.put(a0, new int[]{0, 3, 6});
 
         TestProcessorContext c = new TestProcessorContext()
-                .setPartitionAssignment(Map.of(a0, new int[]{0, 3, 6}));
+                .setPartitionAssignment(map);
 
         HazelcastInstance mockHazelcastInstance = mock(HazelcastInstance.class);
         Cluster mockCluster = mock(Cluster.class);
