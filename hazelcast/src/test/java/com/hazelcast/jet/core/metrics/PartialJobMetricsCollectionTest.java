@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Collection;
+import java.util.List;
 
 import static com.hazelcast.jet.core.JobStatus.FAILED;
 import static com.hazelcast.jet.core.JobStatus.RUNNING;
@@ -71,19 +72,19 @@ public class PartialJobMetricsCollectionTest extends JetTestSupport {
 
         Config config = smallInstanceConfig();
 
-        var hzInstances = createHazelcastInstances(config, MEMBER_COUNT);
+        HazelcastInstance[] hzInstances = createHazelcastInstances(config, MEMBER_COUNT);
         instance = hzInstances[0];
         assertEquals(MEMBER_COUNT, hzInstances[0].getCluster().getMembers().size());
     }
 
     @Test
     public void when_jobRunning_then_metricsEventuallyExist() {
-        var p = Pipeline.create();
+        Pipeline p = Pipeline.create();
         p.readFrom(TestSources.itemStream(1))
                 .withoutTimestamps()
                 .writeTo(Sinks.logger());
         JobConfig jobConfig = new JobConfig().setStoreMetricsAfterJobCompletion(isStoreMetricsEnabled);
-        var job = instance.getJet().newJob(p, jobConfig);
+        Job job = instance.getJet().newJob(p, jobConfig);
         assertJobStatusEventually(job, RUNNING);
         awaitOnlyOneJobIsRunning(job);
 
@@ -95,12 +96,12 @@ public class PartialJobMetricsCollectionTest extends JetTestSupport {
 
     @Test
     public void when_suspendAndResume_then_metricsReset() {
-        var p = Pipeline.create();
+        Pipeline p = Pipeline.create();
         p.readFrom(TestSources.itemStream(1))
                 .withoutTimestamps()
                 .writeTo(Sinks.logger());
         JobConfig jobConfig = new JobConfig().setStoreMetricsAfterJobCompletion(isStoreMetricsEnabled);
-        var job = instance.getJet().newJob(p, jobConfig);
+        Job job = instance.getJet().newJob(p, jobConfig);
         assertJobStatusEventually(job, RUNNING);
         awaitOnlyOneJobIsRunning(job);
 
@@ -119,23 +120,23 @@ public class PartialJobMetricsCollectionTest extends JetTestSupport {
 
     @Test
     public void when_jobRestarted_then_metricsReset() {
-        var p = Pipeline.create();
+        Pipeline p = Pipeline.create();
         p.readFrom(TestSources.itemStream(1))
                 .withoutTimestamps()
                 .writeTo(Sinks.logger());
 
         JobConfig jobConfig = new JobConfig().setStoreMetricsAfterJobCompletion(isStoreMetricsEnabled);
-        var job = instance.getJet().newJob(p, jobConfig);
+        Job job = instance.getJet().newJob(p, jobConfig);
 
         assertJobStatusEventually(job, RUNNING);
         awaitOnlyOneJobIsRunning(job);
-        var completionTime = job.getMetrics().get(EXECUTION_COMPLETION_TIME).stream().findFirst().orElseThrow().value();
+        long completionTime = job.getMetrics().get(EXECUTION_COMPLETION_TIME).stream().findFirst().orElseThrow(RuntimeException::new).value();
         job.restart();
         assertJobStatusEventually(job, RUNNING);
 
         assertTrueEventually(() -> {
-            var metrics = job.getMetrics();
-            var completionTimes = metrics.get(EXECUTION_COMPLETION_TIME);
+            JobMetrics metrics = job.getMetrics();
+            List<Measurement> completionTimes = metrics.get(EXECUTION_COMPLETION_TIME);
             assertThat(completionTimes).satisfiesOnlyOnce(measurement -> assertThat(measurement.value()).isLessThan(0));
             if (isStoreMetricsEnabled) {
                 assertThat(completionTimes).satisfiesOnlyOnce(measurement -> assertThat(measurement.value()).isGreaterThan(completionTime));
@@ -146,21 +147,21 @@ public class PartialJobMetricsCollectionTest extends JetTestSupport {
 
     @Test
     public void when_jobCanceled_then_terminatedJobMetricsReturn() {
-        var p = Pipeline.create();
+        Pipeline p = Pipeline.create();
         p.readFrom(TestSources.itemStream(1))
                 .withoutTimestamps()
                 .writeTo(Sinks.logger());
 
         JobConfig jobConfig = new JobConfig().setStoreMetricsAfterJobCompletion(isStoreMetricsEnabled);
-        var job = instance.getJet().newJob(p, jobConfig);
+        Job job = instance.getJet().newJob(p, jobConfig);
         assertJobStatusEventually(job, RUNNING);
 
         job.cancel();
         assertJobStatusEventually(job, FAILED);
 
-        var metrics = job.getMetrics();
+        JobMetrics metrics = job.getMetrics();
         if (isStoreMetricsEnabled) {
-            var completionTimes = metrics.get(EXECUTION_COMPLETION_TIME);
+            List<Measurement> completionTimes = metrics.get(EXECUTION_COMPLETION_TIME);
             assertThat(completionTimes).hasSize(1);
             assertThat(completionTimes).satisfiesOnlyOnce(measurement -> assertThat(measurement.value()).isGreaterThan(0));
         } else {
@@ -170,14 +171,14 @@ public class PartialJobMetricsCollectionTest extends JetTestSupport {
 
     private void awaitOnlyOneJobIsRunning(Job job) {
         assertTrueEventually(() -> {
-            var completionTimes = job.getMetrics().get(EXECUTION_COMPLETION_TIME);
+            List<Measurement> completionTimes = job.getMetrics().get(EXECUTION_COMPLETION_TIME);
             assertThat(completionTimes).satisfiesOnlyOnce(measurement -> assertThat(measurement.value()).isLessThan(0));
         });
     }
 
     private void assertExecutionMetrics(Job job) {
         assertTrueEventually(() -> {
-            var completionTimes = job.getMetrics().get(EXECUTION_COMPLETION_TIME);
+            List<Measurement> completionTimes = job.getMetrics().get(EXECUTION_COMPLETION_TIME);
             assertThat(completionTimes).hasSize(isStoreMetricsEnabled ? 2 : 1);
             assertThat(completionTimes).satisfiesOnlyOnce(measurement -> assertThat(measurement.value()).isLessThan(0));
             if (isStoreMetricsEnabled) {
