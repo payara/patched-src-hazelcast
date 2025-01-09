@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.hazelcast.internal.nio.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,7 +35,6 @@ import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 @RunWith(HazelcastParallelClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
@@ -77,9 +77,8 @@ public class ClassLoaderUtilTest extends HazelcastTestSupport {
             @Override
             protected Class<?> findClass(String name) throws ClassNotFoundException {
                 if (name.equals("mock.Class")) {
-                    try (InputStream inputStream = getClass().getResourceAsStream("mock-class-data.dat")) {
-                        assert inputStream != null;
-                        byte[] classData = inputStream.readAllBytes();
+                    try {
+                        byte[] classData = IOUtil.toByteArray(getClass().getResourceAsStream("mock-class-data.dat"));
                         return defineClass(name, classData, 0, classData.length);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
