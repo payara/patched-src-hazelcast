@@ -20,6 +20,7 @@ import com.hazelcast.test.HazelcastSerialClassRunner;
 import com.hazelcast.test.JarUtil;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -253,7 +254,7 @@ public class ChildFirstClassLoaderTest {
                 throw new IllegalArgumentException("Resource with name " + name +
                         " could not be found in classloader " + cl);
             }
-            return new String(is.readAllBytes(), UTF_8);
+            return IOUtils.toString(is, UTF_8);
         }
     }
 }
