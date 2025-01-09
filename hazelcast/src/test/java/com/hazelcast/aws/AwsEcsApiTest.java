@@ -32,6 +32,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +85,9 @@ public class AwsEcsApiTest {
         // given
         String cluster = "arn:aws:ecs:eu-central-1:665466731577:cluster/rafal-test-cluster";
         stubListTasks(cluster, null);
-        Map<String, String> tasksArnToIp = Map.of(
-                "arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16",
-                "arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
+        Map<String, String> tasksArnToIp = new HashMap<>();
+        tasksArnToIp.put("arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16");
+        tasksArnToIp.put("arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
         stubDescribeTasks(tasksArnToIp, cluster);
 
         // when
@@ -106,10 +107,10 @@ public class AwsEcsApiTest {
         AwsEcsApi awsEcsApi = new AwsEcsApi(endpoint, awsConfig, requestSigner, CLOCK);
 
         stubListTasks("arn:aws:ecs:eu-central-1:665466731577:cluster/rafal-test-cluster", "family-name");
-        stubDescribeTasks(Map.of(
-                        "arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16",
-                        "arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219"),
-                cluster);
+        Map<String, String> map = new HashMap<>();
+        map.put("arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16");
+        map.put("arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
+        stubDescribeTasks(map, cluster);
 
         // when
         List<String> ips = awsEcsApi.listTaskPrivateAddresses(cluster, CREDENTIALS);
@@ -129,10 +130,10 @@ public class AwsEcsApiTest {
         AwsEcsApi awsEcsApi = new AwsEcsApi(endpoint, awsConfig, requestSigner, CLOCK);
 
         stubListTasks("arn:aws:ecs:eu-central-1:665466731577:cluster/rafal-test-cluster", null);
-        stubDescribeTasks(Map.of(
-                        "arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16",
-                        "arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219"),
-                cluster);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("arn:aws:ecs:us-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16");
+        map.put("arn:aws:ecs:us-east-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
+        stubDescribeTasks(map, cluster);
 
         // when
         List<String> ips = awsEcsApi.listTaskPrivateAddresses(cluster, CREDENTIALS);
@@ -146,9 +147,9 @@ public class AwsEcsApiTest {
     public void describeTasks() {
         // given
         String cluster = "arn:aws:ecs:eu-central-1:665466731577:cluster/rafal-test-cluster";
-        Map<String, String> tasks = Map.of(
-                "arn:aws:ecs:eu-central-1-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16",
-                "arn:aws:ecs:eu-central-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
+        Map<String, String> tasks = new HashMap<>();
+        tasks.put("arn:aws:ecs:eu-central-1-east-1:012345678910:task/0b69d5c0-d655-4695-98cd-5d2d526d9d5a", "10.0.1.16");
+        tasks.put("arn:aws:ecs:eu-central-1:012345678910:task/51a01bdf-d00e-487e-ab14-7645330b6207", "10.0.1.219");
         stubDescribeTasks(tasks, cluster);
 
         // when
