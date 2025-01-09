@@ -156,7 +156,7 @@ public class YamlConfigBuilderTest extends AbstractConfigBuilderTest {
                 + "  map:\n"
                 + "    my-map:\n"
                 + "      backup-count: 1";
-        Writer writer = new PrintWriter(file, StandardCharsets.UTF_8);
+        Writer writer = new PrintWriter(file, StandardCharsets.UTF_8.name());
         writer.write(yaml);
         writer.close();
 
