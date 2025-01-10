@@ -20,6 +20,7 @@ import com.hazelcast.internal.networking.nio.MigratablePipeline;
 import com.hazelcast.internal.networking.nio.NioThread;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import com.hazelcast.internal.util.ItemCounter;
@@ -107,7 +108,7 @@ public class LoadMigrationStrategyTest extends HazelcastTestSupport {
         MigratablePipeline pipeline3 = mock(MigratablePipeline.class);
         loadCounter.set(pipeline2, 200L);
         loadCounter.set(pipeline3, 100L);
-        ownerToPipelines.put(srcOwner, Set.of(pipeline2, pipeline3));
+        ownerToPipelines.put(srcOwner, TestCollectionUtils.setOf(pipeline2, pipeline3));
 
         MigratablePipeline pipelineToMigrate = strategy.findPipelineToMigrate(imbalance);
         assertEquals(pipeline3, pipelineToMigrate);
