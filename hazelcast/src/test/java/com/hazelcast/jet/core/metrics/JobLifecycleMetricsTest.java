@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.hazelcast.jet.core.Edge.between;
@@ -112,7 +113,7 @@ public class JobLifecycleMetricsTest extends JetTestSupport {
         //given
         DAG dag = new DAG();
         Throwable e = new AssertionError("mock error");
-        Vertex source = dag.newVertex("source", ListSource.supplier(List.of(1)));
+        Vertex source = dag.newVertex("source", ListSource.supplier(Arrays.asList(1)));
 
         Vertex process = dag.newVertex("faulty", new MockPMS(() -> new MockPS(() ->
                         new MockP().initBlocks().setProcessError(() -> e), MEMBER_COUNT)))
@@ -254,7 +255,7 @@ public class JobLifecycleMetricsTest extends JetTestSupport {
         job.join();
 
         JobMetricsChecker jobChecker = new JobMetricsChecker(job);
-        List<String> expectedMetrics = List.of(
+        List<String> expectedMetrics = Arrays.asList(
                 COALESCED_WM,
                 EMITTED_COUNT,
                 EXECUTION_COMPLETION_TIME,
@@ -277,7 +278,7 @@ public class JobLifecycleMetricsTest extends JetTestSupport {
                 "lateEventsDropped"
 
         );
-        var metrics = job.getMetrics();
+        JobMetrics metrics = job.getMetrics();
         assertEquals(metrics.metrics().size(), expectedMetrics.size());
         expectedMetrics.forEach(jobChecker::assertMetricExists);
     }
