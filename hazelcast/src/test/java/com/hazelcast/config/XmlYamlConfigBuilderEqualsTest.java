@@ -17,6 +17,7 @@
 package com.hazelcast.config;
 
 import com.hazelcast.config.replacer.EncryptionReplacer;
+import com.hazelcast.internal.nio.IOUtil;
 import com.hazelcast.internal.tpcengine.util.OS;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -111,7 +113,7 @@ public class XmlYamlConfigBuilderEqualsTest extends HazelcastTestSupport {
     public static String readResourceToString(String resource) throws IOException {
         try (InputStream xmlInputStream = XmlYamlConfigBuilderEqualsTest.class.getClassLoader().getResourceAsStream(resource)) {
             assert xmlInputStream != null;
-            return new String(xmlInputStream.readAllBytes(), UTF_8);
+            return new String(IOUtil.toByteArray(xmlInputStream), UTF_8);
         }
     }
 
@@ -163,16 +165,17 @@ public class XmlYamlConfigBuilderEqualsTest extends HazelcastTestSupport {
         final Path file = Files.createTempFile("password", ".txt");
         file.toFile().deleteOnExit();
 
-        Files.writeString(file, "h4z3lc4$t");
+        Files.write(file, "h4z3lc4$t".getBytes(UTF_8));
 
         return str.replace("password.txt", file.toString());
     }
 
     /** Replace the UCN example paths with real files (but empty) to ensure they can be inflated */
     private String replaceUCNReferencesWithTemporaryFile(String str) throws IOException {
-        for (Path pathToReplace : new Path[] {Path.of("etc", "hazelcast", "jar.jar"), Path.of("etc", "hazelcast", "jar2.jar"),
-                Path.of("etc", "hazelcast", "jar3.jar"), Path.of("etc", "hazelcast", "jarsInZip.zip"),
-                Path.of("etc", "hazelcast", "classes", "MyClass.class")}) {
+        for (Path pathToReplace : new Path[] {
+            Paths.get("etc", "hazelcast", "jar.jar"), Paths.get("etc", "hazelcast", "jar2.jar"),
+            Paths.get("etc", "hazelcast", "jar3.jar"), Paths.get("etc", "hazelcast", "jarsInZip.zip"),
+            Paths.get("etc", "hazelcast", "classes", "MyClass.class")}) {
 
             Path newPath = tempDirectory.resolve(pathToReplace);
 
