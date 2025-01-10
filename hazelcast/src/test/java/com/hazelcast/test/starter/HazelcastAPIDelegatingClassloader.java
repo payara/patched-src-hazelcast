@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
 
+import static com.hazelcast.internal.nio.IOUtil.toByteArray;
 import static com.hazelcast.test.compatibility.SamplingSerializationService.isTestClass;
 import static com.hazelcast.test.starter.HazelcastStarterUtils.debug;
 import static java.util.Collections.enumeration;
@@ -127,20 +128,17 @@ public class HazelcastAPIDelegatingClassloader extends URLClassLoader {
      */
     private Class<?> findClassInParentURLs(final String name) {
         String classFilePath = name.replaceAll("\\.", "/").concat(".class");
-        try (InputStream classInputStream = getParent().getResourceAsStream(classFilePath)) {
-            if (classInputStream != null) {
-                byte[] classBytes = null;
-                try {
-                    classBytes = classInputStream.readAllBytes();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (classBytes != null) {
-                    return defineClass(name, classBytes, 0, classBytes.length);
-                }
+        InputStream classInputStream = getParent().getResourceAsStream(classFilePath);
+        if (classInputStream != null) {
+            byte[] classBytes = null;
+            try {
+                classBytes = toByteArray(classInputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            if (classBytes != null) {
+                return defineClass(name, classBytes, 0, classBytes.length);
+            }
         }
         return null;
     }
