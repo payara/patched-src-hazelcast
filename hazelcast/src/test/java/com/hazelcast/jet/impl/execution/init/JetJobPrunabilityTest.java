@@ -33,6 +33,7 @@ import com.hazelcast.jet.core.processor.Processors;
 import com.hazelcast.spi.impl.NodeEngineImpl;
 import com.hazelcast.test.Accessors;
 import com.hazelcast.test.HazelcastSerialClassRunner;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.QuickTest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,7 @@ import org.junit.runner.RunWith;
 
 import javax.annotation.Nonnull;
 import java.security.Permission;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -198,7 +200,7 @@ public class JetJobPrunabilityTest extends SimpleTestInClusterSupport {
         // should print 2.
         assertJobStatusEventually(job, JobStatus.COMPLETED);
         List<List<Object>> lists = consumerPms.getLists();
-        assertContainsAll(lists.get(0), List.of(2L));
+        assertContainsAll(lists.get(0), Arrays.asList(2L));
     }
 
     @Test
@@ -238,7 +240,7 @@ public class JetJobPrunabilityTest extends SimpleTestInClusterSupport {
         Set<Object> containerList = new TreeSet<>();
         containerList.addAll(lists.get(0));
         containerList.addAll(lists.get(1));
-        assertEquals(containerList, Set.of(0, 1));
+        assertEquals(containerList, TestCollectionUtils.setOf(0, 1));
     }
 
     @Nonnull
