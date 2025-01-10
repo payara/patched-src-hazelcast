@@ -38,7 +38,7 @@ public class JmsSourceIntegrationTest_RabbitMQ extends JmsSourceIntegrationTestB
     private static final SupplierEx<ConnectionFactory> FACTORY_SUPPLIER = () -> {
         RMQConnectionFactory f = new RMQConnectionFactory();
         f.setUri(container.getAmqpUrl());
-        return f;
+        return (ConnectionFactory) f;
     };
 
     @BeforeClass
