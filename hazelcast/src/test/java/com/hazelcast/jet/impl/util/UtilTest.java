@@ -98,7 +98,7 @@ public class UtilTest {
     @Test
     public void when_memoizeConcurrent_then_threadSafe() {
         final Object obj = new Object();
-        Supplier<Object> supplier = new Supplier<>() {
+        Supplier<Object> supplier = new Supplier<Object>() {
             boolean supplied;
 
             @Override
