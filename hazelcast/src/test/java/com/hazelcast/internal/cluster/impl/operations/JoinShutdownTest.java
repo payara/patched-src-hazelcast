@@ -152,7 +152,7 @@ public class JoinShutdownTest {
     }
 
     private static void send(Operation operation, InetSocketAddress address) throws Exception {
-        send(toBuffer(operation).flip(), address);
+        send((ByteBuffer) toBuffer(operation).flip(), address);
     }
 
     private static void send(ByteBuffer buffer, InetSocketAddress address) throws Exception {
