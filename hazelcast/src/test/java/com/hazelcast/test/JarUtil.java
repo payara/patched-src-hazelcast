@@ -16,6 +16,8 @@
 
 package com.hazelcast.test;
 
+import org.apache.commons.io.IOUtils;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.util.Lists.newArrayList;
 
@@ -23,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -69,8 +70,8 @@ public class JarUtil {
 
     private static void writeEntry(JarOutputStream jarOS, String sourceFolder, String name) throws IOException {
         jarOS.putNextEntry(new JarEntry(name));
-        try (InputStream fis = new FileInputStream(sourceFolder + name)) {
-            fis.transferTo(jarOS);
+        try (FileInputStream fis = new FileInputStream(sourceFolder + name)) {
+            jarOS.write(IOUtils.toByteArray(fis));
         }
         jarOS.closeEntry();
     }
