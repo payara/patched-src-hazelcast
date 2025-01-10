@@ -285,7 +285,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
 
         objectProvider.assertRows(mapName,
                 newArrayList(Integer.class, String.class),
-                List.of(
+                asList(
                 asList(0, "name-0"),
                 asList(1, "name-1"),
                 asList(2, "name-2"),
@@ -444,7 +444,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
 
         objectProvider.assertRows(mapName,
                 newArrayList(Integer.class, String.class, String.class),
-                List.of(
+                asList(
                 asList(0, "name-0", "def"),
                 asList(1, "name-1", "def")
         ));
@@ -477,7 +477,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
 
         objectProvider.assertRows(mapName,
                 newArrayList(Integer.class, String.class, String.class),
-                List.of(
+                asList(
                 asList(0, "name-0", "def"),
                 asList(1, "name-1", "def")
         ));
@@ -510,7 +510,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
 
         objectProvider.assertRows(mapName,
                 newArrayList(Integer.class, String.class, String.class),
-                List.of(
+                asList(
                 asList(0, "name-0", "def"),
                 asList(1, "name-1", "def")
         ));
