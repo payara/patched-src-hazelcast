@@ -24,6 +24,7 @@ import com.hazelcast.query.Predicate;
 import com.hazelcast.query.Predicates;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Before;
@@ -94,7 +95,7 @@ public class LocalKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.localKeySet();
 
-        assertEquals(Set.of(localKey1, localKey2), result);
+        assertEquals(TestCollectionUtils.setOf(localKey1, localKey2), result);
     }
 
     @Test
@@ -105,7 +106,7 @@ public class LocalKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.localKeySet(Predicates.alwaysTrue());
 
-        assertEquals(Set.of(localKey1, localKey2), result);
+        assertEquals(TestCollectionUtils.setOf(localKey1, localKey2), result);
     }
 
     @Test
@@ -119,7 +120,7 @@ public class LocalKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.localKeySet(new GoodPredicate());
 
-        assertEquals(Set.of(localKey1, localKey3), result);
+        assertEquals(TestCollectionUtils.setOf(localKey1, localKey3), result);
     }
 
     @Test

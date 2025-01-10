@@ -24,6 +24,7 @@ import com.hazelcast.query.Predicate;
 import com.hazelcast.query.Predicates;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Before;
@@ -33,7 +34,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import static com.hazelcast.test.Accessors.getSerializationService;
 import static org.junit.Assert.assertTrue;
@@ -95,7 +95,7 @@ public class LocalValuesTest extends HazelcastTestSupport {
 
         Collection<String> result = map.localValues();
 
-        assertEquals(Set.of("a", "b"), result);
+        assertEquals(TestCollectionUtils.setOf("a", "b"), result);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class LocalValuesTest extends HazelcastTestSupport {
 
         Collection<String> result = map.localValues(Predicates.alwaysTrue());
 
-        assertEquals(Set.of("a", "b"), result);
+        assertEquals(TestCollectionUtils.setOf("a", "b"), result);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class LocalValuesTest extends HazelcastTestSupport {
 
         Collection<String> result = map.localValues(new GoodPredicate());
 
-        assertEquals(Set.of("good1", "good2"), result);
+        assertEquals(TestCollectionUtils.setOf("good1", "good2"), result);
     }
 
     @Test

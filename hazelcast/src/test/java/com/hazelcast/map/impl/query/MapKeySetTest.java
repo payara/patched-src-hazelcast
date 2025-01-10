@@ -28,6 +28,7 @@ import com.hazelcast.query.Predicate;
 import com.hazelcast.query.Predicates;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Before;
@@ -85,7 +86,7 @@ public class MapKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.keySet();
 
-        assertEquals(Set.of("1", "2", "3"), result);
+        assertEquals(TestCollectionUtils.setOf("1", "2", "3"), result);
     }
 
     @Test
@@ -96,7 +97,7 @@ public class MapKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.keySet(Predicates.alwaysTrue());
 
-        assertEquals(Set.of("1", "2", "3"), result);
+        assertEquals(TestCollectionUtils.setOf("1", "2", "3"), result);
     }
 
     @Test
@@ -107,7 +108,7 @@ public class MapKeySetTest extends HazelcastTestSupport {
 
         Set<String> result = map.keySet(new GoodPredicate());
 
-        assertEquals(Set.of("1", "3"), result);
+        assertEquals(TestCollectionUtils.setOf("1", "3"), result);
     }
 
     @Test

@@ -44,6 +44,7 @@ import com.hazelcast.splitbrainprotection.SplitBrainProtectionOn;
 import com.hazelcast.splitbrainprotection.impl.ProbabilisticSplitBrainProtectionFunction;
 import com.hazelcast.splitbrainprotection.impl.RecentlyActiveSplitBrainProtectionFunction;
 import com.hazelcast.test.HazelcastParallelClassRunner;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import com.hazelcast.topic.TopicOverloadPolicy;
@@ -989,7 +990,7 @@ public class XMLConfigBuilderTest extends AbstractConfigBuilderTest {
         assertTrue(mcConfig.isConsoleEnabled());
         assertFalse(mcConfig.isDataAccessEnabled());
         assertEquals(2, mcConfig.getTrustedInterfaces().size());
-        assertTrue(mcConfig.getTrustedInterfaces().containsAll(Set.of("127.0.0.1", "192.168.1.*")));
+        assertTrue(mcConfig.getTrustedInterfaces().containsAll(TestCollectionUtils.setOf("127.0.0.1", "192.168.1.*")));
     }
 
     @Override
@@ -1856,7 +1857,7 @@ public class XMLConfigBuilderTest extends AbstractConfigBuilderTest {
         assertEquals(4, multicastConfig.getMulticastTimeoutSeconds());
         assertEquals(42, multicastConfig.getMulticastTimeToLive());
         assertEquals(2, multicastConfig.getTrustedInterfaces().size());
-        assertTrue(multicastConfig.getTrustedInterfaces().containsAll(Set.of("127.0.0.1", "0.0.0.0")));
+        assertTrue(multicastConfig.getTrustedInterfaces().containsAll(TestCollectionUtils.setOf("127.0.0.1", "0.0.0.0")));
     }
 
     @Override
@@ -3892,7 +3893,7 @@ public class XMLConfigBuilderTest extends AbstractConfigBuilderTest {
     public void testAllPermissionsCovered() throws IOException {
         URL xmlResource = XMLConfigBuilderTest.class.getClassLoader().getResource("hazelcast-fullconfig.xml");
         Config config = new XmlConfigBuilder(xmlResource).build();
-        Set<PermissionType> allPermissionTypes = Set.of(PermissionType.values());
+        Set<PermissionType> allPermissionTypes = TestCollectionUtils.setOf(PermissionType.values());
         Set<PermissionType> foundPermissionTypes = config.getSecurityConfig().getClientPermissionConfigs().stream()
                 .map(PermissionConfig::getType).collect(Collectors.toSet());
         Collection<PermissionType> difference = Sets.difference(allPermissionTypes, foundPermissionTypes);
