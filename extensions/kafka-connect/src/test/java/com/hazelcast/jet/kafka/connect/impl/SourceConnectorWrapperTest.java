@@ -104,7 +104,7 @@ public class SourceConnectorWrapperTest {
         properties.setProperty("tasks.max", "2");
         properties.setProperty("connector.class", "com.example.non.existing.Connector");
         TestProcessorContext testProcessorContext = new TestProcessorContext();
-        var c = new SourceConnectorWrapper(properties, 0, testProcessorContext, never());
+        SourceConnectorWrapper c = new SourceConnectorWrapper(properties, 0, testProcessorContext, never());
         assertThatThrownBy(c::waitNeeded)
                 .isInstanceOf(HazelcastException.class)
                 .cause()
@@ -116,7 +116,7 @@ public class SourceConnectorWrapperTest {
     public void should_cleanup_on_destroy() {
         Properties properties = dummySourceConnectorProperties();
         properties.setProperty(ITEMS_SIZE, String.valueOf(3));
-        var wrapper = new TestSourceConnectorWrapper(properties);
+        TestSourceConnectorWrapper wrapper = new TestSourceConnectorWrapper(properties);
         assertThat(sourceConnectorInstance().isStarted()).isTrue();
 
         wrapper.close();

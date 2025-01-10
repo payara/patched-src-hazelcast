@@ -162,8 +162,8 @@ public class MongoDataConnection extends DataConnectionBase {
             if (connectionString != null) {
                 builder.applyConnectionString(new ConnectionString(connectionString));
             } else {
-                var serverAddress = new ServerAddress(host);
-                var credential = MongoCredential.createCredential(username, authDb, password.toCharArray());
+                ServerAddress serverAddress = new ServerAddress(host);
+                MongoCredential credential = MongoCredential.createCredential(username, authDb, password.toCharArray());
                 builder
                         .applyToClusterSettings(s -> s.hosts(singletonList(serverAddress)))
                         .credential(credential);

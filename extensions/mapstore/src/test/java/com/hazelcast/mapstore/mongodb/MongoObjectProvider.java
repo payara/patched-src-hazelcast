@@ -43,7 +43,7 @@ public class MongoObjectProvider implements TestDatabaseRecordProvider {
     @Override
     public ObjectSpec createObject(String objectName, boolean useQuotedNames) {
         String idName = useQuotedNames ? "person-id" : "id";
-        var spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
+        ObjectSpec spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
         createObject(spec);
         return spec;
     }
@@ -82,7 +82,7 @@ public class MongoObjectProvider implements TestDatabaseRecordProvider {
 
     @Override
     public void insertItems(ObjectSpec spec, int count) {
-        var objectName = spec.name;
+        String objectName = spec.name;
         MongoCollection<Document> collection = databaseProvider.database().getCollection(objectName);
         List<Document> toInsert = new ArrayList<>();
         for (int i = 0; i < count; i++) {

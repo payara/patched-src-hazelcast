@@ -143,7 +143,7 @@ public class FullScanPhysicalRel extends FullScan implements HazelcastPhysicalSc
     @Override
     public RelWriter explainTerms(RelWriter pw) {
         final HazelcastTable hazelcastTable = OptUtils.extractHazelcastTable(this);
-        final var candidates = OptUtils.metadataQuery(this).extractPrunability(this);
+        final java.util.Map<String, List<java.util.Map<String, RexNode>>> candidates = OptUtils.metadataQuery(this).extractPrunability(this);
         final boolean isPrunable = !candidates.isEmpty();
         String partitioningKey = "";
         String partitioningKeyValues = "";

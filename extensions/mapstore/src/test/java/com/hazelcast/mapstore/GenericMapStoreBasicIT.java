@@ -418,7 +418,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
     @Test
     public void givenColumnPropSubset_whenStore_thenTableContainsRow() throws SQLException {
         assumeThat(objectProvider).isInstanceOf(JdbcObjectProvider.class);
-        var jdbcDbProvider = (JdbcObjectProvider) objectProvider;
+        JdbcObjectProvider jdbcDbProvider = (JdbcObjectProvider) objectProvider;
         jdbcDbProvider.createTable(mapName, "id INT PRIMARY KEY", "name VARCHAR(100)", "other VARCHAR(100) DEFAULT 'def'");
         try (Connection conn = DriverManager.getConnection(dbConnectionUrl);
              Statement stmt = conn.createStatement()
@@ -453,7 +453,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
     @Test
     public void givenColumnPropSubset_whenStoreAsSingleColumn_thenTableContainsRow() throws SQLException {
         assumeThat(objectProvider).isInstanceOf(JdbcObjectProvider.class);
-        var jdbcDbProvider = (JdbcObjectProvider) objectProvider;
+        JdbcObjectProvider jdbcDbProvider = (JdbcObjectProvider) objectProvider;
         jdbcDbProvider.createTable(mapName, "id INT PRIMARY KEY", "name VARCHAR(100)", "other VARCHAR(100) DEFAULT 'def'");
         try (Connection conn = DriverManager.getConnection(dbConnectionUrl);
              Statement stmt = conn.createStatement()
@@ -486,7 +486,7 @@ public class GenericMapStoreBasicIT extends GenericMapLoaderTest {
     @Test
     public void givenColumnPropSubsetWithoutId_whenStore_thenTableContainsRow() throws SQLException {
         assumeThat(objectProvider).isInstanceOf(JdbcObjectProvider.class);
-        var jdbcDbProvider = (JdbcObjectProvider) objectProvider;
+        JdbcObjectProvider jdbcDbProvider = (JdbcObjectProvider) objectProvider;
         jdbcDbProvider.createTable(mapName, "id INT PRIMARY KEY", "name VARCHAR(100)", "other VARCHAR(100) DEFAULT 'def'");
         try (Connection conn = DriverManager.getConnection(dbConnectionUrl);
              Statement stmt = conn.createStatement()

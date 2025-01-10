@@ -262,7 +262,8 @@ public class IMapSqlConnector implements SqlConnector {
 
             // We need some low-level data which are not passed to SqlConnector, this code should be refactored.
             DagBuildContextImpl contextImpl = (DagBuildContextImpl) context;
-            var relPrunability = CalciteSqlOptimizerImpl.partitionStrategyCandidates(contextImpl.getRel(),
+            Map<String, List<Map<String, Expression<?>>>> relPrunability =
+                CalciteSqlOptimizerImpl.partitionStrategyCandidates(contextImpl.getRel(),
                     contextImpl.getParameterMetadata(),
                     // expect only single map in the rel
                     Map.of(table.getSqlName(), table));
@@ -485,7 +486,7 @@ public class IMapSqlConnector implements SqlConnector {
 
         List<List<Expression<?>>> partitionsExpressions = new ArrayList<>();
 
-        final var container = getMapContainer(nodeEngine.getHazelcastInstance().getMap(mapName));
+        final MapContainer container = getMapContainer(nodeEngine.getHazelcastInstance().getMap(mapName));
         final PartitioningStrategy<?> strategy = container.getPartitioningStrategy();
 
         // We only support Default and Attribute strategies, even if one of the maps uses non-Default/Attribute
@@ -500,7 +501,7 @@ public class IMapSqlConnector implements SqlConnector {
         // ordering of attributes matters for partitioning (1,2) produces different partition than (2,1).
         final List<String> orderedKeyAttributes = new ArrayList<>();
         if (strategy instanceof AttributePartitioningStrategy) {
-            final var attributeStrategy = (AttributePartitioningStrategy) strategy;
+            final AttributePartitioningStrategy attributeStrategy = (AttributePartitioningStrategy) strategy;
             orderedKeyAttributes.addAll(asList(attributeStrategy.getPartitioningAttributes()));
         } else {
             orderedKeyAttributes.add(KEY_ATTRIBUTE_NAME.value());

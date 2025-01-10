@@ -51,7 +51,7 @@ public class RootCauseMatcher {
     }
 
     public static Condition<Throwable> rootCause(Class<? extends Throwable> expectedType, String expectedMessage) {
-        var matcher = new RootCauseMatcher(expectedType, expectedMessage);
+        RootCauseMatcher matcher = new RootCauseMatcher(expectedType, expectedMessage);
         return new Condition<>(matcher::matches, expectedMessage);
     }
 

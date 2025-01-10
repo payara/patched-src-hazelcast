@@ -129,7 +129,7 @@ public class PojoUpsertTargetTest {
 
     @Test
     public void when_filterThrowsException_then_init_failed() {
-        var expected = new SecurityException("failed");
+        SecurityException expected = new SecurityException("failed");
         var filter = mock(ReflectionClassNameFilter.class);
         doThrow(expected)
                 .when(filter)

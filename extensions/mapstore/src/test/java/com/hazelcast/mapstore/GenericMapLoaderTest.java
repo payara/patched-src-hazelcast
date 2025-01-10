@@ -235,7 +235,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
 
     @Test
     public void givenTableMultipleColumns_whenLoad_thenReturnGenericRecord() {
-        var spec = new ObjectSpec(mapName,
+        ObjectSpec spec = new ObjectSpec(mapName,
                 col("id", INT),
                 col("name", STRING),
                 col("age", INT),
@@ -254,7 +254,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
 
     @Test
     public void givenTableVarcharPKColumn_whenLoad_thenReturnGenericRecordWithCorrectType() {
-        var spec = new ObjectSpec(mapName, col("id", STRING), col("name", STRING));
+        ObjectSpec spec = new ObjectSpec(mapName, col("id", STRING), col("name", STRING));
         objectProvider.createObject(spec);
         objectProvider.insertItems(spec, 1);
 
@@ -268,7 +268,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
 
     @Test
     public void givenTableVarcharPKColumn_whenLoad_thenReturnSingleColumnWithCorrectType() {
-        var spec = new ObjectSpec(mapName,
+        ObjectSpec spec = new ObjectSpec(mapName,
                 col("id", STRING),
                 col("name", STRING)
         );
@@ -348,7 +348,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
 
     @Test
     public void whenSetNonExistingColumnOnSecondMapLoader_thenFailToInitialize() {
-        var spec = new ObjectSpec(mapName,
+        ObjectSpec spec = new ObjectSpec(mapName,
                 col("id", INT),
                 col("name", STRING),
                 col("age", INT));
@@ -735,7 +735,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
     @Test
     public void givenTableNameProperty_whenCreateMapLoader_thenUseTableNameWithCustomSchema() {
         assumeTrue(objectProvider instanceof JdbcDatabaseProvider);
-        var jdbcDatabaseProvider = (JdbcObjectProvider) objectProvider;
+        JdbcObjectProvider jdbcDatabaseProvider = (JdbcObjectProvider) objectProvider;
         String schemaName = "custom_schema";
         jdbcDatabaseProvider.createSchema(schemaName);
         String tableName = randomName() + "-with-hyphen";
@@ -756,7 +756,7 @@ public class GenericMapLoaderTest extends SqlTestSupport {
     @Test
     public void givenTableNameProperty_whenCreateMapLoader_thenUseTableNameWithCustomSchemaWithDotInName() {
         assumeTrue(objectProvider instanceof JdbcDatabaseProvider);
-        var jdbcDatabaseProvider = (JdbcObjectProvider) objectProvider;
+        JdbcObjectProvider jdbcDatabaseProvider = (JdbcObjectProvider) objectProvider;
         // See MySQLSchemaJdbcSqlConnectorTest
         assumeFalse(MySQLDatabaseProvider.TEST_MYSQL_VERSION.startsWith("5"));
 

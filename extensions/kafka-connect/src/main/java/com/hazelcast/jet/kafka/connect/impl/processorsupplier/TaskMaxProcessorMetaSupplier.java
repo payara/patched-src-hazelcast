@@ -81,7 +81,7 @@ public class TaskMaxProcessorMetaSupplier implements ProcessorMetaSupplier, Data
         }
         final int lastActive = this.lastInitiallyActiveProcessorOrder;
         return memberAddress -> {
-            var startingProcessorOrder = startingProcessorOrderMap.get(memberAddress);
+            Integer startingProcessorOrder = startingProcessorOrderMap.get(memberAddress);
             if (startingProcessorOrder != null) {
                 return new TaskMaxProcessorSupplier(startingProcessorOrder, lastActive, supplier);
             } else {

@@ -66,7 +66,7 @@ public class QueryUtilTest extends SqlTestSupport {
         when(evalContextMock.getArguments()).thenReturn(emptyList());
         when(evalContextMock.getNodeEngine()).thenReturn(mock());
 
-        var supplier = KvRowProjector.supplier(
+        KvRowProjector.Supplier supplier = KvRowProjector.supplier(
                 new QueryPath[]{},
                 new QueryDataType[]{},
                 null,

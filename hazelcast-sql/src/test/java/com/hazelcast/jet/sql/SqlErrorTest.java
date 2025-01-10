@@ -113,7 +113,7 @@ public class SqlErrorTest extends SqlErrorAbstractTest {
 
         // Start query with immediate shutdown afterwards
         HazelcastSqlException error = assertSqlExceptionWithShutdown(instance1, streamingQuery);
-        var rootCause = findRootCause(error);
+        Throwable rootCause = findRootCause(error);
 
         assertTrue(rootCause instanceof TopologyChangedException || rootCause instanceof HazelcastInstanceNotActiveException);
     }

@@ -128,7 +128,7 @@ public class KafkaIntegrationSqlTest extends KafkaSqlTestSupport {
     }
 
     public void assertTopicContentsEventually(KafkaConsumer<Integer, String> consumer, Map<Integer, String> expected) {
-        var collected = new HashMap<Integer, String>();
+        HashMap<Integer, String> collected = new HashMap<Integer, String>();
         assertTrueEventually(() -> {
             ConsumerRecords<Integer, String> records = consumer.poll(Duration.ofSeconds(5));
             logger.info("Polled records: " + records.count());

@@ -173,7 +173,7 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         Job job = instance.getJet().newJob(pipeline, jobConfig);
 
-        var allInstancesNames = Arrays.stream(instances).map(HazelcastInstance::getName).toArray(String[]::new);
+        String[] allInstancesNames = Arrays.stream(instances).map(HazelcastInstance::getName).toArray(String[]::new);
         assertTrueEventually(() -> {
             Set<Integer> array = new TreeSet<>(processors.values());
             assertThat(array).hasSize(localParallelism * nodeCount);
@@ -244,7 +244,7 @@ public class KafkaConnectScalingIT extends JetTestSupport {
         JobConfig jobConfig = new JobConfig();
         jobConfig.addJarsInZip(getJdbcConnectorURL());
 
-        var job = instance.getJet().newJob(pipeline, jobConfig);
+        Job job = instance.getJet().newJob(pipeline, jobConfig);
 
         assertTrueEventually(() -> {
             assertThat(new HashSet<>(processors.values())).hasSize(localParallelism);
@@ -323,7 +323,7 @@ public class KafkaConnectScalingIT extends JetTestSupport {
         jobConfig.setProcessingGuarantee(ProcessingGuarantee.EXACTLY_ONCE);
         jobConfig.addJarsInZip(getJdbcConnectorURL());
 
-        var job = instance.getJet().newJob(pipeline, jobConfig);
+        Job job = instance.getJet().newJob(pipeline, jobConfig);
 
         assertTrueEventually(() -> assertThat(values.values()).hasSize(TABLE_COUNT * ITEM_COUNT));
 
@@ -412,7 +412,7 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         instance.getJet().newJob(pipeline, jobConfig);
 
-        var allInstancesNames = Arrays.stream(instances).map(HazelcastInstance::getName).toArray(String[]::new);
+        String[] allInstancesNames = Arrays.stream(instances).map(HazelcastInstance::getName).toArray(String[]::new);
         assertTrueEventually(() -> {
             Set<Integer> array = new TreeSet<>(processors.values());
             assertThat(array).hasSize(2);

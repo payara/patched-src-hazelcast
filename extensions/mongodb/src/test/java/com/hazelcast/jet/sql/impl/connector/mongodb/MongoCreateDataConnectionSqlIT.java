@@ -75,8 +75,8 @@ public class MongoCreateDataConnectionSqlIT extends MongoSqlIT {
         assertThat(dataConnection).isNotNull();
 
         try (MongoClient client = dataConnection.getClient()) {
-            var impl = ReflectionUtils.getFieldValueReflectively(client, "delegate");
-            var settings = (MongoClientSettings) ReflectionUtils.getFieldValueReflectively(impl, "settings");
+            Object impl = ReflectionUtils.getFieldValueReflectively(client, "delegate");
+            MongoClientSettings settings = (MongoClientSettings) ReflectionUtils.getFieldValueReflectively(impl, "settings");
             assertThat(settings.getConnectionPoolSettings().getMinSize()).isEqualTo(1337);
             assertThat(settings.getConnectionPoolSettings().getMaxSize()).isEqualTo(2023);
         }

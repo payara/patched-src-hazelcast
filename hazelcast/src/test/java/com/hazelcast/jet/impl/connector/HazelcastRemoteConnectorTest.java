@@ -140,7 +140,7 @@ public class HazelcastRemoteConnectorTest extends JetTestSupport {
 
         DAG dag = new DAG();
 
-        var config = new RemoteMapSourceConfiguration<>(
+        RemoteMapSourceConfiguration<Object, Object, Object> config = new RemoteMapSourceConfiguration<>(
                 SOURCE_NAME,
                 null,
                 clientConfig,
@@ -166,7 +166,7 @@ public class HazelcastRemoteConnectorTest extends JetTestSupport {
 
         DAG dag = new DAG();
 
-        var config = new RemoteMapSourceConfiguration<>(
+        RemoteMapSourceConfiguration<Object, Object, Object> config = new RemoteMapSourceConfiguration<>(
                 SOURCE_NAME,
                 null,
                 clientConfig,

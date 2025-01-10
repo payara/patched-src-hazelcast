@@ -92,7 +92,7 @@ public class MethodAvailableMatcherTest {
 
     @Test
     public void assertThat_withNull() {
-        var ex = assertThrows(AssertionError.class, () -> {
+        AssertionError ex = assertThrows(AssertionError.class, () -> {
             methodAvailable(DataStructureMethods.CLEAR).matches(null);
         });
         assertThat(ex).hasMessageContaining("clear() to be available");

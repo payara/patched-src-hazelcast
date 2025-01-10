@@ -87,8 +87,8 @@ public class KafkaConnectMongoDbIT extends JetTestSupport {
         HazelcastInstance leader = hazelcastInstances[0];
         HazelcastInstance nonLeader = hazelcastInstances[2];
 
-        var job = leader.getJet().newJob(p, jobConfig());
-        var jobRepository = new JobRepository(leader);
+        Job job = leader.getJet().newJob(p, jobConfig());
+        JobRepository jobRepository = new JobRepository(leader);
         assertJobStatusEventually(job, JobStatus.RUNNING);
         waitForNextSnapshot(jobRepository, job.getId(), 30, false);
 

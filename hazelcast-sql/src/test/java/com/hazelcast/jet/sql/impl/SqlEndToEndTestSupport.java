@@ -154,7 +154,7 @@ public abstract class SqlEndToEndTestSupport extends SqlTestSupport {
 
     @Nonnull
     protected static ArrayList<Row> collectResult(SqlResult result) {
-        var actualRows = new ArrayList<Row>();
+        ArrayList<Row> actualRows = new ArrayList<Row>();
         for (SqlRow r : result) {
             actualRows.add(new Row(r));
         }

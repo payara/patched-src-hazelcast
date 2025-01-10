@@ -38,6 +38,7 @@ import com.hazelcast.test.OverridePropertyRule;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.SlowTest;
 import com.hazelcast.test.jdbc.MySQLDatabaseProvider;
+import eu.rekawek.toxiproxy.Proxy;
 import eu.rekawek.toxiproxy.ToxiproxyClient;
 import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
@@ -300,13 +301,13 @@ public class KafkaConnectJdbcIT extends JetTestSupport {
     @Test
     public void reconnectsOnNetworkProblem() throws Exception {
         final String testName = "reconnectsOnNetworkProblem";
-        try (var toxiproxy = new ToxiproxyContainer(TOXIPROXY_IMAGE)
+        try (ToxiproxyContainer toxiproxy = new ToxiproxyContainer(TOXIPROXY_IMAGE)
                 .withNetwork(network)
                 .withNetworkAliases("toxiproxy")) {
             toxiproxy.start();
 
-            var toxiproxyClient = new ToxiproxyClient(toxiproxy.getHost(), toxiproxy.getControlPort());
-            var proxy = toxiproxyClient.createProxy("mysql", "0.0.0.0:8666", "mysql:3306");
+            ToxiproxyClient toxiproxyClient = new ToxiproxyClient(toxiproxy.getHost(), toxiproxy.getControlPort());
+            Proxy proxy = toxiproxyClient.createProxy("mysql", "0.0.0.0:8666", "mysql:3306");
 
             String connectionUrl = mysql.getJdbcUrl();
 
@@ -333,11 +334,11 @@ public class KafkaConnectJdbcIT extends JetTestSupport {
             Config config = smallInstanceConfig();
             config.getJetConfig().setResourceUploadEnabled(true);
             HazelcastInstance[] hazelcastInstances = createHazelcastInstances(config, 3);
-            var hazelcastInstance = hazelcastInstances[0];
+            HazelcastInstance hazelcastInstance = hazelcastInstances[0];
 
             IMap<String, String> itemsMap = hazelcastInstance.getMap("itemsMap" + System.currentTimeMillis());
             Map<String, String> map = itemsMap;
-            var pipeline = Pipeline.create();
+            Pipeline pipeline = Pipeline.create();
             pipeline.readFrom(connect(connectorProperties,
                             TestUtil::convertToStringWithJustIndexForMongo))
                     .withIngestionTimestamps()
@@ -354,7 +355,7 @@ public class KafkaConnectJdbcIT extends JetTestSupport {
             Job job = hazelcastInstance.getJet().newJob(pipeline, jobConfig);
             assertJobStatusEventually(job, RUNNING);
 
-            var jobRepository = new JobRepository(hazelcastInstance);
+            JobRepository jobRepository = new JobRepository(hazelcastInstance);
             waitForNextSnapshot(jobRepository, job.getId(), 30, false);
 
             AtomicLong recordsCreatedCounter = new AtomicLong();

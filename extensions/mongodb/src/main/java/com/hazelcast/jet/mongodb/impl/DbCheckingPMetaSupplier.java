@@ -121,7 +121,7 @@ public class DbCheckingPMetaSupplier implements ProcessorMetaSupplier {
             } else if (dataConnectionRef != null) {
                 NodeEngine nodeEngine = Util.getNodeEngine(context.hazelcastInstance());
                 DataConnectionService dataConnectionService = nodeEngine.getDataConnectionService();
-                var dataConnection = dataConnectionService.getAndRetainDataConnection(dataConnectionRef.getName(),
+                MongoDataConnection dataConnection = dataConnectionService.getAndRetainDataConnection(dataConnectionRef.getName(),
                         MongoDataConnection.class);
                 return tuple2(dataConnection.getClient(), dataConnection);
             } else {

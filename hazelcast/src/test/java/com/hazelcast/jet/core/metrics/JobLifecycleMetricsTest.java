@@ -244,13 +244,13 @@ public class JobLifecycleMetricsTest extends JetTestSupport {
 
     @Test
     public void jobFinishedAllMetricsPresents() {
-        var p = Pipeline.create();
+        Pipeline p = Pipeline.create();
         p.readFrom(TestSources.items(0, 1, 2, 3, 4, 5))
                 .groupingKey(i -> i % 2 == 0 ? "odds" : "evens")
                 .rollingAggregate(AggregateOperations.counting())
                 .writeTo(Sinks.logger());
 
-        var job = hzInstances[0].getJet().newJob(p, createJobConfigWithEnabledMetrics("targetJob"));
+        Job job = hzInstances[0].getJet().newJob(p, createJobConfigWithEnabledMetrics("targetJob"));
         job.join();
 
         JobMetricsChecker jobChecker = new JobMetricsChecker(job);
@@ -285,10 +285,10 @@ public class JobLifecycleMetricsTest extends JetTestSupport {
     @Test
     public void jobFinishedReceiveMetricsFromTargetJob() {
         hzInstances[0].getJet().newJob(streamingPipeline(), createJobConfigWithEnabledMetrics("otherJob"));
-        var job = hzInstances[0].getJet().newJob(batchPipeline(), createJobConfigWithEnabledMetrics("targetJob"));
+        Job job = hzInstances[0].getJet().newJob(batchPipeline(), createJobConfigWithEnabledMetrics("targetJob"));
         job.join();
-        var jobName = job.getName();
-        var metrics = job.getMetrics();
+        String jobName = job.getName();
+        JobMetrics metrics = job.getMetrics();
         metrics.metrics().stream()
                 .flatMap(metricName -> metrics.get(metricName).stream())
                 .forEach(measurement -> assertEquals(jobName, measurement.tag("jobName")));

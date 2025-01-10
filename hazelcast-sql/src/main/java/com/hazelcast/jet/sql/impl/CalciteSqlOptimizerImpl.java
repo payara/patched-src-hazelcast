@@ -943,9 +943,9 @@ public class CalciteSqlOptimizerImpl implements CalciteSqlOptimizer {
         final Map<String, List<Map<String, Expression<?>>>> result = new HashMap<>();
         for (final String tableName : prunabilityMap.keySet()) {
             assert tableMap.get(tableName) != null && tableMap.get(tableName) instanceof PartitionedMapTable;
-            var table = (PartitionedMapTable) tableMap.get(tableName);
+            PartitionedMapTable table = (PartitionedMapTable) tableMap.get(tableName);
 
-            var tableVariants = prunabilityMap.get(tableName);
+            List<Map<String, RexNode>> tableVariants = prunabilityMap.get(tableName);
             final List<Map<String, Expression<?>>> convertedList = new ArrayList<>();
 
             for (final Map<String, RexNode> variant : tableVariants) {

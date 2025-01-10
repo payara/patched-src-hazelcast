@@ -49,7 +49,7 @@ public class JdbcObjectProvider implements TestDatabaseRecordProvider {
     @Override
     public ObjectSpec createObject(String objectName, boolean useQuotedNames) {
         String idName = useQuotedNames ? databaseProvider.quote("person-id") : "id";
-        var spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
+        ObjectSpec spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
         createObject(spec);
         return spec;
     }
@@ -102,7 +102,7 @@ public class JdbcObjectProvider implements TestDatabaseRecordProvider {
 
     @Override
     public void insertItems(ObjectSpec spec, int count) {
-        var objectName = spec.name;
+        String objectName = spec.name;
         int start = 0;
         int end = start + count;
 

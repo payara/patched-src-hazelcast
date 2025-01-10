@@ -74,7 +74,7 @@ public class SqlMappingTest extends SqlTestSupport {
     public void when_mapExistsButMappingIsNotCreated_then_suggestDdl() {
         IMap<Integer, Integer> map = instance().getMap("map");
         map.put(1, 1);
-        var expectedDdl = "Object 'map' not found%s, did you forget to CREATE MAPPING? If you want to use the IMap named 'map', "
+        String expectedDdl = "Object 'map' not found%s, did you forget to CREATE MAPPING? If you want to use the IMap named 'map', "
                 + "execute this command first: CREATE OR REPLACE EXTERNAL MAPPING \"hazelcast\".\"public\".\"map\" EXTERNAL NAME \"map\"\n"
                 + "TYPE \"IMap\"\n"
                 + "OPTIONS (\n"

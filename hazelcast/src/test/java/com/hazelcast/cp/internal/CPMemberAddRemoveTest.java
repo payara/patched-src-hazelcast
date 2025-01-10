@@ -1086,7 +1086,7 @@ public class CPMemberAddRemoveTest extends HazelcastRaftTestSupport {
             futures[i] = spawn(() -> instances[ix].shutdown());
         }
 
-        for (var f : futures) {
+        for (Future<?> f : futures) {
             assertCompletesEventually(f);
             f.get();
         }

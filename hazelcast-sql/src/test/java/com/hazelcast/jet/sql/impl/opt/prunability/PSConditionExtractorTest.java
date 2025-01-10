@@ -73,12 +73,12 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 emptyList(),
                 10, emptyList(), true).getTarget();
 
-        var b = new RexBuilder(typeFactory);
+        RexBuilder b = new RexBuilder(typeFactory);
         var leftInputRef = b.makeInputRef(typeFactory.createSqlType(INTEGER), 0);
         var rexLiteral = b.makeLiteral("1");
-        var call = (RexCall) b.makeCall(EQUALS, leftInputRef, rexLiteral);
+        RexCall call = (RexCall) b.makeCall(EQUALS, leftInputRef, rexLiteral);
 
-        var decomposedConds = extractor.extractCondition(table, call, Set.of(KEY));
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, call, Set.of(KEY));
         assertEquals(Map.of("m", singletonList(Map.of("__key", rexLiteral))), decomposedConds);
     }
 
@@ -95,7 +95,7 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 Collections.emptyList(), 10, Arrays.asList("comp1", "comp2"), true).getTarget();
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
-        var b = new RexBuilder(typeFactory);
+        RexBuilder b = new RexBuilder(typeFactory);
         var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
         var param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
         var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
@@ -103,13 +103,13 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
         var col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
         var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
-        var filter = (RexCall) b.makeCall(AND,
+        RexCall filter = (RexCall) b.makeCall(AND,
                 b.makeCall(EQUALS, col0, param2),
                 b.makeCall(EQUALS, col1, param1),
                 b.makeCall(EQUALS, col2, param0)
         );
 
-        var decomposedConds = extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
         assertEquals(Map.of("m", singletonList(Map.of(
                 "comp1", param1,
                 "comp2", param0
@@ -129,7 +129,7 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 Collections.emptyList(), 10, Arrays.asList("comp1", "comp2"), true).getTarget();
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
-        var b = new RexBuilder(typeFactory);
+        RexBuilder b = new RexBuilder(typeFactory);
         var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
         var param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
         var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
@@ -137,13 +137,14 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
         var col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
         var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
-        var filter = (RexCall) b.makeCall(OR,
+        RexCall filter = (RexCall) b.makeCall(OR,
                 b.makeCall(EQUALS, col0, param2),
                 b.makeCall(EQUALS, col1, param1),
                 b.makeCall(EQUALS, col2, param0)
         );
 
-        var decomposedConds = extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds =
+            extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
         assertEquals(0, decomposedConds.size());
     }
 
@@ -160,18 +161,19 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 Collections.emptyList(), 10, Arrays.asList("comp1", "comp2"), true).getTarget();
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
-        var b = new RexBuilder(typeFactory);
+        RexBuilder b = new RexBuilder(typeFactory);
         var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
         var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
         var col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
         var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
-        var filter = (RexCall) b.makeCall(AND,
+        RexCall filter = (RexCall) b.makeCall(AND,
                 b.makeCall(EQUALS, col0, param2),
                 b.makeCall(EQUALS, col2, param0)
         );
 
-        var decomposedConds = extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds =
+            extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
         assertEquals(0, decomposedConds.size());
     }
 }

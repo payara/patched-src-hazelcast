@@ -153,8 +153,8 @@ public class MongoDataConnectionTest extends AbstractMongoTest {
                 .setProperty(MongoDataConnection.CONNECTION_POOL_MAX, "2023"));
 
         try (MongoClient client = dataConnection.getClient()) {
-            var asCloseable = (CloseableMongoClient) client;
-            var impl = (MongoClientImpl) asCloseable.delegate;
+            CloseableMongoClient asCloseable = (CloseableMongoClient) client;
+            MongoClientImpl impl = (MongoClientImpl) asCloseable.delegate;
             assertThat(impl.getSettings().getConnectionPoolSettings().getMinSize()).isEqualTo(1337);
             assertThat(impl.getSettings().getConnectionPoolSettings().getMaxSize()).isEqualTo(2023);
         }

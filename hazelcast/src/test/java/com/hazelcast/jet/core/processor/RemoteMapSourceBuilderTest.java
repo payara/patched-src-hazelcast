@@ -17,6 +17,7 @@
 package com.hazelcast.jet.core.processor;
 
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.jet.pipeline.RemoteMapSourceBuilder;
 import com.hazelcast.jet.pipeline.Sources;
 import com.hazelcast.projection.Projection;
 import com.hazelcast.query.Predicate;
@@ -57,7 +58,7 @@ class RemoteMapSourceBuilderTest {
     void testNotSerializablePredicate() {
         NonSerializablePredicate predicate = new NonSerializablePredicate();
 
-        var builder = Sources.<Integer, Integer>remoteMapBuilder("mapName");
+        RemoteMapSourceBuilder<Integer, Integer, Map.Entry<Integer, Integer>> builder = Sources.<Integer, Integer>remoteMapBuilder("mapName");
         assertThatThrownBy(() -> builder.predicate(predicate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("\"predicate\" must be serializable");
@@ -67,7 +68,8 @@ class RemoteMapSourceBuilderTest {
     void testNotSerializableProjection() {
         NonSerializableProjection projection = new NonSerializableProjection();
 
-        var builder = Sources.<Integer, Integer>remoteMapBuilder("mapName");
+        RemoteMapSourceBuilder<Integer, Integer, Map.Entry<Integer, Integer>> builder =
+            Sources.<Integer, Integer>remoteMapBuilder("mapName");
         assertThatThrownBy(() -> builder.projection(projection))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("\"projection\" must be serializable");

@@ -107,7 +107,7 @@ public final class HazelcastRelMdPrunability
         }
 
         final RexCall call = (RexCall) filter;
-        final var conditionExtractor = new PartitionStrategyConditionExtractor();
+        final PartitionStrategyConditionExtractor conditionExtractor = new PartitionStrategyConditionExtractor();
         return conditionExtractor.extractCondition(targetTable, call, partitioningColumns);
     }
 
@@ -154,13 +154,13 @@ public final class HazelcastRelMdPrunability
         Map<String, List<Map<String, RexNode>>> prunability = new HashMap<>();
         for (int i = 0; i < rel.getInputs().size(); i++) {
             RelNode input = rel.getInput(i);
-            var extractedPrunability = query.extractPrunability(input);
+            Map<String, List<Map<String, RexNode>>> extractedPrunability = query.extractPrunability(input);
             // If we detect any non-prunable input rel, we disrupt prunability.
             if (extractedPrunability.isEmpty()) {
                 return emptyMap();
             }
             for (final String tableName : extractedPrunability.keySet()) {
-                var tableVariants = extractedPrunability.get(tableName);
+                List<Map<String, RexNode>> tableVariants = extractedPrunability.get(tableName);
                 prunability.putIfAbsent(tableName, new ArrayList<>());
                 prunability.get(tableName).addAll(tableVariants);
             }

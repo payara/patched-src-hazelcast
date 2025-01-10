@@ -95,7 +95,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -112,7 +112,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -129,7 +129,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -146,7 +146,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -160,7 +160,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
 
         SqlPlanImpl.SelectPlan selectPlan = assertQueryPlan(query);
 
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
 
         assertEquals(0, partitionsToUse.size());
         assertQueryResult(selectPlan, singletonList(new Row(2, 2, 2, "2")));
@@ -180,7 +180,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -198,7 +198,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -215,7 +215,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         // When
         assertQueryResult(selectPlan, singletonList(new Row(c, c, c, "" + c)));
 
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertEquals(0, partitionsToUse.size());
     }
 
@@ -234,7 +234,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row("" + c)), key);
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -253,7 +253,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row("" + c)), key);
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -274,7 +274,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, singletonList(new Row("" + c)), new PAKeyWithPAField(key));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(1, partitionsToUse);
     }
 
@@ -293,7 +293,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, emptyList(), new Object[1]);
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertEquals(0, partitionsToUse.size());
     }
 
@@ -315,7 +315,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
                 new Row(c[1], c[1], c[1], "" + c[1])));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(c.length, partitionsToUse);
     }
 
@@ -337,7 +337,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
                 new Row(c[1], c[1], c[1], "" + c[1])));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(c.length, partitionsToUse);
     }
 
@@ -359,7 +359,7 @@ public class SqlPartitionPruningE2ETest extends SqlEndToEndTestSupport {
         assertQueryResult(selectPlan, asList(new Row(c[0]), new Row(c[1])));
 
         // Then
-        var partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
+        Set<Integer> partitionsToUse = planExecutor.tryUsePrunability(selectPlan, eec);
         assertPrunability(2, partitionsToUse);
     }
 

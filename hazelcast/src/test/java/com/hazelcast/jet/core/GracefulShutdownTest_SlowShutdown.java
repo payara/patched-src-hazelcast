@@ -25,6 +25,7 @@ import com.hazelcast.internal.services.GracefulShutdownAwareService;
 import com.hazelcast.jet.Job;
 import com.hazelcast.jet.core.processor.DiagnosticProcessors;
 import com.hazelcast.jet.impl.JetServiceBackend;
+import com.hazelcast.jet.impl.JobCoordinationService;
 import com.hazelcast.test.Accessors;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
@@ -137,7 +138,7 @@ public class GracefulShutdownTest_SlowShutdown extends JetTestSupport {
         Executors.newSingleThreadExecutor().submit(() -> instances[1].shutdown());
         shutdownInitiated.await();
 
-        var shutdownedMemberUUID = instances[1].getCluster().getLocalMember().getUuid();
+        UUID shutdownedMemberUUID = instances[1].getCluster().getLocalMember().getUuid();
 
         assertShuttingDownMembers(emptySet(), instances[1]);
         assertTrueEventually(() -> assertShuttingDownMembers(singleton(shutdownedMemberUUID), instances[0]));
@@ -152,7 +153,7 @@ public class GracefulShutdownTest_SlowShutdown extends JetTestSupport {
         Executors.newSingleThreadExecutor().submit(() -> instances[1].shutdown());
         shutdownInitiated.await();
 
-        var shutdownedMemberUUID = instances[1].getCluster().getLocalMember().getUuid();
+        UUID shutdownedMemberUUID = instances[1].getCluster().getLocalMember().getUuid();
 
         assertShuttingDownMembers(emptySet(), instances[1]);
         assertTrueEventually(() -> assertShuttingDownMembers(singleton(shutdownedMemberUUID), instances[0]));
@@ -183,7 +184,7 @@ public class GracefulShutdownTest_SlowShutdown extends JetTestSupport {
 
     private void assertShuttingDownMembers(Set<UUID> expected, HazelcastInstance instance) {
         JetServiceBackend service = Accessors.getService(instance, JetServiceBackend.SERVICE_NAME);
-        var jobCoordinatorService = service.getJobCoordinationService();
+        JobCoordinationService jobCoordinatorService = service.getJobCoordinationService();
         Map<UUID, CompletableFuture<Void>> membersShuttingDown;
         try {
             membersShuttingDown = ReflectionUtils.getFieldValueReflectively(jobCoordinatorService, "membersShuttingDown");

@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -45,48 +46,48 @@ public class OrderedIndexStoreTest {
 
     @Test
     public void getSqlRecordIteratorBatchLeftIncludedRightIncludedDescending() {
-        var expectedKeyOrder = List.of(7, 4, 1, 6, 3, 0);
-        var result = store.getSqlRecordIteratorBatch(0, true, 1, true, true);
+        List<Integer> expectedKeyOrder = Arrays.asList(7, 4, 1, 6, 3, 0);
+        Iterator<IndexKeyEntries> result = store.getSqlRecordIteratorBatch(0, true, 1, true, true);
         assertResult(expectedKeyOrder, result);
     }
 
     @Test
     public void getSqlRecordIteratorBatchLeftExcludeRightExcludeAscending() {
-        var expectedKeyOrder = List.of(1, 4, 7);
-        var result = store.getSqlRecordIteratorBatch(0, false, 2, false, false);
+        List<Integer> expectedKeyOrder = Arrays.asList(1, 4, 7);
+        Iterator<IndexKeyEntries> result = store.getSqlRecordIteratorBatch(0, false, 2, false, false);
         assertResult(expectedKeyOrder, result);
     }
 
     @Test
     public void getSqlRecordIteratorBatchLeftIncludedRightExcludedDescending() {
-        var expectedKeyOrder = List.of(6, 3, 0);
-        var result = store.getSqlRecordIteratorBatch(0, true, 1, false, true);
+        List<Integer> expectedKeyOrder = Arrays.asList(6, 3, 0);
+        Iterator<IndexKeyEntries> result = store.getSqlRecordIteratorBatch(0, true, 1, false, true);
         assertResult(expectedKeyOrder, result);
     }
 
     @Test
     public void getSqlRecordIteratorBatchLeftExcludedRightIncludedAscending() {
-        var expectedKeyOrder = List.of(1, 4, 7);
-        var result = store.getSqlRecordIteratorBatch(0, false, 1, true, false);
+        List<Integer> expectedKeyOrder = Arrays.asList(1, 4, 7);
+        Iterator<IndexKeyEntries> result = store.getSqlRecordIteratorBatch(0, false, 1, true, false);
         assertResult(expectedKeyOrder, result);
     }
 
     @Test
     public void getSqlRecordIteratorBatchCursorLeftIncludeRightIncludedAscending() {
-        var expectedOrder = List.of(0, 3, 6, 1, 4, 7);
+        List<Integer> expectedOrder = Arrays.asList(0, 3, 6, 1, 4, 7);
         performCursorTest(3, expectedOrder, cursor -> store.getSqlRecordIteratorBatch(0, true, 1, true, false, cursor));
     }
 
     @Test
     public void getSqlRecordIteratorBatchCursorLeftExcludedRightIncludedDescending() {
-        var expectedOrder = List.of(7, 4, 1);
+        List<Integer> expectedOrder = Arrays.asList(7, 4, 1);
         performCursorTest(expectedOrder, cursor -> store.getSqlRecordIteratorBatch(0, false, 1, true, true, cursor));
     }
 
 
     @Test
     public void getSqlRecordIteratorBatchCursorLeftIncludedAscending() {
-        var expectedOrder = List.of(0, 3, 6, 1, 4, 7);
+        List<Integer> expectedOrder = Arrays.asList(0, 3, 6, 1, 4, 7);
         performCursorTest(3, expectedOrder, cursor -> store.getSqlRecordIteratorBatch(0, true, 2, false, false, cursor));
     }
 
@@ -97,67 +98,67 @@ public class OrderedIndexStoreTest {
 
     @Test
     public void getRecordAllAscending() {
-        var expectedOrder = List.of(0, 3, 6, 1, 4, 7, 2, 5, 8);
-        var actual = store.getSqlRecordIteratorBatch(false);
+        List<Integer> expectedOrder = Arrays.asList(0, 3, 6, 1, 4, 7, 2, 5, 8);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(false);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordAllDescending() {
-        var expectedOrder = List.of(8, 5, 2, 7, 4, 1, 6, 3, 0);
-        var actual = store.getSqlRecordIteratorBatch(true);
+        List<Integer> expectedOrder = Arrays.asList(8, 5, 2, 7, 4, 1, 6, 3, 0);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(true);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordsUsingExactValueAscending() {
-        var expectedOrder = List.of(1, 4, 7);
-        var actual = store.getSqlRecordIteratorBatch(1, false);
+        List<Integer> expectedOrder = Arrays.asList(1, 4, 7);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(1, false);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordsUsingExactValueDescending() {
-        var expectedOrder = List.of(7, 4, 1);
-        var actual = store.getSqlRecordIteratorBatch(1, true);
+        List<Integer> expectedOrder = Arrays.asList(7, 4, 1);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(1, true);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordsWithCursorUsingExactValueAscending() {
-        var expectedOrder = List.of(1, 4, 7);
+        List<Integer> expectedOrder = Arrays.asList(1, 4, 7);
         performCursorTest(expectedOrder, cursor -> store.getSqlRecordIteratorBatch(1, false, cursor));
     }
 
     @Test
     public void getRecordsWithCursorUsingExactValueDepending() {
-        var expectedOrder = List.of(7, 4, 1);
+        List<Integer> expectedOrder = Arrays.asList(7, 4, 1);
         performCursorTest(expectedOrder, cursor -> store.getSqlRecordIteratorBatch(1, true, cursor));
     }
 
     @Test
     public void getRecordsUsingExactValueInequalityAscending() {
-        var expectedOrder = List.of(1, 4, 7, 2, 5, 8);
-        var actual = store.getSqlRecordIteratorBatch(Comparison.GREATER, 0, false);
+        List<Integer> expectedOrder = Arrays.asList(1, 4, 7, 2, 5, 8);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(Comparison.GREATER, 0, false);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordsUsingExactValueInequalityDescending() {
-        var expectedOrder = List.of(7, 4, 1, 6, 3, 0);
-        var actual = store.getSqlRecordIteratorBatch(Comparison.LESS_OR_EQUAL, 1, true);
+        List<Integer> expectedOrder = Arrays.asList(7, 4, 1, 6, 3, 0);
+        Iterator<IndexKeyEntries> actual = store.getSqlRecordIteratorBatch(Comparison.LESS_OR_EQUAL, 1, true);
         assertResult(expectedOrder, actual);
     }
 
     @Test
     public void getRecordsWithCursorUsingExactValueInequalityAscending() {
-        var expectedOrder = List.of(1, 4, 7, 2, 5, 8);
+        List<Integer> expectedOrder = Arrays.asList(1, 4, 7, 2, 5, 8);
         performCursorTest(3, expectedOrder, cursor -> store.getSqlRecordIteratorBatch(Comparison.GREATER_OR_EQUAL, 1, false, cursor));
     }
 
     @Test
     public void getRecordsWithCursorUsingExactValueInequalityDescending() {
-        var expectedOrder = List.of(6, 3, 0);
+        List<Integer> expectedOrder = Arrays.asList(6, 3, 0);
         performCursorTest(expectedOrder, cursor -> store.getSqlRecordIteratorBatch(Comparison.LESS_OR_EQUAL, 0, true, cursor));
     }
 
@@ -171,16 +172,16 @@ public class OrderedIndexStoreTest {
 
     private void performCursorTest(int cursorCases, List<Integer> order, Function<Data, Iterator<IndexKeyEntries>> cursorIteratorFunction) {
         for (int i = 0; i < cursorCases; i++) {
-            var cursor = buildCursor(order.get(i));
-            var result = cursorIteratorFunction.apply(cursor);
+            Data cursor = buildCursor(order.get(i));
+            Iterator<IndexKeyEntries> result = cursorIteratorFunction.apply(cursor);
             assertResult(order.subList(i + 1, order.size()), result);
         }
     }
 
     private void assertResult(List<Integer> expected, Iterator<IndexKeyEntries> actual) {
-        var expectedKeyOrder = expected.iterator();
+        Iterator<Integer> expectedKeyOrder = expected.iterator();
         while (actual.hasNext()) {
-            var entries = actual.next().getEntries();
+            Iterator<QueryableEntry> entries = actual.next().getEntries();
             while (entries.hasNext()) {
                 assertEquals(entries.next().getKey(), expectedKeyOrder.next());
             }

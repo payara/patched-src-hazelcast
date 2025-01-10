@@ -97,7 +97,7 @@ public class KafkaConnectWindowingViaMongoDbIT extends JetTestSupport {
     public void rollingCount() throws InterruptedException {
         Config config = smallInstanceConfig();
         config.getJetConfig().setResourceUploadEnabled(true);
-        var instances = createHazelcastInstances(config, 2);
+        HazelcastInstance[] instances = createHazelcastInstances(config, 2);
         final HazelcastInstance instance = instances[0];
 
         final String testName = randomName();

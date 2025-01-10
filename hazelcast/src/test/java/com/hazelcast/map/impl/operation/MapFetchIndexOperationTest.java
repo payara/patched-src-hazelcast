@@ -31,6 +31,7 @@ import com.hazelcast.instance.impl.NodeContext;
 import com.hazelcast.instance.impl.NodeExtension;
 import com.hazelcast.internal.cluster.Joiner;
 import com.hazelcast.internal.iteration.IndexIterationPointer;
+import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.internal.serialization.SerializationService;
 import com.hazelcast.internal.server.Server;
 import com.hazelcast.internal.server.tcp.LocalAddressRegistry;
@@ -178,7 +179,7 @@ public class MapFetchIndexOperationTest extends HazelcastTestSupport {
         IndexIterationPointer[] pointers = new IndexIterationPointer[1];
         SerializationService ss = getNodeEngineImpl(instance).getSerializationService();
 
-        var value = ss.toData("person8");
+        Data value = ss.toData("person8");
 
         pointers[0] = IndexIterationPointer.create(45, true, 66, true, descending, value);
 

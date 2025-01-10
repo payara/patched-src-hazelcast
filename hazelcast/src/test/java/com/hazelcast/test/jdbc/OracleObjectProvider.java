@@ -59,7 +59,7 @@ public class OracleObjectProvider extends JdbcObjectProvider {
 
     @Override
     public void insertItems(ObjectSpec spec, int count) {
-        var objectName = databaseProvider.quote(spec.name);
+        String objectName = databaseProvider.quote(spec.name);
         int start = 0;
         int end = start + count;
 
@@ -99,7 +99,7 @@ public class OracleObjectProvider extends JdbcObjectProvider {
     @Override
     public ObjectSpec createObject(String objectName, boolean useQuotedNames) {
         String idName = useQuotedNames ? "person-id" : "id";
-        var spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
+        ObjectSpec spec = new ObjectSpec(objectName, col(idName, INT, true), col("name", STRING));
         createObject(spec);
         return spec;
     }

@@ -205,7 +205,7 @@ public class ReadMongoParams<I> implements Serializable {
         private Document sort;
 
         public List<Document> nonNulls() {
-            var list = new ArrayList<Document>();
+            List<Document> list = new ArrayList<Document>();
             if (filter != null) {
                 list.add(filter);
             }

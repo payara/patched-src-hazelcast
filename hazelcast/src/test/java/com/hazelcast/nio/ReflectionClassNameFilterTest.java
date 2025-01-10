@@ -68,7 +68,7 @@ public class ReflectionClassNameFilterTest {
     @Test
     public void testDefaultEnabledSuccess() {
         JavaSerializationFilterConfig config = new JavaSerializationFilterConfig().setDefaultsDisabled(false);
-        var filter = new ReflectionClassNameFilter(config);
+        ReflectionClassNameFilter filter = new ReflectionClassNameFilter(config);
         filter.filter("java.someclass");
         filter.filter(int[].class.getName());
         filter.filter("com.hazelcast.someclass");
@@ -84,7 +84,7 @@ public class ReflectionClassNameFilterTest {
     @Test
     public void testDefaultDisabledFailed() {
         JavaSerializationFilterConfig config = new JavaSerializationFilterConfig().setDefaultsDisabled(true);
-        var filter = new ReflectionClassNameFilter(config);
+        ReflectionClassNameFilter filter = new ReflectionClassNameFilter(config);
         assertThatThrownBy(() -> filter.filter("java.someclass")).isInstanceOf(SecurityException.class);
         assertThatThrownBy(() -> filter.filter(int[].class.getName())).isInstanceOf(SecurityException.class);
         assertThatThrownBy(() -> filter.filter("com.hazelcast.someclass")).isInstanceOf(SecurityException.class);

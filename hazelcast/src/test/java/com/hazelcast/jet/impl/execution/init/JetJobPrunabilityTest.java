@@ -98,7 +98,7 @@ public class JetJobPrunabilityTest extends SimpleTestInClusterSupport {
         Vertex printer = dag.newVertex("Consumer", consumerPms);
         dag.edge(between(generator, printer).distributeTo(localMemberAddress()).allToOne());
 
-        var analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
+        ExecutionPlanBuilder.PartitionPruningAnalysisResult analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
         assertThat(analysisResult.allPartitionsRequired).isFalse();
         assertThat(analysisResult.constantPartitionIds).containsExactly(allToOnePartitionId());
         assertThat(analysisResult.requiredAddresses).containsExactly(localMemberAddress());
@@ -184,7 +184,7 @@ public class JetJobPrunabilityTest extends SimpleTestInClusterSupport {
         // aggregator -> printer
         dag.edge(between(aggregator, printer).isolated());
 
-        var analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
+        ExecutionPlanBuilder.PartitionPruningAnalysisResult analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
         assertThat(analysisResult.allPartitionsRequired).isTrue();
         assertThat(analysisResult.constantPartitionIds).isEmpty();
         assertThat(analysisResult.requiredAddresses).containsExactly(addr);
@@ -222,7 +222,7 @@ public class JetJobPrunabilityTest extends SimpleTestInClusterSupport {
         dag.edge(Edge.from(generatorLeft).to(consumer, 0).isolated());
         dag.edge(Edge.from(generatorRight).to(consumer, 1).distributed().broadcast());
 
-        var analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
+        ExecutionPlanBuilder.PartitionPruningAnalysisResult analysisResult = ExecutionPlanBuilder.analyzeDagForPartitionPruning(getNodeEngineImpl(instance()), dag);
         assertThat(analysisResult.allPartitionsRequired).isFalse();
         assertThat(analysisResult.constantPartitionIds).isEmpty();
         assertThat(analysisResult.requiredAddresses).isEmpty();

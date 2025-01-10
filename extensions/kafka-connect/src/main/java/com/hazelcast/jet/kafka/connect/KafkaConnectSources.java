@@ -18,6 +18,7 @@ package com.hazelcast.jet.kafka.connect;
 
 import com.hazelcast.function.FunctionEx;
 import com.hazelcast.jet.kafka.connect.impl.SourceConnectorWrapper;
+import com.hazelcast.jet.kafka.connect.impl.processorsupplier.ReadKafkaConnectProcessorSupplier;
 import com.hazelcast.jet.kafka.connect.impl.processorsupplier.TaskMaxProcessorMetaSupplier;
 import com.hazelcast.jet.pipeline.Sources;
 import com.hazelcast.jet.pipeline.StreamSource;
@@ -138,7 +139,7 @@ public final class KafkaConnectSources {
         int tasksMax = Integer.parseInt(strTasksMax);
         checkPositive(tasksMax, "tasks.max must be positive");
 
-        final var metaSupplier = new TaskMaxProcessorMetaSupplier();
+        final TaskMaxProcessorMetaSupplier metaSupplier = new TaskMaxProcessorMetaSupplier();
         metaSupplier.setTasksMax(tasksMax);
 
         // Create source name
@@ -146,7 +147,8 @@ public final class KafkaConnectSources {
 
         return Sources.streamFromProcessorWithWatermarks(name, true,
                 eventTimePolicy -> {
-                    var sup = processorSupplier(defaultProperties, eventTimePolicy, projectionFn, retryStrategy);
+                    ReadKafkaConnectProcessorSupplier sup = processorSupplier(
+                        defaultProperties, eventTimePolicy, projectionFn, retryStrategy);
                     metaSupplier.setSupplier(sup);
                     return metaSupplier;
                 });

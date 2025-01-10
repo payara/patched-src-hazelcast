@@ -252,7 +252,7 @@ public class KafkaConnectIT extends SimpleTestInClusterSupport {
         Job job = hz.getJet().newJob(pipeline, jobConfig);
         MetricsRegistry metricsRegistry = getNode(hz).nodeEngine.getMetricsRegistry();
 
-        var collector = new KafkaMetricsCollector();
+        KafkaMetricsCollector collector = new KafkaMetricsCollector();
         ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
         try {
             es.scheduleWithFixedDelay(() -> metricsRegistry.collect(collector), 10, 10, MILLISECONDS);
@@ -298,7 +298,8 @@ public class KafkaConnectIT extends SimpleTestInClusterSupport {
 
         HazelcastInstance hazelcastInstance = hazelcastInstances[0];
         Job job = hazelcastInstance.getJet().newJob(pipeline, jobConfig);
-        var collectors = new MultiNodeMetricsCollector<>(hazelcastInstances, new KafkaMetricsCollector());
+        MultiNodeMetricsCollector<KafkaMetricsCollector> collectors = new MultiNodeMetricsCollector<>(
+            hazelcastInstances, new KafkaMetricsCollector());
         try {
             job.join();
             fail("Job should have completed with an AssertionCompletedException, but completed normally");

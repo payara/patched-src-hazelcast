@@ -63,7 +63,7 @@ public class PartitionStrategyConditionExtractor {
         if (partitioningColumns.isEmpty()) {
             return emptyMap();
         }
-        final var variants = extractSubCondition(table, call, partitioningColumns);
+        final List<Map<String, RexNode>> variants = extractSubCondition(table, call, partitioningColumns);
         if (variants.isEmpty()) {
             return emptyMap();
         }
@@ -92,7 +92,7 @@ public class PartitionStrategyConditionExtractor {
                     if (!(operand instanceof RexCall)) {
                         return emptyList();
                     }
-                    var condition = extractEqualityCondition(table, (RexCall) operand, partitioningColumns);
+                    Map.Entry<String, RexNode> condition = extractEqualityCondition(table, (RexCall) operand, partitioningColumns);
                     if (condition != null) {
                         variant.put(condition.getKey(), condition.getValue());
                     }
@@ -100,7 +100,7 @@ public class PartitionStrategyConditionExtractor {
                 result.add(variant);
                 break;
             case EQUALS:
-                var entry = extractEqualityCondition(table, call, partitioningColumns);
+                Map.Entry<String, RexNode> entry = extractEqualityCondition(table, call, partitioningColumns);
                 if (entry != null) {
                     result.add(Map.ofEntries(entry));
                 }

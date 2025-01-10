@@ -120,8 +120,8 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
     @ValueSource(booleans = { true, false })
     public void should_produce_watermarks(boolean isActive) throws Exception {
 
-        var sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
-        var policy = EventTimePolicy.eventTimePolicy(o -> System.currentTimeMillis(), limitingRealTimeLag(0),
+        SourceConnectorWrapper sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
+        EventTimePolicy<Object> policy = EventTimePolicy.eventTimePolicy(o -> System.currentTimeMillis(), limitingRealTimeLag(0),
                 1, 0, 1);
         readKafkaConnectP = new ReadKafkaConnectP<>(policy, rec -> (Integer) rec.value());
         readKafkaConnectP.setActive(isActive);
@@ -135,7 +135,7 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
         assertFalse(complete);
 
         final Predicate<Object> isWatermark = o -> (o instanceof Watermark);
-        var actual = new ArrayList<>(outbox.queue(0));
+        List<Object> actual = new ArrayList<>(outbox.queue(0));
         assertThat(actual)
                 .filteredOn(isWatermark)
                 .withFailMessage("Watermark should be always present")
@@ -148,7 +148,7 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
 
     @Test
     public void should_require_eventTimePolicy() {
-        var wrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
+        SourceConnectorWrapper wrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
         assertThatThrownBy(() -> new ReadKafkaConnectP<>(null,
                 rec -> (Integer) rec.value())
                 .setSourceConnectorWrapper(wrapper))
@@ -158,7 +158,7 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
 
     @Test
     public void should_require_projectionFn() {
-        var wrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
+        SourceConnectorWrapper wrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
         assertThatThrownBy(() -> new ReadKafkaConnectP<>(noEventTime(), null)
                 .setSourceConnectorWrapper(wrapper))
                 .isInstanceOf(NullPointerException.class)

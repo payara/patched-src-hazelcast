@@ -139,7 +139,7 @@ public class InsertProcessorSupplier extends MongoProcessorSupplier implements D
         writeMode = writeModeName == null ? null : WriteMode.valueOf(writeModeName);
         types = in.readObject();
         int howManyExtTypes = in.readInt();
-        var extTypes = new BsonType[howManyExtTypes];
+        BsonType[] extTypes = new BsonType[howManyExtTypes];
         for (int i = 0; i < howManyExtTypes; i++) {
             extTypes[i] = BsonType.findByValue(in.readInt());
         }

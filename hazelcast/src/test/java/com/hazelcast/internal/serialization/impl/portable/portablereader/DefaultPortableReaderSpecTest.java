@@ -127,7 +127,7 @@ public class DefaultPortableReaderSpecTest extends HazelcastTestSupport {
             resultToMatchVar = ((List<?>) resultToMatchVar).toArray();
         }
 
-        final var resultToMatch = resultToMatchVar;
+        final Object resultToMatch = resultToMatchVar;
 
         ThrowingCallable test = () -> {
 

@@ -121,10 +121,10 @@ public class UpdateProcessorTest extends SqlTestSupport {
 
         var evalContextMock = mock(UntrustedExpressionEvalContext.class);
         when(evalContextMock.getSerializationService()).thenReturn(mock());
-        var subject = new Subject(true, emptySet(), emptySet(), emptySet());
+        Subject subject = new Subject(true, emptySet(), emptySet(), emptySet());
         when(evalContextMock.subject()).thenReturn(subject);
 
-        var processor = UpdatingEntryProcessor.supplier(
+        EntryProcessor<Object, Object, Long> processor = UpdatingEntryProcessor.supplier(
                 partitionedTable(INT),
                 emptyList(),
                 emptyList()

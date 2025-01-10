@@ -724,7 +724,7 @@ public class PlanExecutor {
         Set<Integer> partitions = new HashSet<>();
         boolean allVariantsValid = true;
         for (final String mapName : plan.getPartitionStrategyCandidates().keySet()) {
-            var perMapCandidates = plan.getPartitionStrategyCandidates().get(mapName);
+            List<Map<String, Expression<?>>> perMapCandidates = plan.getPartitionStrategyCandidates().get(mapName);
             final PartitioningStrategy<?> strategy = ((MapProxyImpl) hazelcastInstance.getMap(mapName))
                     .getPartitionStrategy();
 
@@ -741,7 +741,7 @@ public class PlanExecutor {
             // ordering of attributes matters for partitioning (1,2) produces different partition than (2,1).
             final List<String> orderedKeyAttributes = new ArrayList<>();
             if (strategy instanceof AttributePartitioningStrategy) {
-                final var attributeStrategy = (AttributePartitioningStrategy) strategy;
+                final AttributePartitioningStrategy attributeStrategy = (AttributePartitioningStrategy) strategy;
                 orderedKeyAttributes.addAll(asList(attributeStrategy.getPartitioningAttributes()));
             } else {
                 orderedKeyAttributes.add(KEY_ATTRIBUTE_NAME.value());

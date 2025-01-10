@@ -97,7 +97,7 @@ public class HazelcastAPIDelegatingClassloader extends URLClassLoader {
         if (shouldDelegate(name)) {
             return super.loadClass(name, resolve);
         } else {
-            try (var classMutex = mutexFactory.mutexFor(name)) {
+            try (ContextMutexFactory.Mutex classMutex = mutexFactory.mutexFor(name)) {
                 synchronized (classMutex) {
                     Class<?> loadedClass = findLoadedClass(name);
                     if (loadedClass == null) {

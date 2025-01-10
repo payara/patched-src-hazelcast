@@ -88,7 +88,7 @@ public class SourceConnectorWrapper {
         this.processorOrder = processorOrder;
         this.isMasterProcessor = processorOrder == 0;
 
-        var rs = retryStrategy == null ? DEFAULT_RECONNECT_BEHAVIOR : retryStrategy;
+        RetryStrategy rs = retryStrategy == null ? DEFAULT_RECONNECT_BEHAVIOR : retryStrategy;
         this.reconnectTracker = new RetryTracker(rs);
         this.currentConfig = toMap(currentConfig);
 
@@ -254,7 +254,7 @@ public class SourceConnectorWrapper {
     }
 
     private Map<String, String> maskPasswords(Map<String, String> configMap) {
-        var newMap = new LinkedHashMap<>(configMap);
+        LinkedHashMap<String, String> newMap = new LinkedHashMap<>(configMap);
         newMap.replaceAll((k, v) -> {
             if (k.toLowerCase(Locale.ROOT).contains("password")) {
                 return "****";

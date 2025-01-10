@@ -163,7 +163,7 @@ public class RaftSessionServiceTest extends HazelcastRaftTestSupport {
 
         invocationManager.invoke(groupId, new CloseSessionOp(response.getSessionId())).get();
 
-        var exc = assertThrows(ExecutionException.class,
+        ExecutionException exc = assertThrows(ExecutionException.class,
                 () -> invocationManager.invoke(groupId, new HeartbeatSessionOp(response.getSessionId())).get());
         assertThat(exc).hasCauseInstanceOf(SessionExpiredException.class);
     }

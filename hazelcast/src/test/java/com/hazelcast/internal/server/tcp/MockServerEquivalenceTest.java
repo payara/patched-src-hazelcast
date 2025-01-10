@@ -18,6 +18,7 @@ package com.hazelcast.internal.server.tcp;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.internal.nio.Packet;
+import com.hazelcast.internal.server.ServerConnectionManager;
 import com.hazelcast.test.Accessors;
 import com.hazelcast.test.TestEnvironment;
 import com.hazelcast.test.TestHazelcastInstanceFactory;

@@ -39,6 +39,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import org.apache.calcite.rex.RexNode;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -187,11 +188,11 @@ public abstract class MongoSqlConnectorBase implements SqlConnector {
         DbCheckingPMetaSupplier supplier;
         final boolean forceReadTotalParallelismOne = table.isforceReadTotalParallelismOne();
         if (table.isStreaming()) {
-            var startAt = Options.startAtTimestamp(table.getOptions());
-            var ps = new SelectProcessorSupplier(table, filter, projections, startAt, eventTimePolicyProvider);
+            BsonTimestamp startAt = Options.startAtTimestamp(table.getOptions());
+            SelectProcessorSupplier ps = new SelectProcessorSupplier(table, filter, projections, startAt, eventTimePolicyProvider);
             supplier = wrap(context, ps, forceReadTotalParallelismOne);
         } else {
-            var ps = new SelectProcessorSupplier(table, filter, projections);
+            SelectProcessorSupplier ps = new SelectProcessorSupplier(table, filter, projections);
             supplier = wrap(context, ps, forceReadTotalParallelismOne);
         }
 

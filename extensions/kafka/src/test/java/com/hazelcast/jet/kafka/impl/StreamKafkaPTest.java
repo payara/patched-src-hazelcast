@@ -777,7 +777,7 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
                 1, 0,
                 0
         );
-        var processor = new StreamKafkaP<Integer, String, String>(
+        StreamKafkaP<Integer, String, String> processor = new StreamKafkaP<Integer, String, String>(
                 (c) -> new KafkaConsumer<>(properties()),
                 singletonList(topic1Name),
                 r -> "0".equals(r.value()) ? null : r.value(),
@@ -799,7 +799,7 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
 
     @Test
     public void when_topicDoesNotExist_then_partitionCountGreaterThanZero() {
-        try (var c = kafkaTestSupport.createConsumer("non-existing-topic")) {
+        try (KafkaConsumer<Integer, String> c = kafkaTestSupport.createConsumer("non-existing-topic")) {
             assertGreaterOrEquals("partition count", c.partitionsFor("non-existing-topic",
                     Duration.ofSeconds(2)).size(), 1);
         }
@@ -811,7 +811,7 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
         properties.put("bootstrap.servers", "127.0.0.1:33333");
         properties.put("key.deserializer", ByteArrayDeserializer.class.getName());
         properties.put("value.deserializer", ByteArrayDeserializer.class.getName());
-        try (var c = new KafkaConsumer<Integer, String>(properties)) {
+        try (KafkaConsumer<Integer, String> c = new KafkaConsumer<Integer, String>(properties)) {
             assertThatThrownBy(() -> c.partitionsFor("t", Duration.ofMillis(100)))
                     .isInstanceOf(TimeoutException.class);
         }

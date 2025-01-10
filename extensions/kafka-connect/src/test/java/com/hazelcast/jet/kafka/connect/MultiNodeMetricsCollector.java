@@ -16,6 +16,7 @@
 package com.hazelcast.jet.kafka.connect;
 
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.internal.metrics.MetricsRegistry;
 import com.hazelcast.internal.metrics.collectors.MetricsCollector;
 
 import java.util.concurrent.Executors;
@@ -32,8 +33,8 @@ class MultiNodeMetricsCollector<T extends MetricsCollector> {
     MultiNodeMetricsCollector(HazelcastInstance[] instances, T collector) {
         this.scheduler = Executors.newScheduledThreadPool(instances.length);
 
-        for (var inst : instances) {
-            var registry = getNode(inst).nodeEngine.getMetricsRegistry();
+        for (HazelcastInstance inst : instances) {
+            MetricsRegistry registry = getNode(inst).nodeEngine.getMetricsRegistry();
             scheduler.scheduleAtFixedRate(() -> registry.collect(collector), 20, 3, MILLISECONDS);
         }
 
