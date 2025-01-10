@@ -22,6 +22,7 @@ import com.hazelcast.internal.cluster.MemberInfo;
 import com.hazelcast.jet.SimpleTestInClusterSupport;
 import com.hazelcast.jet.impl.util.Util;
 import com.hazelcast.spi.impl.NodeEngine;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Before;
@@ -31,9 +32,9 @@ import org.junit.experimental.categories.Category;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.hazelcast.jet.impl.util.Util.range;
@@ -106,7 +107,7 @@ public class JetPartitionAssignmentTest extends SimpleTestInClusterSupport {
                 members,
                 false,
                 Collections.singleton(requiredNonCoordinatorOwnedPartition),
-                Set.of(coordinatorPartition),
+                TestCollectionUtils.setOf(coordinatorPartition),
                 Collections.singleton(localMemberInfo.getAddress())
         );
 
@@ -142,8 +143,8 @@ public class JetPartitionAssignmentTest extends SimpleTestInClusterSupport {
                 members,
                 true,
                 Collections.singleton(requiredCoordinatorOwnedPartition),
-                Set.of(),
-                Set.of()
+                new HashSet<>(),
+                new HashSet<>()
         );
 
         List<Integer> actualAssignedPartitions = partitionAssignment
@@ -187,9 +188,9 @@ public class JetPartitionAssignmentTest extends SimpleTestInClusterSupport {
                 nodeEngine,
                 members,
                 true,
-                Set.of(requiredNonCoordinatorOwnedPartition, requiredCoordinatorOwnedPartition),
-                Set.of(),
-                Set.of(localMemberInfo.getAddress())
+                TestCollectionUtils.setOf(requiredNonCoordinatorOwnedPartition, requiredCoordinatorOwnedPartition),
+                TestCollectionUtils.setOf(),
+                TestCollectionUtils.setOf((localMemberInfo.getAddress()))
         );
 
         List<Integer> actualAssignedPartitions = partitionAssignment
