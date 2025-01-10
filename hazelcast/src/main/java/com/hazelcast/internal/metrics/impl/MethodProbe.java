@@ -112,7 +112,9 @@ abstract class MethodProbe implements ProbeFunction {
             } else {
                 methodHandle = null;
 
-                final Lookup privateLookup = MethodHandles.privateLookupIn(method.getDeclaringClass(), LOOKUP);
+                // TODO JDK8: privateLookup has been modified from 5.4.0 to compile in Java8, it may behave differently.
+                //  MethodHandles.privateLookupIn(method.getDeclaringClass(), LOOKUP);
+                final Lookup privateLookup = MethodHandles.lookup().in(method.getDeclaringClass());
                 final MethodType methodReturnType = MethodType.methodType(method.getReturnType());
                 final MethodHandle implementation;
                 final MethodType dynamicMethodType = unreflected.type();
