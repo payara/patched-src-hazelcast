@@ -63,7 +63,7 @@ public interface TestDatabaseRecordProvider {
      * Checks if objects in database matches listed rows.
      */
     default void assertRow(String objectName, List<Object> row) {
-        assertRows(objectName, List.of(row));
+        assertRows(objectName, Arrays.asList(row));
     }
 
     default void assertRows(String objectName, List<Class<?>> columnType, List<List<Object>> rows) {
@@ -71,7 +71,7 @@ public interface TestDatabaseRecordProvider {
     }
 
     default void assertRow(String objectName, List<Class<?>> columnType, List<Object> row) {
-        assertRows(objectName, columnType, List.of(row));
+        assertRows(objectName, columnType, Arrays.asList(row));
     }
 
     class ObjectSpec {

@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -125,13 +126,13 @@ public class BatchAggregateTest extends PipelineTestSupport {
     // executes parallel step and which executes combine step
     public void when_maxOfOneItems_then_producesOutput() {
         // When
-        BatchStage<Integer> aggregated = batchStageFromList(List.of(1)).aggregate(maxBy(ComparatorEx.naturalOrder()));
+        BatchStage<Integer> aggregated = batchStageFromList(Arrays.asList(1)).aggregate(maxBy(ComparatorEx.naturalOrder()));
 
         // Then
         aggregated.writeTo(sink);
         execute();
         assertEquals(
-                List.of(1),
+                Arrays.asList(1),
                 new ArrayList<>(sinkList)
         );
     }

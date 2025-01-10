@@ -27,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,7 +40,7 @@ class JoinPredicateScanResultSetIteratorTest {
 
     private static String dbConnectionUrl;
 
-    private static final List<String> EXPECTED_TABLES = List.of("VIEWS", "TABLES", "ROLES", "USERS");
+    private static final List<String> EXPECTED_TABLES = Arrays.asList("VIEWS", "TABLES", "ROLES", "USERS");
 
     @BeforeAll
     public static void beforeAll() {

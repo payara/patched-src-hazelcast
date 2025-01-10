@@ -52,7 +52,7 @@ public class PostgresCdcListenBeforeExistsIntegrationTest extends AbstractPostgr
 
     @Test
     public void listenBeforeSchemaExists() throws Exception {
-        List<String> expectedRecords = List.of(
+        List<String> expectedRecords = Arrays.asList(
                 "1001/0:(SYNC|INSERT):TableRow \\{id=1001, value1=someValue1, value2=someValue2, value3=null\\}"
         );
 

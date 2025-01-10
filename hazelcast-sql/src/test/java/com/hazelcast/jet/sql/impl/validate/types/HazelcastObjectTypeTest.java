@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
-import java.util.List;
+import java.util.Arrays;
 
 import static org.apache.calcite.sql.type.SqlTypeName.INTEGER;
 import static org.apache.calcite.sql.type.SqlTypeName.VARCHAR;
@@ -44,7 +44,7 @@ public class HazelcastObjectTypeTest {
         HazelcastObjectType person = new HazelcastObjectType("P(e:r=s,o)n");
         person.addField(new Field("name", 0, nullable(VARCHAR)));
         person.addField(new Field("(:fri=end,)", 1, person));
-        HazelcastObjectType.finalizeFields(List.of(person));
+        HazelcastObjectType.finalizeFields(Arrays.asList(person));
 
         assertEquals("P\\(e\\:r=s\\,o\\)n("
                 + "name:VARCHAR CHARACTER SET \"UTF-16LE\", "
@@ -64,7 +64,7 @@ public class HazelcastObjectTypeTest {
         assertThatThrownBy(person::getFieldNames).hasMessage("Type fields are not finalized");
         assertThatThrownBy(person::getFieldCount).hasMessage("Type fields are not finalized");
 
-        HazelcastObjectType.finalizeFields(List.of(person));
+        HazelcastObjectType.finalizeFields(Arrays.asList(person));
 
         assertThat(person.getFieldList()).hasSize(2);
         assertThat(person.getField("name", false, false)).isNotNull();
@@ -72,7 +72,7 @@ public class HazelcastObjectTypeTest {
         assertThat(person.getFieldCount()).isEqualTo(2);
         assertThatThrownBy(() -> person.addField(new Field("friend", 2, person)))
                 .hasMessage("Type fields are already finalized");
-        assertThatThrownBy(() -> HazelcastObjectType.finalizeFields(List.of(person)))
+        assertThatThrownBy(() -> HazelcastObjectType.finalizeFields(Arrays.asList(person)))
                 .hasMessage("Type fields are already finalized");
     }
 

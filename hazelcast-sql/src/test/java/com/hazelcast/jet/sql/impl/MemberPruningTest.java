@@ -26,6 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -122,8 +123,8 @@ public class MemberPruningTest extends SqlEndToEndTestSupport {
                 "(SELECT this FROM " + mapName + " WHERE stringField = ?) "
                         + "UNION ALL "
                         + "(SELECT this FROM " + otherMapName + " WHERE stringField = ?)",
-                List.of(key, otherKey.getStringField()),
-                List.of(new Row(0), new Row(Integer.MIN_VALUE)));
+                Arrays.asList(key, otherKey.getStringField()),
+                Arrays.asList(new Row(0), new Row(Integer.MIN_VALUE)));
 
         assertInvokedOnlyOnMembers(instance(), partitionOwnerMember);
     }

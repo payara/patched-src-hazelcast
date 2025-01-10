@@ -110,7 +110,7 @@ public class AllTypesInsertJdbcSqlConnectorTest extends JdbcSqlTestSupport {
 
         assertJdbcQueryRowsAnyOrder("SELECT " + databaseProvider.quote("table_column")
                         + " FROM " + databaseProvider.quote(tableName),
-                List.of(jdbcValue.getClass()),
+                asList(jdbcValue.getClass()),
                 new Row(jdbcValue),
                 new Row(jdbcValue)
         );

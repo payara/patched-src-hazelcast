@@ -56,6 +56,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -120,7 +121,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
     @Parameters(name = "useSchemaRegistry=[{0}]")
     public static Iterable<Object> parameters() {
-        return List.of(false, true);
+        return Arrays.asList(false, true);
     }
 
     @Parameter
@@ -191,7 +192,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT name, (organization).name FROM " + name,
-                List.of(new Row("Alice", "Umbrella Corporation"))
+                Arrays.asList(new Row("Alice", "Umbrella Corporation"))
         );
     }
 
@@ -260,7 +261,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT name, (parent).name, (parent).phone FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row("Alice", "Bob", "(111) 111-1111"),
                         new Row("Dave", "Erin", "(999) 999-9999")
                 )
@@ -384,7 +385,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row(1, null),
                         new Row(2, true),
                         new Row(3, true),
@@ -462,7 +463,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
         };
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(allRow))
+                Arrays.asList(new Row(allRow))
         );
 
         // Test field resolution for nested fields
@@ -501,7 +502,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
         GenericRecord record = createRecord(childSchema, valueRow);
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(1, record, record, null))
+                Arrays.asList(new Row(1, record, record, null))
         );
     }
 
@@ -512,33 +513,33 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
         // Test all QueryDataType <-> Schema.Type conversions
         List<Tuple4<QueryDataTypeFamily, Object, Schema.Type, Object>> conversions = new ArrayList<>();
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.BOOLEAN, true)),
-                List.of(tuple2(Schema.Type.BOOLEAN, true),
+                Arrays.asList(tuple2(QueryDataTypeFamily.BOOLEAN, true)),
+                Arrays.asList(tuple2(Schema.Type.BOOLEAN, true),
                         tuple2(Schema.Type.STRING, "true"))));
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.TINYINT, (byte) 1),
+                Arrays.asList(tuple2(QueryDataTypeFamily.TINYINT, (byte) 1),
                         tuple2(QueryDataTypeFamily.SMALLINT, (short) 1),
                         tuple2(QueryDataTypeFamily.INTEGER, 1),
                         tuple2(QueryDataTypeFamily.BIGINT, 1L),
                         tuple2(QueryDataTypeFamily.REAL, 1F),
                         tuple2(QueryDataTypeFamily.DOUBLE, 1D),
                         tuple2(QueryDataTypeFamily.DECIMAL, BigDecimal.ONE)),
-                List.of(tuple2(Schema.Type.INT, 1),
+                Arrays.asList(tuple2(Schema.Type.INT, 1),
                         tuple2(Schema.Type.LONG, 1L),
                         tuple2(Schema.Type.FLOAT, 1F),
                         tuple2(Schema.Type.DOUBLE, 1D))));
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.TINYINT, (byte) 1),
+                Arrays.asList(tuple2(QueryDataTypeFamily.TINYINT, (byte) 1),
                         tuple2(QueryDataTypeFamily.SMALLINT, (short) 1),
                         tuple2(QueryDataTypeFamily.INTEGER, 1),
                         tuple2(QueryDataTypeFamily.BIGINT, 1L),
                         tuple2(QueryDataTypeFamily.DECIMAL, BigDecimal.ONE)),
-                List.of(tuple2(Schema.Type.STRING, "1"))));
+                Arrays.asList(tuple2(Schema.Type.STRING, "1"))));
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.REAL, 1F),
+                Arrays.asList(tuple2(QueryDataTypeFamily.REAL, 1F),
                         tuple2(QueryDataTypeFamily.DOUBLE, 1D)),
-                List.of(tuple2(Schema.Type.STRING, "1.0"))));
-        conversions.addAll(List.of(
+                Arrays.asList(tuple2(Schema.Type.STRING, "1.0"))));
+        conversions.addAll(Arrays.asList(
                 tuple4(QueryDataTypeFamily.TIME, LocalTime.of(12, 23, 34), Schema.Type.STRING, "12:23:34"),
                 tuple4(QueryDataTypeFamily.DATE, LocalDate.of(2020, 4, 15), Schema.Type.STRING, "2020-04-15"),
                 tuple4(QueryDataTypeFamily.TIMESTAMP, LocalDateTime.of(2020, 4, 15, 12, 23, 34, 1_000_000),
@@ -547,13 +548,13 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
                         OffsetDateTime.of(2020, 4, 15, 12, 23, 34, 200_000_000, UTC),
                         Schema.Type.STRING, "2020-04-15T12:23:34.200Z")));
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.VARCHAR, "1")),
-                List.of(tuple2(Schema.Type.INT, 1),
+                Arrays.asList(tuple2(QueryDataTypeFamily.VARCHAR, "1")),
+                Arrays.asList(tuple2(Schema.Type.INT, 1),
                         tuple2(Schema.Type.LONG, 1L),
                         tuple2(Schema.Type.STRING, "1"))));
         conversions.addAll(cartesian(
-                List.of(tuple2(QueryDataTypeFamily.VARCHAR, "1.0")),
-                List.of(tuple2(Schema.Type.FLOAT, 1F),
+                Arrays.asList(tuple2(QueryDataTypeFamily.VARCHAR, "1.0")),
+                Arrays.asList(tuple2(Schema.Type.FLOAT, 1F),
                         tuple2(Schema.Type.DOUBLE, 1D))));
         conversions.add(tuple4(QueryDataTypeFamily.VARCHAR, "true", Schema.Type.BOOLEAN, true));
         conversions.add(tuple4(QueryDataTypeFamily.OBJECT, "string", Schema.Type.UNION, "string"));
@@ -588,7 +589,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
                 Schema.Type.NULL,
                 Schema.Type.BYTES
         ).forEach(type -> schemaFieldTypes.add(Schema.create(type)));
-        schemaFieldTypes.addAll(List.of(
+        schemaFieldTypes.addAll(Arrays.asList(
                 OBJECT_SCHEMA, // Schema.Type.UNION
                 SchemaBuilder.array().items(Schema.create(Schema.Type.INT)),
                 SchemaBuilder.map().values(Schema.create(Schema.Type.INT)),
@@ -683,7 +684,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
         // assert both - initial & evolved - records are correctly read
         Runnable assertRecords = () -> assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row(13, "Alice", null),
                         new Row(69, "Bob", 123456789L)
                 )
@@ -725,7 +726,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + to,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         1,
                         "string",
                         true,
@@ -794,7 +795,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         new GenericRecordBuilder(ID_SCHEMA).set("id", 1).build(),
                         new GenericRecordBuilder(NAME_SCHEMA).set("name", "Alice").build()
                 ))
@@ -907,7 +908,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + mapping.name,
-                List.of(new Row(selectValues))
+                Arrays.asList(new Row(selectValues))
         );
     }
 

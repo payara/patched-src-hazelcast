@@ -23,6 +23,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class KafkaIntegrationSqlTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT __key,this FROM " + topicName,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         1,
                         Map.of(
                                 "ticker", "ABCD",

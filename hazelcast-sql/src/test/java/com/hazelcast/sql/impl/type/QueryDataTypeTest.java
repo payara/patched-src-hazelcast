@@ -67,11 +67,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -299,7 +299,7 @@ public class QueryDataTypeTest extends HazelcastTestSupport {
     }
 
     private void checkClasses(QueryDataType type, Class<?>... classes) {
-        assertContains(List.of(classes), type.getConverter().getValueClass());
+        assertContains(Arrays.asList(classes), type.getConverter().getValueClass());
         for (Class<?> clazz : classes) {
             assertSame(type, QueryDataTypeUtils.resolveTypeForClass(clazz));
         }
@@ -319,7 +319,7 @@ public class QueryDataTypeTest extends HazelcastTestSupport {
         Object identifiedDataSerialized = serde(type);
         Object javaSerialized = serde((SupplierEx<Object>) () -> type).get();
 
-        for (Object serialized : List.of(identifiedDataSerialized, javaSerialized)) {
+        for (Object serialized : Arrays.asList(identifiedDataSerialized, javaSerialized)) {
             if (type.isCustomType()) {
                 assertEquals(type, serialized);
             } else {

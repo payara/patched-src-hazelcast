@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.hazelcast.internal.util.ExceptionUtil.sneakyThrow;
@@ -129,7 +129,7 @@ final class FileUtil {
         ).set("bytes", ByteBuffer.wrap(new byte[]{(byte) 19}))
          .set("map", Map.of("key", 71))
          .set("record", new GenericRecordBuilder(recordSchema).set("field", 23).build())
-         .set("array", new GenericData.Array<>(arraySchema, List.of(53)))
+         .set("array", new GenericData.Array<>(arraySchema, Arrays.asList(53)))
          .set("enum", new GenericData.EnumSymbol(enumSchema, "symbol"))
          .set("fixed", new GenericData.Fixed(fixedSchema, new byte[]{(byte) 74}))
          .build();

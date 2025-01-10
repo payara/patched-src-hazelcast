@@ -154,10 +154,10 @@ public class SpecificPartitionsImapReaderPmsTest extends SqlTestSupport {
             // given
             List<List<Expression<?>>> expressions = new ArrayList<>();
             if (partitionCountToUse > 0) {
-                expressions.add(List.of(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
+                expressions.add(Arrays.asList(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
             }
             for (int i = 0; i < partitionCountToUse - 1; ++i) {
-                expressions.add(List.of(ConstantExpression.create(perMemberOwnedPKey[i], QueryDataType.INT)));
+                expressions.add(Arrays.asList(ConstantExpression.create(perMemberOwnedPKey[i], QueryDataType.INT)));
             }
             SpecificPartitionsImapReaderPms readPms = (SpecificPartitionsImapReaderPms) mapReader(mapName, null, expressions);
 
@@ -178,7 +178,7 @@ public class SpecificPartitionsImapReaderPmsTest extends SqlTestSupport {
     public void test_prunableScan_psUnitTest() throws Exception {
         // given
         List<List<Expression<?>>> expressions = new ArrayList<>();
-        expressions.add(List.of(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
+        expressions.add(Arrays.asList(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
         SpecificPartitionsImapReaderPms readPms = (SpecificPartitionsImapReaderPms) mapReader(mapName, null, expressions);
 
         TestProcessorSupplierContext context = new TestProcessorSupplierContext().setHazelcastInstance(instance());
@@ -186,7 +186,7 @@ public class SpecificPartitionsImapReaderPmsTest extends SqlTestSupport {
 
         Address coordinatorAddress = Accessors.getAddress(instance());
         ReadMapOrCacheP.LocalProcessorSupplier ps = (ReadMapOrCacheP.LocalProcessorSupplier)
-                readPms.get(List.of(coordinatorAddress)).apply(coordinatorAddress);
+                readPms.get(Arrays.asList(coordinatorAddress)).apply(coordinatorAddress);
 
         // when
         ps.init(context);
@@ -202,7 +202,7 @@ public class SpecificPartitionsImapReaderPmsTest extends SqlTestSupport {
         List<List<Expression<?>>> expressions = new ArrayList<>();
         // simulate situation when many expressions produce the same partition
         for (int i = 0; i < 5; ++i) {
-            expressions.add(List.of(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
+            expressions.add(Arrays.asList(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
         }
         SpecificPartitionsImapReaderPms readPms = (SpecificPartitionsImapReaderPms) mapReader(mapName, null, expressions);
 
@@ -274,11 +274,11 @@ public class SpecificPartitionsImapReaderPmsTest extends SqlTestSupport {
         List<List<Expression<?>>> expressions = new ArrayList<>();
         if (partitionCountToUse > 0) {
             map.put(coordinatorOwnedPartitionKey, coordinatorOwnedPartitionKey);
-            expressions.add(List.of(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
+            expressions.add(Arrays.asList(ConstantExpression.create(coordinatorOwnedPartitionKey, QueryDataType.INT)));
         }
         for (int i = 0; i < partitionCountToUse - 1; ++i) {
             map.put(perMemberOwnedPKey[i], perMemberOwnedPKey[i]);
-            expressions.add(List.of(ConstantExpression.create(perMemberOwnedPKey[i], QueryDataType.INT)));
+            expressions.add(Arrays.asList(ConstantExpression.create(perMemberOwnedPKey[i], QueryDataType.INT)));
         }
 
         assertEquals(partitionCountToUse, expressions.size());

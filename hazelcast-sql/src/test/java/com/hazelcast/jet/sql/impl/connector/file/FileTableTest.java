@@ -25,6 +25,7 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class FileTableTest {
         FilePlanObjectKey k1 = new FilePlanObjectKey(
                 schema1,
                 name1,
-                List.of(new TableField(field1, QueryDataType.INT, false)),
+                Arrays.asList(new TableField(field1, QueryDataType.INT, false)),
                 new ProcessorMetaSupplierProvider(Map.of("key", "value"), format1)
         );
         FilePlanObjectKey k2 = new FilePlanObjectKey(

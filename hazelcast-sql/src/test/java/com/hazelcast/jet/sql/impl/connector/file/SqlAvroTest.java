@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -76,7 +77,7 @@ public class SqlAvroTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row((Object) null))
+                Arrays.asList(new Row((Object) null))
         );
     }
 
@@ -90,7 +91,7 @@ public class SqlAvroTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT id, name FROM " + name,
-                List.of(new Row((byte) 127, "string"))
+                Arrays.asList(new Row((byte) 127, "string"))
         );
     }
 
@@ -116,7 +117,7 @@ public class SqlAvroTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         "string",
                         true,
                         (byte) 127,
@@ -140,7 +141,7 @@ public class SqlAvroTest extends SqlTestSupport {
         String name = randomName();
         fileMapping(name, AVRO_COMPLEX_FILE).create();
 
-        List<Row> rows = List.of(new Row(getAllValues(FileUtil.AVRO_COMPLEX_TYPES)));
+        List<Row> rows = Arrays.asList(new Row(getAllValues(FileUtil.AVRO_COMPLEX_TYPES)));
         assertRowsAnyOrder(instances()[1], "SELECT * FROM " + name, rows);
         assertRowsAnyOrder(client(), "SELECT * FROM " + name, rows);
     }
@@ -182,7 +183,7 @@ public class SqlAvroTest extends SqlTestSupport {
                         + ", \"null\""
                         + ", object "
                         + "FROM " + name,
-                List.of(avroFile == AVRO_NULL_FILE ? new Row(new Object[15]) : new Row(
+                Arrays.asList(avroFile == AVRO_NULL_FILE ? new Row(new Object[15]) : new Row(
                         "string",
                         true,
                         127,
@@ -239,7 +240,7 @@ public class SqlAvroTest extends SqlTestSupport {
                                 OPTION_PATH, file.getParent(),
                                 OPTION_SHARED_FILE_SYSTEM, true)
                         + ")",
-                List.of(file == AVRO_NULL_FILE ? new Row(new Object[15]) : new Row(
+                Arrays.asList(file == AVRO_NULL_FILE ? new Row(new Object[15]) : new Row(
                         "string",
                         true,
                         127,

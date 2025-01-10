@@ -181,7 +181,7 @@ public abstract class SimpleTestInClusterSupport extends JetTestSupport {
         //
         // This behavior affects all objects for which references are kept across test methods,
         // (both in production code and in tests) but for those there is no generic solution.
-        List<String> jetMaps = List.of(JOB_RECORDS_MAP_NAME, JOB_RESULTS_MAP_NAME,
+        List<String> jetMaps = Arrays.asList(JOB_RECORDS_MAP_NAME, JOB_RESULTS_MAP_NAME,
                 JOB_EXECUTION_RECORDS_MAP_NAME, JOB_EXECUTION_RECORDS_MAP_NAME,
                 EXPORTED_SNAPSHOTS_DETAIL_CACHE,
                 SQL_CATALOG_MAP_NAME);

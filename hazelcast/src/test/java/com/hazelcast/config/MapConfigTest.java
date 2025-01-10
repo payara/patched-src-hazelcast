@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
 
@@ -236,10 +237,10 @@ public class MapConfigTest {
         idx1.setName("idx1");
         IndexConfig idx2 = new IndexConfig(IndexType.SORTED, "bar");
         idx2.setName("idx2");
-        config.setIndexConfigs(List.of(idx1, idx2));
+        config.setIndexConfigs(Arrays.asList(idx1, idx2));
 
         MapConfig reordered = new MapConfig("m");
-        reordered.setIndexConfigs(List.of(idx2, idx1));
+        reordered.setIndexConfigs(Arrays.asList(idx2, idx1));
 
         assertEquals(config, reordered);
         assertEquals(config.hashCode(), reordered.hashCode());

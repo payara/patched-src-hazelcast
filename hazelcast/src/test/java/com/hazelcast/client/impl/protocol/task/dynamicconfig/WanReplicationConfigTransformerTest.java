@@ -46,8 +46,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -288,7 +288,7 @@ public class WanReplicationConfigTransformerTest {
         DiscoveryConfig discoveryConfig = new DiscoveryConfig();
         DiscoveryStrategyConfig discoveryStrategyConfig1 = new DiscoveryStrategyConfig(TEST_CLASS_NAME + "1");
         DiscoveryStrategyConfig discoveryStrategyConfig2 = new DiscoveryStrategyConfig(TEST_CLASS_NAME + "2");
-        discoveryConfig.setDiscoveryStrategyConfigs(List.of(discoveryStrategyConfig1, discoveryStrategyConfig2));
+        discoveryConfig.setDiscoveryStrategyConfigs(Arrays.asList(discoveryStrategyConfig1, discoveryStrategyConfig2));
         discoveryConfig.setNodeFilterClass(TEST_CLASS_NAME + "Filter");
         expected.setDiscoveryConfig(discoveryConfig);
 

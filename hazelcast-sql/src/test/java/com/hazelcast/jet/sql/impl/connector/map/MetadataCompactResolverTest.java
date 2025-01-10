@@ -37,6 +37,7 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -81,7 +82,7 @@ public class MetadataCompactResolverTest {
         Map<String, String> options =
                 Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
-        List<MappingField> fields = List.of(field("object", QueryDataType.OBJECT, prefix + ".object"));
+        List<MappingField> fields = Arrays.asList(field("object", QueryDataType.OBJECT, prefix + ".object"));
 
         // TODO: fix compact nested types support?
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(key, fields, options, ss).collect(toList()))
@@ -99,7 +100,7 @@ public class MetadataCompactResolverTest {
         Map<String, String> options =
                 Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
-        List<MappingField> fields = List.of(
+        List<MappingField> fields = Arrays.asList(
                 field("string", QueryDataType.VARCHAR, prefix + ".string"),
                 field("character", QueryDataType.VARCHAR_CHARACTER, prefix + ".character"),
                 field("boolean", QueryDataType.BOOLEAN, prefix + ".boolean"),
@@ -132,7 +133,7 @@ public class MetadataCompactResolverTest {
         Map<String, String> options = emptyMap();
 
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(key,
-                List.of(field("field", QueryDataType.INT, prefix + ".field")), options, ss)
+                Arrays.asList(field("field", QueryDataType.INT, prefix + ".field")), options, ss)
         ).hasMessageMatching("(key|value)CompactTypeName is required to create Compact-based mapping");
     }
 
@@ -149,7 +150,7 @@ public class MetadataCompactResolverTest {
 
         assertThatThrownBy(() -> MetadataPortableResolver.INSTANCE.resolveAndValidateFields(
                 key,
-                List.of(
+                Arrays.asList(
                         field("field1", QueryDataType.INT, prefix + ".field"),
                         field("field2", QueryDataType.VARCHAR, prefix + ".field")
                 ),
@@ -167,7 +168,7 @@ public class MetadataCompactResolverTest {
     public void test_resolveMetadata(boolean key, String prefix) {
         KvMetadata metadata = INSTANCE.resolveMetadata(
                 key,
-                List.of(
+                Arrays.asList(
                         field("boolean", QueryDataType.BOOLEAN, prefix + ".boolean"),
                         field("byte", QueryDataType.TINYINT, prefix + ".byte"),
                         field("short", QueryDataType.SMALLINT, prefix + ".short"),

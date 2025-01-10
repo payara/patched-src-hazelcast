@@ -98,7 +98,7 @@ public class CalcDropLateItemsTransposeTest extends OptimizerTestSupport {
                 )
         );
 
-        assertRowsEventuallyInAnyOrder(sql, List.of(new Row(1, timestamp(1L), "1")));
+        assertRowsEventuallyInAnyOrder(sql, asList(new Row(1, timestamp(1L), "1")));
     }
 
     @Test

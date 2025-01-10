@@ -22,6 +22,7 @@ import com.hazelcast.query.impl.OrderedIndexStore;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.collect.Range.atLeast;
@@ -255,7 +256,7 @@ class IndexIterationPointerTest {
     }
 
     private static <T> List<T> arrayListOf(T... elements) {
-        return new ArrayList<>(List.of(elements));
+        return new ArrayList<>(Arrays.asList(elements));
     }
 
     @Test

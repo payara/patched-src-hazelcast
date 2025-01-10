@@ -23,8 +23,8 @@ import com.hazelcast.sql.impl.QueryException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static com.hazelcast.dataconnection.impl.DataConnectionTestUtil.DUMMY_TYPE;
 import static java.util.Collections.emptyList;
@@ -44,7 +44,7 @@ public class GetDdlTest extends SqlTestSupport {
     public void when_queryMappingFromRelationNamespace_then_success() {
         createMapping("a", int.class, int.class);
 
-        assertRowsAnyOrder("SELECT GET_DDL('relation', 'a')", List.of(
+        assertRowsAnyOrder("SELECT GET_DDL('relation', 'a')", Arrays.asList(
                 new Row("CREATE OR REPLACE EXTERNAL MAPPING \"hazelcast\".\"public\".\"a\" EXTERNAL NAME \"a\" (" + LE +
                         "  \"__key\" INTEGER EXTERNAL NAME \"__key\"," + LE +
                         "  \"this\" INTEGER EXTERNAL NAME \"this\"" + LE +
@@ -65,7 +65,7 @@ public class GetDdlTest extends SqlTestSupport {
         createMapping("a", int.class, int.class);
         instance().getSql().executeUpdate("CREATE VIEW v AS SELECT * FROM a");
 
-        assertRowsAnyOrder("SELECT GET_DDL('relation', 'v')", List.of(
+        assertRowsAnyOrder("SELECT GET_DDL('relation', 'v')", Arrays.asList(
                 new Row("CREATE OR REPLACE VIEW \"hazelcast\".\"public\".\"v\" AS" + LE +
                         "SELECT \"a\".\"__key\", \"a\".\"this\"" + LE +
                         "FROM \"hazelcast\".\"public\".\"a\" AS \"a\""))
@@ -83,7 +83,7 @@ public class GetDdlTest extends SqlTestSupport {
                 ")";
 
         instance().getSql().executeUpdate(createTypeQuery);
-        assertRowsAnyOrder("SELECT GET_DDL('relation', 't')", List.of(new Row(createTypeQuery)));
+        assertRowsAnyOrder("SELECT GET_DDL('relation', 't')", Arrays.asList(new Row(createTypeQuery)));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class GetDdlTest extends SqlTestSupport {
         String createTypeQuery = "CREATE OR REPLACE TYPE \"hazelcast\".\"public\".\"t\"";
 
         instance().getSql().executeUpdate(createTypeQuery);
-        assertRowsAnyOrder("SELECT GET_DDL('relation', 't')", List.of(new Row(createTypeQuery)));
+        assertRowsAnyOrder("SELECT GET_DDL('relation', 't')", Arrays.asList(new Row(createTypeQuery)));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class GetDdlTest extends SqlTestSupport {
                 + "TYPE \"DUMMY\"" + LE + "SHARED";
 
         instance().getSql().executeUpdate(createDataConnectionQuery);
-        assertRowsAnyOrder("SELECT GET_DDL('dataconnection', 'dl')", List.of(new Row(createDataConnectionQueryFixedType)));
+        assertRowsAnyOrder("SELECT GET_DDL('dataconnection', 'dl')", Arrays.asList(new Row(createDataConnectionQueryFixedType)));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class GetDdlTest extends SqlTestSupport {
                 + "TYPE \"DUMMY\"" + LE + "SHARED";
 
         assertRowsAnyOrder("SELECT __key, GET_DDL('dataconnection', this) FROM a WHERE __key = 1",
-                List.of(new Row(1, ddl))
+                Arrays.asList(new Row(1, ddl))
         );
     }
 
@@ -162,13 +162,13 @@ public class GetDdlTest extends SqlTestSupport {
         createMapping("a", int.class, int.class);
 
         assertRowsAnyOrder("SELECT SUBSTRING(GET_DDL('relation', 'a') FROM 1 FOR 6)",
-                List.of(new Row("CREATE"))
+                Arrays.asList(new Row("CREATE"))
         );
 
         assertRowsAnyOrder(
                 "SELECT SUBSTRING(GET_DDL('relation', 'a') FROM 1 FOR 6) " +
                         "|| SUBSTRING(GET_DDL('relation', 'a') FROM 1 FOR 3)",
-                List.of(new Row("CREATECRE"))
+                Arrays.asList(new Row("CREATECRE"))
         );
     }
 
@@ -178,7 +178,7 @@ public class GetDdlTest extends SqlTestSupport {
 
         assertRowsAnyOrder("SELECT SUBSTRING(GET_DDL('relation', 'a') FROM 1 FOR 6)" +
                         "UNION ALL SELECT SUBSTRING(GET_DDL('relation', 'a') FROM 1 FOR 6)",
-                List.of(new Row("CREATE"), new Row("CREATE")));
+                Arrays.asList(new Row("CREATE"), new Row("CREATE")));
     }
 
     @Test
@@ -187,7 +187,7 @@ public class GetDdlTest extends SqlTestSupport {
         instance().getMap("a").put(1, "a");
 
         assertRowsAnyOrder("SELECT GET_DDL('relation', this) FROM a",
-                List.of(new Row(
+                Arrays.asList(new Row(
                         "CREATE OR REPLACE EXTERNAL MAPPING \"hazelcast\".\"public\".\"a\" EXTERNAL NAME \"a\" (" + LE +
                                 "  \"__key\" INTEGER EXTERNAL NAME \"__key\"," + LE +
                                 "  \"this\" VARCHAR EXTERNAL NAME \"this\"" + LE +

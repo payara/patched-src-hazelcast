@@ -26,6 +26,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -95,7 +96,7 @@ class FullScanResultSetIteratorTest {
 
     @Test
     void testRowMapperIsCalled() throws SQLException {
-        List<String> expectedTables = List.of("VIEWS", "TABLES", "ROLES", "USERS");
+        List<String> expectedTables = Arrays.asList("VIEWS", "TABLES", "ROLES", "USERS");
 
         try (Connection connection = DriverManager.getConnection(dbConnectionUrl)) {
             String sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES";

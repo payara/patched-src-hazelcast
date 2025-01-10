@@ -815,7 +815,7 @@ public class ConvertersTest {
         // Others
         assertEquals(Map.of("k", 1), converter.asMap(Map.of("k", 1)));
         assertEquals(new HazelcastJsonValue("[1,2,3]"), converter.asJson("[1,2,3]"));
-        assertEquals(new RowValue(List.of(1, 2, 3)), converter.asRow(new RowValue(List.of(1, 2, 3))));
+        assertEquals(new RowValue(Arrays.asList(1, 2, 3)), converter.asRow(new RowValue(Arrays.asList(1, 2, 3))));
 
         checkConverterSelf(converter);
     }
@@ -878,7 +878,7 @@ public class ConvertersTest {
 
         checkConverterConversions(converter, VARCHAR, OBJECT, ROW);
 
-        assertEquals("[1, 2, 3]", converter.asVarchar(new RowValue(List.of(1, 2, 3))));
+        assertEquals("[1, 2, 3]", converter.asVarchar(new RowValue(Arrays.asList(1, 2, 3))));
 
         checkConverterSelf(converter);
     }
@@ -889,7 +889,7 @@ public class ConvertersTest {
     }
 
     private void checkClasses(Converter converter, Class<?>... classes) {
-        assertContains(List.of(classes), converter.getValueClass());
+        assertContains(Arrays.asList(classes), converter.getValueClass());
         for (Class<?> clazz : classes) {
             assertSame(converter, Converters.getConverter(clazz));
         }

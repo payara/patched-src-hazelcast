@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -137,7 +138,7 @@ public abstract class KafkaTestSupport {
 
     public void deleteTopic(String topicId) {
         try {
-            admin.deleteTopics(List.of(topicId)).all().get();
+            admin.deleteTopics(Arrays.asList(topicId)).all().get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -244,7 +245,7 @@ public abstract class KafkaTestSupport {
         consumerProps.setProperty("auto.offset.reset", "earliest");
         consumerProps.putAll(properties);
         KafkaConsumer<K, V> consumer = new KafkaConsumer<>(consumerProps);
-        consumer.subscribe(List.of(topicIds));
+        consumer.subscribe(Arrays.asList(topicIds));
         return consumer;
     }
 

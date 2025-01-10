@@ -90,8 +90,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -469,10 +469,10 @@ public class DynamicConfigTest extends HazelcastTestSupport {
         idx1.setName("idx1");
         IndexConfig idx2 = new IndexConfig(IndexType.SORTED, "bar");
         idx2.setName("idx2");
-        config.setIndexConfigs(List.of(idx1, idx2));
+        config.setIndexConfigs(Arrays.asList(idx1, idx2));
 
         MapConfig reordered = new MapConfig(name);
-        reordered.setIndexConfigs(List.of(idx2, idx1));
+        reordered.setIndexConfigs(Arrays.asList(idx2, idx1));
 
         driver.getConfig().addMapConfig(config);
         assertThatNoException().isThrownBy(() -> driver.getConfig().addMapConfig(reordered));

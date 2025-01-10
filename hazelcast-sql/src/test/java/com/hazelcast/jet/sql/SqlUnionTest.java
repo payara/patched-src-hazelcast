@@ -264,11 +264,11 @@ public class SqlUnionTest extends SqlTestSupport {
         String map1Name = randomName();
         String map2Name = randomName();
         instance().getConfig().addMapConfig(
-                new MapConfig(map1Name).setPartitioningAttributeConfigs(List.of(
+                new MapConfig(map1Name).setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
         instance().getConfig().addMapConfig(
-                new MapConfig(map2Name).setPartitioningAttributeConfigs(List.of(
+                new MapConfig(map2Name).setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
 
@@ -302,11 +302,11 @@ public class SqlUnionTest extends SqlTestSupport {
         String map1Name = randomName();
         String map2Name = randomName();
         instance().getConfig().addMapConfig(
-                new MapConfig(map1Name).setPartitioningAttributeConfigs(List.of(
+                new MapConfig(map1Name).setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
         instance().getConfig().addMapConfig(
-                new MapConfig(map2Name).setPartitioningAttributeConfigs(List.of(
+                new MapConfig(map2Name).setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
 
@@ -333,7 +333,7 @@ public class SqlUnionTest extends SqlTestSupport {
     @Test
     public void prunableSelfUnionAllTest() {
         instance().getConfig().addMapConfig(
-                new MapConfig("pMap1").setPartitioningAttributeConfigs(List.of(
+                new MapConfig("pMap1").setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
 
@@ -360,7 +360,7 @@ public class SqlUnionTest extends SqlTestSupport {
         //  Right now it just a execution check test.
         // JIRA issue : https://hazelcast.atlassian.net/browse/HZ-2796
         instance().getConfig().addMapConfig(
-                new MapConfig("pMap1").setPartitioningAttributeConfigs(List.of(
+                new MapConfig("pMap1").setPartitioningAttributeConfigs(asList(
                         new PartitioningAttributeConfig("id")
                 )));
 

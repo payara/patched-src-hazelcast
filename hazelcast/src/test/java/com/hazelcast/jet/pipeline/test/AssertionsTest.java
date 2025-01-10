@@ -358,7 +358,7 @@ public class AssertionsTest extends PipelineTestSupport {
         assertTrue(assertionSink.isEmpty());
 
         p.readFrom(TestSources.items("some text here and here and some here"))
-                .apply(Assertions.assertOrdered(List.of("some text here and here and some here")))
+                .apply(Assertions.assertOrdered(Arrays.asList("some text here and here and some here")))
                 .flatMap(line -> traverseArray(line.toLowerCase(Locale.ROOT).split("\\W+")))
                 .apply(Assertions.assertAnyOrder(
                         Arrays.asList("some", "text", "here", "and", "here", "and", "some", "here")))

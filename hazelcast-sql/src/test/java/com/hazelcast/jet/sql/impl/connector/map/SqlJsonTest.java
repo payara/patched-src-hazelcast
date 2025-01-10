@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.hazelcast.jet.pipeline.file.JsonFileFormat.FORMAT_JSON;
@@ -70,7 +70,7 @@ public class SqlJsonTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(null, null))
+                Arrays.asList(new Row(null, null))
         );
     }
 
@@ -89,7 +89,7 @@ public class SqlJsonTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row("Alice", "Bob"))
+                Arrays.asList(new Row("Alice", "Bob"))
         );
     }
 
@@ -123,7 +123,7 @@ public class SqlJsonTest extends SqlTestSupport {
         // assert both - initial & evolved - records are correctly read
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row(13, "Alice", null),
                         new Row(69, "Bob", 123456789L)
                 )
@@ -159,7 +159,7 @@ public class SqlJsonTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT * FROM " + to,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         "1",
                         "string",
                         true,
@@ -229,7 +229,7 @@ public class SqlJsonTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         new HazelcastJsonValue("{\"id\":1}"),
                         new HazelcastJsonValue("{\"name\":\"Alice\"}")
                 ))
@@ -248,7 +248,7 @@ public class SqlJsonTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         new HazelcastJsonValue("[1,2,3]"),
                         new HazelcastJsonValue("[4,5,6]")
                 ))

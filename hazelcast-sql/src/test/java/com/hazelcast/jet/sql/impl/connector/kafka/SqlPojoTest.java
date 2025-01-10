@@ -37,7 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.hazelcast.jet.sql.impl.connector.SqlConnector.JAVA_FORMAT;
@@ -89,7 +89,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(null, null))
+                Arrays.asList(new Row(null, null))
         );
     }
 
@@ -108,7 +108,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(1, "Alice"))
+                Arrays.asList(new Row(1, "Alice"))
         );
     }
 
@@ -130,7 +130,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT  key_id, value_id FROM " + name,
-                List.of(new Row(1, 2))
+                Arrays.asList(new Row(1, 2))
         );
     }
 
@@ -186,7 +186,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
                         + ", timestampTz"
                         + ", object"
                         + " FROM " + to,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         1,
                         "string",
                         true,
@@ -239,7 +239,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         sqlService.execute("INSERT INTO " + topicName + (explicit ? "(__key, name)" : "") + " VALUES (1, 'foo')");
 
         assertRowsEventuallyInAnyOrder("SELECT __key, this, name FROM " + topicName,
-                List.of(new Row(1, new Person(null, "foo"), "foo")));
+                Arrays.asList(new Row(1, new Person(null, "foo"), "foo")));
     }
 
     @Test
@@ -254,7 +254,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
 
         assertRowsEventuallyInAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(new PersonId(1), new Person(null, "Alice")))
+                Arrays.asList(new Row(new PersonId(1), new Person(null, "Alice")))
         );
     }
 

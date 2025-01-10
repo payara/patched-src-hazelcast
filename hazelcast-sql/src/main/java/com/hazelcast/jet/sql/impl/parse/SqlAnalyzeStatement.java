@@ -27,8 +27,8 @@ import org.apache.calcite.sql.SqlWriter;
 import org.apache.calcite.sql.parser.SqlParserPos;
 import org.apache.calcite.sql.validate.SqlValidator;
 
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.hazelcast.jet.config.JobConfigArguments.KEY_JOB_IS_SUSPENDABLE;
@@ -63,7 +63,7 @@ public class SqlAnalyzeStatement extends SqlCall {
 
     @Override
     public List<SqlNode> getOperandList() {
-        return List.of(query);
+        return Arrays.asList(query);
     }
 
     public JobConfig getJobConfig() {

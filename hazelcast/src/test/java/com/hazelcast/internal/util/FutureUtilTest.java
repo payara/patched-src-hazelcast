@@ -199,7 +199,7 @@ public class FutureUtilTest extends HazelcastTestSupport {
     @Test
     public void testGetAllDoneThrowsException_whenSomeFutureHasException() {
         InterruptedException exception = new InterruptedException();
-        Collection<Future<?>> futures = List.of(InternalCompletableFuture.completedExceptionally(exception));
+        Collection<Future<?>> futures = asList(InternalCompletableFuture.completedExceptionally(exception));
         // the future is completedExceptionally with an InterruptedException (thread was not
         // interrupted during future.get()), so it is normal to expect
         // InterruptedException wrapped within an ExecutionException.

@@ -36,6 +36,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -66,7 +67,7 @@ public class KvMetadataAvroResolverTest {
     public void test_resolveFields() {
         Stream<MappingField> fields = INSTANCE.resolveAndValidateFields(
                 isKey,
-                List.of(field("field", QueryDataType.INT)),
+                Arrays.asList(field("field", QueryDataType.INT)),
                 emptyMap(),
                 null
         );
@@ -78,7 +79,7 @@ public class KvMetadataAvroResolverTest {
     public void when_noKeyOrThisPrefixInExternalName_then_usesValue() {
         KvMetadata metadata = INSTANCE.resolveMetadata(
                 isKey,
-                List.of(field("field", QueryDataType.INT, "extField")),
+                Arrays.asList(field("field", QueryDataType.INT, "extField")),
                 emptyMap(),
                 null
         );
@@ -96,7 +97,7 @@ public class KvMetadataAvroResolverTest {
     public void when_duplicateExternalName_then_throws() {
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                 isKey,
-                List.of(
+                Arrays.asList(
                         field("field1", QueryDataType.INT, prefix + ".field"),
                         field("field2", QueryDataType.VARCHAR, prefix + ".field")
                 ),
@@ -110,7 +111,7 @@ public class KvMetadataAvroResolverTest {
     public void when_schemaIsNotRecord_then_throws() {
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                 isKey,
-                List.of(field("field", QueryDataType.INT)),
+                Arrays.asList(field("field", QueryDataType.INT)),
                 Map.of(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
                         Schema.create(Schema.Type.INT).toString()),
                 null
@@ -121,7 +122,7 @@ public class KvMetadataAvroResolverTest {
     public void when_inlineSchemaUsedWithSchemaRegistry_then_throws() {
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                 isKey,
-                List.of(field("field", QueryDataType.INT)),
+                Arrays.asList(field("field", QueryDataType.INT)),
                 Map.of(
                         isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
                                 SchemaBuilder.record("jet.sql").fields()
@@ -135,7 +136,7 @@ public class KvMetadataAvroResolverTest {
 
     @Test
     public void when_schemaHasUnsupportedType_then_fieldResolutionFails() {
-        List<Schema> unsupportedSchemaTypes = List.of(
+        List<Schema> unsupportedSchemaTypes = Arrays.asList(
                 Schema.create(Schema.Type.BYTES),
                 SchemaBuilder.array().items(Schema.create(Schema.Type.INT)),
                 SchemaBuilder.map().values(Schema.create(Schema.Type.INT)),
@@ -159,7 +160,7 @@ public class KvMetadataAvroResolverTest {
     public void test_resolveMetadata() {
         KvMetadata metadata = INSTANCE.resolveMetadata(
                 isKey,
-                List.of(
+                Arrays.asList(
                         field("string", QueryDataType.VARCHAR),
                         field("boolean", QueryDataType.BOOLEAN),
                         field("byte", QueryDataType.TINYINT),

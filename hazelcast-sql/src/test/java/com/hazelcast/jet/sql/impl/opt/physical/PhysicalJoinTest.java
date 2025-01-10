@@ -32,7 +32,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.hazelcast.jet.impl.util.Util.getNodeEngine;
 import static com.hazelcast.sql.impl.extract.QueryPath.KEY;
@@ -122,7 +122,7 @@ public class PhysicalJoinTest extends OptimizerTestSupport {
 
         String query = "SELECT * FROM l JOIN r ON l.b = r.y";
         assertPlan(
-                optimizePhysical(query, List.of(), tableLeft, tableRight).getPhysical(),
+                optimizePhysical(query, new ArrayList<>(), tableLeft, tableRight).getPhysical(),
                 plan(
                         planRow(0, StreamToStreamJoinPhysicalRel.class),
                         planRow(1, FullScanPhysicalRel.class),

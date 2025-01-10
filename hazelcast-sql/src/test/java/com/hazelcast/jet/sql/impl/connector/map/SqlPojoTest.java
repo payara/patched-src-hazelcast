@@ -36,9 +36,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -85,7 +85,7 @@ public class SqlPojoTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(1, null))
+                Arrays.asList(new Row(1, null))
         );
     }
 
@@ -162,7 +162,7 @@ public class SqlPojoTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(1, "Alice"))
+                Arrays.asList(new Row(1, "Alice"))
         );
     }
 
@@ -182,7 +182,7 @@ public class SqlPojoTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT key_id, value_id, name FROM " + name,
-                List.of(new Row(1, 2, "Alice"))
+                Arrays.asList(new Row(1, 2, "Alice"))
         );
     }
 
@@ -203,7 +203,7 @@ public class SqlPojoTest extends SqlTestSupport {
         // assert both - initial & evolved - records are correctly read
         assertRowsAnyOrder(
                 "SELECT id, name, ssn FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row(1, "Alice", null),
                         new Row(2, "Bob", 123456789L)
                 )
@@ -233,7 +233,7 @@ public class SqlPojoTest extends SqlTestSupport {
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(
+                Arrays.asList(
                         new Row(1, "Alice", 123456789L),
                         new Row(2, "Bob", null)
                 )
@@ -324,7 +324,7 @@ public class SqlPojoTest extends SqlTestSupport {
                         + ", map"
                         + ", object "
                         + "FROM " + to,
-                List.of(new Row(
+                Arrays.asList(new Row(
                         BigDecimal.valueOf(1),
                         "string",
                         "s",
@@ -374,7 +374,7 @@ public class SqlPojoTest extends SqlTestSupport {
         sqlService.execute("SINK INTO " + mapName + "(__key) VALUES (1)");
         assertRowsAnyOrder(
                 "SELECT * FROM " + mapName,
-                List.of(new Row(1, null))
+                Arrays.asList(new Row(1, null))
         );
     }
 
@@ -385,7 +385,7 @@ public class SqlPojoTest extends SqlTestSupport {
         sqlService.execute("SINK INTO " + mapName + "(__key, field) VALUES (1, null)");
         assertRowsAnyOrder(
                 "SELECT * FROM " + mapName,
-                List.of(new Row(1, null))
+                Arrays.asList(new Row(1, null))
         );
     }
 
@@ -419,7 +419,7 @@ public class SqlPojoTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT __key, this, name FROM " + mapName,
-                List.of(new Row(1, new Person(null, "foo"), "foo"))
+                Arrays.asList(new Row(1, new Person(null, "foo"), "foo"))
         );
     }
 
@@ -431,7 +431,7 @@ public class SqlPojoTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(new PersonId(1), new Person(null, "Alice")))
+                Arrays.asList(new Row(new PersonId(1), new Person(null, "Alice")))
         );
     }
 
@@ -458,7 +458,7 @@ public class SqlPojoTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(key, value))
+                Arrays.asList(new Row(key, value))
         );
     }
 
@@ -471,11 +471,11 @@ public class SqlPojoTest extends SqlTestSupport {
 
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(0))
+                Arrays.asList(new Row(0))
         );
         assertRowsAnyOrder(
                 "SELECT __key, this FROM " + name,
-                List.of(new Row(new ClassWithKey(), 0))
+                Arrays.asList(new Row(new ClassWithKey(), 0))
         );
     }
 
@@ -489,7 +489,7 @@ public class SqlPojoTest extends SqlTestSupport {
         instance().getSql().execute("SINK INTO " + name + " VALUES (?, ?, ?)", 1L, obj.id, obj.props);
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
-                List.of(new Row(1L, obj.id, obj.props))
+                Arrays.asList(new Row(1L, obj.id, obj.props))
         );
     }
 

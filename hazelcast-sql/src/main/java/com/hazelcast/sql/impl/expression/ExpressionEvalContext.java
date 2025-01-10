@@ -61,7 +61,7 @@ public interface ExpressionEvalContext {
             // Note that additional serializers configured for the job are not available in PMS.
             // Currently this is not needed.
             return new ExpressionEvalContextImpl(
-                    arguments != null ? arguments : List.of(),
+                    arguments != null ? arguments : new ArrayList<Object>(),
                     (InternalSerializationService) mCtx.nodeEngine().getSerializationService(),
                     mCtx.nodeEngine(),
                     mCtx

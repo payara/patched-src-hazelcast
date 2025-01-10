@@ -185,14 +185,14 @@ public abstract class SqlTestSupport extends SimpleTestInClusterSupport {
      * Assert the contents of a given table via Hazelcast SQL engine
      */
     public static void assertRowsAnyOrder(String sql, Row... rows) {
-        assertRowsAnyOrder(sql, List.of(rows));
+        assertRowsAnyOrder(sql, asList(rows));
     }
 
     /**
      * Assert the contents of a given table via Hazelcast SQL engine
      */
     public static void assertRowsAnyOrder(String sql, List<Object> arguments, Row... rows) {
-        assertRowsAnyOrder(sql, arguments, List.of(rows));
+        assertRowsAnyOrder(sql, arguments, asList(rows));
     }
 
     public static void assertRowsEventuallyInAnyOrder(
@@ -948,7 +948,7 @@ public abstract class SqlTestSupport extends SimpleTestInClusterSupport {
         }
 
         public T fields(String... fields) {
-            this.fields.addAll(List.of(fields));
+            this.fields.addAll(Arrays.asList(fields));
             return me();
         }
 

@@ -37,6 +37,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -105,7 +106,7 @@ public class MappingJdbcSqlConnectorTest extends JdbcSqlTestSupport {
                 "DATA CONNECTION \"testDatabaseRef\"" + LE +
                 "OBJECT TYPE \"Table\"";
         assertRowsAnyOrder("SELECT GET_DDL('relation', '" + mappingName + "')",
-                List.of(new Row(expectedMappingQuery)));
+                Arrays.asList(new Row(expectedMappingQuery)));
     }
 
     @Test

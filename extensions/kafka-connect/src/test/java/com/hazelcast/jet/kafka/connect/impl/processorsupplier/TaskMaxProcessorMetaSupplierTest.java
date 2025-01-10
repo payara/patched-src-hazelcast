@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -49,36 +50,36 @@ class TaskMaxProcessorMetaSupplierTest {
         return Stream.of(
                 // 1 cluster member
                 Arguments.of(
-                        List.of(ADDRESSES[0]),
+                        Arrays.asList(ADDRESSES[0]),
                         1,
                         // Number of processors per member
-                        List.of(0)
+                        Arrays.asList(0)
                 ),
                 // 2 cluster members, localParallelism = 1
                 Arguments.of(
-                        List.of(ADDRESSES[0], ADDRESSES[1]),
+                        Arrays.asList(ADDRESSES[0], ADDRESSES[1]),
                         1,
-                        List.of(0, 1)
+                        Arrays.asList(0, 1)
                 ),
                 // 2 cluster members, localParallelism = 2
                 Arguments.of(
-                        List.of(ADDRESSES[0], ADDRESSES[1]),
+                        Arrays.asList(ADDRESSES[0], ADDRESSES[1]),
                         2,
-                        List.of(0, 2)
+                        Arrays.asList(0, 2)
                 ),
                 // 3 cluster members, localParallelism = 1
                 Arguments.of(
-                        List.of(ADDRESSES[0], ADDRESSES[1], ADDRESSES[2]),
+                        Arrays.asList(ADDRESSES[0], ADDRESSES[1], ADDRESSES[2]),
                         1,
                         // Number of processors per member
-                        List.of(0, 1, 2)
+                        Arrays.asList(0, 1, 2)
                 ),
                 // 3 cluster members, localParallelism = 2
                 Arguments.of(
-                        List.of(ADDRESSES[0], ADDRESSES[1], ADDRESSES[2]),
+                        Arrays.asList(ADDRESSES[0], ADDRESSES[1], ADDRESSES[2]),
                         2,
                         // Number of processors per member
-                        List.of(0, 2)
+                        Arrays.asList(0, 2)
                 )
         );
     }

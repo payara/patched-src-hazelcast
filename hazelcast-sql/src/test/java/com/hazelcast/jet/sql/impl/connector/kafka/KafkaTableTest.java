@@ -25,7 +25,7 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.hazelcast.jet.sql.impl.connector.SqlConnector.OPTION_PREFERRED_LOCAL_PARALLELISM;
@@ -62,7 +62,7 @@ public class KafkaTableTest {
                 schema1,
                 name1,
                 topic1,
-                List.of(new TableField(field1, QueryDataType.INT, false)),
+                Arrays.asList(new TableField(field1, QueryDataType.INT, false)),
                 Map.of("key", value1)
         );
         KafkaPlanObjectKey k2 = new KafkaPlanObjectKey(

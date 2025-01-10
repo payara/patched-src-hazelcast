@@ -30,6 +30,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -236,8 +237,8 @@ public final class KvMetadataAvroResolver implements KvMetadataResolver {
 
             List<Schema.Type> conversions = mappingFieldTypeFamily == QueryDataTypeFamily.OBJECT
                     ? mappingFieldType.isCustomType()
-                            ? List.of(RECORD)  // Unwrapped, so does not include NULL
-                            : List.of(UNION, NULL)  // Ordinary OBJECT can be mapped to NULL
+                            ? Arrays.asList(RECORD)  // Unwrapped, so does not include NULL
+                            : Arrays.asList(UNION, NULL)  // Ordinary OBJECT can be mapped to NULL
                     : Schemas.CONVERSIONS.get(mappingFieldTypeFamily);
             if (conversions == null) {
                 throw new IllegalArgumentException("Unsupported type: " + mappingFieldType);

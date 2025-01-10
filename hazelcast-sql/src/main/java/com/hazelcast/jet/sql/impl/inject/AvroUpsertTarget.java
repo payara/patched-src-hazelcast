@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -55,21 +56,21 @@ public class AvroUpsertTarget implements UpsertTarget {
     public static final DefaultedMap<Class<?>, List<Schema.Type>> CONVERSION_PREFS = new DefaultedMap<>(
             // TODO We may consider supporting temporal types <-> int/long conversions (globally).
             ImmutableMap.<Class<?>, List<Schema.Type>>builder()
-                    .put(Boolean.class, List.of(BOOLEAN, STRING))
-                    .put(Byte.class, List.of(INT, LONG, FLOAT, DOUBLE, STRING))
-                    .put(Short.class, List.of(INT, LONG, FLOAT, DOUBLE, STRING))
-                    .put(Integer.class, List.of(INT, LONG, DOUBLE, STRING, FLOAT))
-                    .put(Long.class, List.of(LONG, INT, STRING, DOUBLE, FLOAT))
-                    .put(Float.class, List.of(FLOAT, DOUBLE, STRING, INT, LONG))
-                    .put(Double.class, List.of(DOUBLE, FLOAT, STRING, LONG, INT))
-                    .put(BigDecimal.class, List.of(STRING, LONG, DOUBLE, INT, FLOAT))
-                    .put(String.class, List.of(STRING, LONG, DOUBLE, INT, FLOAT, BOOLEAN))
-                    .put(LocalTime.class, List.of(STRING))
-                    .put(LocalDate.class, List.of(STRING))
-                    .put(LocalDateTime.class, List.of(STRING))
-                    .put(OffsetDateTime.class, List.of(STRING))
+                    .put(Boolean.class, Arrays.asList(BOOLEAN, STRING))
+                    .put(Byte.class, Arrays.asList(INT, LONG, FLOAT, DOUBLE, STRING))
+                    .put(Short.class, Arrays.asList(INT, LONG, FLOAT, DOUBLE, STRING))
+                    .put(Integer.class, Arrays.asList(INT, LONG, DOUBLE, STRING, FLOAT))
+                    .put(Long.class, Arrays.asList(LONG, INT, STRING, DOUBLE, FLOAT))
+                    .put(Float.class, Arrays.asList(FLOAT, DOUBLE, STRING, INT, LONG))
+                    .put(Double.class, Arrays.asList(DOUBLE, FLOAT, STRING, LONG, INT))
+                    .put(BigDecimal.class, Arrays.asList(STRING, LONG, DOUBLE, INT, FLOAT))
+                    .put(String.class, Arrays.asList(STRING, LONG, DOUBLE, INT, FLOAT, BOOLEAN))
+                    .put(LocalTime.class, Arrays.asList(STRING))
+                    .put(LocalDate.class, Arrays.asList(STRING))
+                    .put(LocalDateTime.class, Arrays.asList(STRING))
+                    .put(OffsetDateTime.class, Arrays.asList(STRING))
                     .build(),
-            List.of(STRING));
+            Arrays.asList(STRING));
 
     private final Schema schema;
 
