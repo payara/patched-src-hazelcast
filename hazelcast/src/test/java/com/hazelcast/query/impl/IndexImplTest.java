@@ -75,7 +75,7 @@ public class IndexImplTest {
     }
 
     private CachedQueryEntry<Object, Object> createQueryableEntry() {
-        return new CachedQueryEntry<>(mockSerializationService, mock(Data.class), null, mockExtractors) {
+        return new CachedQueryEntry<Object, Object>(mockSerializationService, mock(Data.class), null, mockExtractors) {
             @Override
             public Object getKey() {
                 fail("\"getKey()\" should not have been called");
