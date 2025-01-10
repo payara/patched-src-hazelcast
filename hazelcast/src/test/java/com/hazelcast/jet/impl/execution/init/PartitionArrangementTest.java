@@ -29,7 +29,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -58,13 +58,11 @@ public class PartitionArrangementTest {
         a1 = new Address("1.2.3.4", 1);
         a2 = new Address("1.2.3.4", 2);
 
-        a = new PartitionArrangement(
-                Map.of(
-                        a0, new int[]{0, 3, 6},
-                        a1, new int[]{2, 4},
-                        a2, new int[]{1, 5}),
-                a0,
-                prunabilityEnabled);
+        HashMap<Address, int[]> map = new HashMap<>();
+        map.put(a0, new int[]{0, 3, 6});
+        map.put(a1, new int[]{2, 4});
+        map.put(a2, new int[]{1, 5});
+        a = new PartitionArrangement(map, a0, prunabilityEnabled);
     }
 
     @Test
