@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.function.Consumer;
 
@@ -96,7 +97,7 @@ public class InstanceTrackingInfoTest extends HazelcastTestSupport {
         File[] files = tmpDir.listFiles((dir, name) -> name.startsWith("hz-embedded-"));
         assertNotNull(files);
         assertEquals(1, files.length);
-        assertEquals("dummy", Files.readString(files[0].toPath()));
+        assertEquals("dummy", new String(Files.readAllBytes(files[0].toPath()), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -123,7 +124,7 @@ public class InstanceTrackingInfoTest extends HazelcastTestSupport {
 
         createHazelcastInstance(config);
 
-        String actualContents = Files.readString(tempFile.toPath());
+        String actualContents = new String(Files.readAllBytes(tempFile.toPath()), StandardCharsets.UTF_8);
         contentAssertion.accept(actualContents);
     }
 }
