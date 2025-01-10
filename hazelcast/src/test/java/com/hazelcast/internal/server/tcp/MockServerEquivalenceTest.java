@@ -25,7 +25,7 @@ import com.hazelcast.test.TestHazelcastInstanceFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junitpioneer.jupiter.RestoreSystemProperties;
+import org.junitpioneer.jupiter.ClearSystemProperty;
 
 import static com.hazelcast.instance.EndpointQualifier.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +45,9 @@ public class MockServerEquivalenceTest {
         }
     }
 
-    @RestoreSystemProperties
+    // TODO JDK8: This method relies on a JUnit annotation @RestoreSystemProperties, this file does not exist in 5.3.8.
+    //  Attempting to force the JUnit pioneer version to 2.3.0 prevents compilation due to a JDK11+ class.
+    @ClearSystemProperty(key = TestEnvironment.HAZELCAST_TEST_USE_NETWORK) // Used instead of @RestoreSystemProperties
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void transmitShouldRejectLocalPacket(boolean realNetwork) {
