@@ -18,6 +18,7 @@ package com.hazelcast.test.starter;
 
 import com.hazelcast.internal.util.ContextMutexFactory;
 import com.hazelcast.internal.util.FilteringClassLoader;
+import com.hazelcast.test.TestCollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +46,7 @@ import static java.util.Collections.enumeration;
  */
 public class HazelcastAPIDelegatingClassloader extends URLClassLoader {
 
-    static final Set<String> DELEGATION_WHITE_LIST = Set.of(
+    static final Set<String> DELEGATION_WHITE_LIST = TestCollectionUtils.setOf(
             "com.hazelcast.test.starter.ProxyInvocationHandler",
             "com.hazelcast.test.starter.HazelcastAPIDelegatingClassloader",
             "com.hazelcast.internal.serialization.impl.SampleIdentifiedDataSerializable"
