@@ -27,6 +27,7 @@ import com.hazelcast.nio.serialization.SerializerHook;
 import com.hazelcast.spi.impl.SpiDataSerializerHook;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import jakarta.servlet.ServletException;
@@ -166,7 +167,7 @@ public class ServiceLoaderTest extends HazelcastTestSupport {
         //the definition loaded by the child classloader -> it only delegates to the parent -> it's a duplicated
         ServiceLoader.ServiceDefinition definition2 = new ServiceLoader.ServiceDefinition(hook.getName(), childClassloader);
 
-        Set<ServiceLoader.ServiceDefinition> definitions = Set.of(definition1, definition2);
+        Set<ServiceLoader.ServiceDefinition> definitions = TestCollectionUtils.setOf(definition1, definition2);
         ServiceLoader.ClassIterator<PortableHook> iterator
                 = new ServiceLoader.ClassIterator<>(definitions, PortableHook.class);
 
@@ -243,7 +244,7 @@ public class ServiceLoaderTest extends HazelcastTestSupport {
         ServiceLoader.ServiceDefinition definition2
                 = new ServiceLoader.ServiceDefinition(SpiDataSerializerHook.class.getName(), SpiDataSerializerHook.class.getClassLoader());
 
-        Set<ServiceLoader.ServiceDefinition> definitions = Set.of(definition1, definition2);
+        Set<ServiceLoader.ServiceDefinition> definitions = TestCollectionUtils.setOf(definition1, definition2);
         ServiceLoader.ClassIterator<DataSerializerHook> iterator
                 = new ServiceLoader.ClassIterator<>(definitions, DataSerializerHook.class);
 
