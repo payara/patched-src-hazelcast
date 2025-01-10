@@ -20,6 +20,7 @@ import com.hazelcast.internal.networking.nio.MigratablePipeline;
 import com.hazelcast.internal.networking.nio.NioThread;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.HazelcastTestSupport;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import com.hazelcast.internal.util.ItemCounter;
@@ -71,7 +72,7 @@ public class MonkeyMigrationStrategyTest extends HazelcastTestSupport {
     public void imbalanceDetected_shouldReturnTrueWhenPipelineExist() {
         MigratablePipeline pipeline = mock(MigratablePipeline.class);
 
-        ownerPipelines.put(imbalance.srcOwner, Set.of(pipeline));
+        ownerPipelines.put(imbalance.srcOwner, TestCollectionUtils.setOf(pipeline));
         boolean imbalanceDetected = strategy.imbalanceDetected(imbalance);
         assertTrue(imbalanceDetected);
     }
@@ -80,7 +81,7 @@ public class MonkeyMigrationStrategyTest extends HazelcastTestSupport {
     public void findPipelineToMigrate_shouldWorkEvenWithASinglePipelineAvailable() {
         MigratablePipeline pipeline = mock(MigratablePipeline.class);
 
-        ownerPipelines.put(imbalance.srcOwner, Set.of(pipeline));
+        ownerPipelines.put(imbalance.srcOwner, TestCollectionUtils.setOf(pipeline));
         MigratablePipeline pipelineToMigrate = strategy.findPipelineToMigrate(imbalance);
         assertEquals(pipeline, pipelineToMigrate);
     }
@@ -92,7 +93,7 @@ public class MonkeyMigrationStrategyTest extends HazelcastTestSupport {
 
         MigratablePipeline pipeline1 = mock(MigratablePipeline.class);
         MigratablePipeline pipeline2 = mock(MigratablePipeline.class);
-        ownerPipelines.put(imbalance.srcOwner, Set.of(pipeline1, pipeline2));
+        ownerPipelines.put(imbalance.srcOwner, TestCollectionUtils.setOf(pipeline1, pipeline2));
 
         assertFairSelection(iterationCount, toleranceFactor, pipeline1, pipeline2);
     }
