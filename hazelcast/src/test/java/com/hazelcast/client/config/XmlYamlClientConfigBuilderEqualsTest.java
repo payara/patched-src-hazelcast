@@ -17,6 +17,7 @@
 package com.hazelcast.client.config;
 
 import com.hazelcast.config.helpers.DeclarativeConfigFileHelper;
+import com.hazelcast.internal.nio.IOUtil;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
@@ -118,7 +119,7 @@ public class XmlYamlClientConfigBuilderEqualsTest {
     private String readResourceToString(String resource) throws IOException {
         try (InputStream xmlInputStream = getClass().getClassLoader().getResourceAsStream(resource)) {
             assert xmlInputStream != null;
-            return new String(xmlInputStream.readAllBytes(), UTF_8);
+            return new String(IOUtil.toByteArray(xmlInputStream), UTF_8);
         }
     }
 
