@@ -166,7 +166,7 @@ public class XMLConfigBuilderTest extends AbstractConfigBuilderTest {
         String xml = HAZELCAST_START_TAG
                 + "  <cluster-name>foobar</cluster-name>\n"
                 + HAZELCAST_END_TAG;
-        Writer writer = new PrintWriter(file, StandardCharsets.UTF_8);
+        Writer writer = new PrintWriter(file, StandardCharsets.UTF_8.name());
         writer.write(xml);
         writer.close();
 

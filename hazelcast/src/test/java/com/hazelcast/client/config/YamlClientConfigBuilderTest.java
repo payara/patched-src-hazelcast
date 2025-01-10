@@ -109,7 +109,7 @@ public class YamlClientConfigBuilderTest extends AbstractClientConfigBuilderTest
 
         File file = File.createTempFile("foo", ".yaml");
         file.deleteOnExit();
-        PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8);
+        PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8.name());
         writer.println(yaml);
         writer.close();
 
