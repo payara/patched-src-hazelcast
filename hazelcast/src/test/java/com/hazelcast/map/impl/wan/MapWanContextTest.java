@@ -47,6 +47,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -238,7 +239,7 @@ public class MapWanContextTest {
         WanSyncConfig syncConfig = mock(WanSyncConfig.class);
         when(batchPublisherConfig.getSyncConfig()).thenReturn(syncConfig);
         when(syncConfig.getConsistencyCheckStrategy()).thenReturn(ConsistencyCheckStrategy.MERKLE_TREES);
-        List<WanBatchPublisherConfig> publishers = List.of(batchPublisherConfig);
+        List<WanBatchPublisherConfig> publishers = Arrays.asList(batchPublisherConfig);
 
         when(merkleTreeConfig.getEnabled()).thenReturn(false);
         when(wanReplicationConfig.getBatchPublisherConfigs()).thenReturn(publishers);
