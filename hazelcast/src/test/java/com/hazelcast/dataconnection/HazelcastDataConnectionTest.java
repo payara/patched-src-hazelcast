@@ -262,6 +262,8 @@ public class HazelcastDataConnectionTest extends HazelcastTestSupport {
     }
 
     private static String readFile() throws IOException {
-        return Files.readString(Paths.get("src", "test", "resources", "hazelcast-client-test-external.xml"));
+        return new String(
+            Files.readAllBytes(Paths.get("src", "test", "resources", "hazelcast-client-test-external.xml")),
+                StandardCharsets.UTF_8);
     }
 }
