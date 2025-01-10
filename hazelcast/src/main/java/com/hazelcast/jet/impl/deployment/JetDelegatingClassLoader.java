@@ -23,7 +23,9 @@ public class JetDelegatingClassLoader extends ClassLoader {
     }
 
     public JetDelegatingClassLoader(String name, ClassLoader parent) {
-        super(name, parent == null ? JetDelegatingClassLoader.class.getClassLoader() : parent);
+        // TODO JDK8: This method relies on a constructor that does not exist in Java8. Further inspection needed.
+        //super(name, parent == null ? JetDelegatingClassLoader.class.getClassLoader() : parent);
+        this(parent); // Temporary workaround
     }
 
     public void shutdown() {
