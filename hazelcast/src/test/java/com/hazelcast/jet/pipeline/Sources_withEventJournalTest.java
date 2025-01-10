@@ -40,6 +40,7 @@ import org.junit.experimental.categories.Category;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class Sources_withEventJournalTest extends PipelineTestSupport {
     }
 
     private static String readLocalClusterConfig(String file, String clusterName) throws IOException {
-        String str = Files.readString(Paths.get("src", "test", "resources", file));
+        String str = new String(Files.readAllBytes(Paths.get("src", "test", "resources", file)), StandardCharsets.UTF_8);
         return str.replace("$CLUSTER_NAME$", clusterName);
     }
 

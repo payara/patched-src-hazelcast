@@ -204,7 +204,7 @@ public class WriteFilePTest extends SimpleTestInClusterSupport {
         instance().getJet().newJob(p).join();
 
         // Then
-        assertEquals(text + System.getProperty("line.separator"), Files.readString(onlyFile, charset));
+        assertEquals(text + System.getProperty("line.separator"), new String(Files.readAllBytes(onlyFile), charset));
     }
 
     @Test
@@ -261,7 +261,7 @@ public class WriteFilePTest extends SimpleTestInClusterSupport {
             Path file = directory.resolve(String.format("%03d-0", i));
             assertTrueEventually(() -> assertTrue("file not found: " + file, Files.exists(file)), 5);
             assertTrueEventually(() ->
-                    assertEquals(stringValue, Files.readString(file)), 5);
+                    assertEquals(stringValue, new String(Files.readAllBytes(file), StandardCharsets.UTF_8)), 5);
             clock.incrementAndGet();
         }
 
@@ -311,7 +311,7 @@ public class WriteFilePTest extends SimpleTestInClusterSupport {
         for (int i = 0, j = 100; i < numItems / 2; i++) {
             Path file = directory.resolve("0-" + i);
             assertEquals((j++) + System.lineSeparator() + (j++) + System.lineSeparator(),
-                    Files.readString(file));
+                    new String(Files.readAllBytes(file), StandardCharsets.UTF_8));
         }
 
         job.join();
@@ -521,7 +521,7 @@ public class WriteFilePTest extends SimpleTestInClusterSupport {
     }
 
     private static Iterable<Integer> rangeIterable(int itemsFrom, int itemsTo) {
-        return (Iterable<Integer> & Serializable) () -> new Iterator<>() {
+        return (Iterable<Integer> & Serializable) () -> new Iterator<Integer>() {
             int val = itemsFrom;
 
             @Override

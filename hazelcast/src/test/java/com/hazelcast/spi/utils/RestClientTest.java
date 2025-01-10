@@ -36,6 +36,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -262,7 +263,7 @@ public class RestClientTest {
     }
 
     private String readFile(String fileName) throws IOException {
-        return Files.readString(Paths.get(fileName));
+        return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
     }
 
     static final class Tls13CipherCheckingServer implements Runnable, AutoCloseable {

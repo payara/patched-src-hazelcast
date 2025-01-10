@@ -34,6 +34,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Random;
 
@@ -73,7 +74,7 @@ public class StoreLatencyPluginRingbufferIntegrationTest extends HazelcastTestSu
 
         assertTrueEventually(() -> {
             File file = getNodeEngineImpl(hz).getDiagnostics().currentFile();
-            String content = Files.readString(file.toPath());
+            String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
             assertContains(content, "ringworm");
         });
     }
