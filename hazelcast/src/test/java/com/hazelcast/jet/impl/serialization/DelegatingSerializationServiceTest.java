@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -52,8 +53,8 @@ public class DelegatingSerializationServiceTest {
     @Test
     public void when_triesToRegisterSerializerWithNegativeTypeId_then_Fails() {
         // Given
-        Map<Class<?>, Serializer> serializers = Map.of(
-                Object.class, new StreamSerializer<>() {
+        Map<Class<?>, Serializer> serializers = new HashMap<>();
+        serializers.put(Object.class, new StreamSerializer<Object>() {
                     @Override
                     public int getTypeId() {
                         return -1;
@@ -79,10 +80,9 @@ public class DelegatingSerializationServiceTest {
     @Test
     public void when_triesToRegisterTwoSerializersWithSameTypeId_then_Fails() {
         // Given
-        Map<Class<?>, Serializer> serializers = Map.of(
-                int.class, new ValueSerializer(),
-                long.class, new ValueSerializer()
-        );
+        Map<Class<?>, Serializer> serializers = new HashMap<>();
+        serializers.put(int.class, new ValueSerializer());
+        serializers.put(long.class, new ValueSerializer());
 
         // When
         // Then
@@ -121,7 +121,8 @@ public class DelegatingSerializationServiceTest {
     public void when_multipleTypeSerializersRegistered_then_localHasPrecedence() {
         // Given
         Serializer serializer = new ValueSerializer();
-        Map<Class<?>, Serializer> serializers = Map.of(Byte.class, serializer);
+        Map<Class<?>, Serializer> serializers = new HashMap<>();
+        serializers.put(Byte.class, serializer);
 
         DelegatingSerializationService service = new DelegatingSerializationService(serializers, DELEGATE);
 
