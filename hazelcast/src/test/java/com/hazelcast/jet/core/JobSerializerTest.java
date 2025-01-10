@@ -34,6 +34,7 @@ import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.HazelcastSerializationException;
 import com.hazelcast.nio.serialization.StreamSerializer;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.BeforeClass;
@@ -44,10 +45,10 @@ import javax.annotation.Nonnull;
 import javax.cache.Cache;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -89,7 +90,12 @@ public class JobSerializerTest extends SimpleTestInClusterSupport {
     @Test
     public void when_serializerIsRegistered_then_itIsAvailableForLocalMapSource() {
         Map<Integer, Value> map = client().getMap(SOURCE_MAP_NAME);
-        map.putAll(Map.of(1, new Value(1), 2, new Value(2)));
+
+        Map<Integer, Value> map2 = new HashMap<>();
+        map2.put(1, new Value(1));
+        map2.put(2, new Value(2));
+
+        map.putAll(map2);
 
         Pipeline pipeline = Pipeline.create();
         pipeline.readFrom(Sources.<Integer, Value>map(SOURCE_MAP_NAME))
@@ -109,9 +115,10 @@ public class JobSerializerTest extends SimpleTestInClusterSupport {
         client().getJet().newJob(pipeline, jobConfig()).join();
 
         Map<Integer, Value> map = client().getMap(SINK_MAP_NAME);
-        assertThat(map).containsExactlyInAnyOrderEntriesOf(
-                Map.of(1, new Value(1), 2, new Value(2))
-        );
+        Map<Integer, Value> map2 = new HashMap<>();
+        map2.put(1, new Value(1));
+        map2.put(2, new Value(2));
+        assertThat(map).containsExactlyInAnyOrderEntriesOf(map2);
     }
 
     @Test
@@ -124,7 +131,10 @@ public class JobSerializerTest extends SimpleTestInClusterSupport {
     @Test
     public void when_serializerIsRegistered_then_itIsAvailableForLocalCacheSource() {
         Cache<Integer, Value> map = client().getCacheManager().getCache(SOURCE_CACHE_NAME);
-        map.putAll(Map.of(1, new Value(1), 2, new Value(2)));
+        Map<Integer, Value> map2 = new HashMap<>();
+        map2.put(1, new Value(1));
+        map2.put(2, new Value(2));
+        map.putAll(map2);
 
         Pipeline pipeline = Pipeline.create();
         pipeline.readFrom(Sources.<Integer, Value>cache(SOURCE_CACHE_NAME))
@@ -145,9 +155,11 @@ public class JobSerializerTest extends SimpleTestInClusterSupport {
 
         ICache<Integer, Value> cache = client().getCacheManager().getCache(SINK_CACHE_NAME);
         assertThat(cache).hasSize(2);
-        assertThat(cache.getAll(Set.of(1, 2))).containsExactlyInAnyOrderEntriesOf(
-                Map.of(1, new Value(1), 2, new Value(2))
-        );
+
+        Map<Integer, Value> map = new HashMap<>();
+        map.put(1, new Value(1));
+        map.put(2, new Value(2));
+        assertThat(cache.getAll(TestCollectionUtils.setOf(1, 2))).containsExactlyInAnyOrderEntriesOf(map);
     }
 
     @Test
