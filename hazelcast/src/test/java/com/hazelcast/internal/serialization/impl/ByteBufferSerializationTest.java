@@ -32,7 +32,6 @@ import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -44,7 +43,7 @@ public class ByteBufferSerializationTest {
 
     @Parameters(name = "bufferHasBackingArray:{0}")
     public static Iterable<Object> parameters() {
-        return List.of(true, false);
+        return Arrays.asList(true, false);
     }
 
     @Parameter
@@ -71,7 +70,7 @@ public class ByteBufferSerializationTest {
 
     @Test
     public void test_bufferHasExcessData() {
-        ByteBuffer buffer = ByteBuffer.allocate(TEST_BYTES.length + 5)
+        ByteBuffer buffer = (ByteBuffer) ByteBuffer.allocate(TEST_BYTES.length + 5)
                 .put(TEST_BYTES)
                 .limit(TEST_BYTES.length)
                 .rewind();
