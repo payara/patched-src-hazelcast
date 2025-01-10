@@ -307,7 +307,7 @@ public class MapResourceClassLoader extends JetDelegatingClassLoader {
             return;
         }
         String packageName = className.substring(0, lastDotIndex);
-        if (getDefinedPackage(packageName) != null) {
+        if (Package.getPackage(packageName) != null) {
             return;
         }
         try {
