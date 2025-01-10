@@ -186,7 +186,9 @@ public class AwsDiscoveryStrategyTest {
         // given
         String privateIp = "192.168.1.15";
         String publicIp = "38.146.24.2";
-        given(awsClient.getAddresses()).willReturn(Map.of(privateIp, publicIp));
+        HashMap<String, String> ipMap = new HashMap<>();
+        ipMap.put(privateIp, publicIp);
+        given(awsClient.getAddresses()).willReturn(ipMap);
 
         // when
         Iterable<DiscoveryNode> nodes = awsDiscoveryStrategy.discoverNodes();
@@ -212,11 +214,11 @@ public class AwsDiscoveryStrategyTest {
         properties.put("hz-port", "5701-5708");
         awsDiscoveryStrategy = new AwsDiscoveryStrategy(properties, awsClient);
 
+        Map<String, String> map = new HashMap<>();
+        map.put("192.168.1.15", "38.146.24.2");
+        map.put("192.168.1.16", "38.146.28.15");
         // 2 instances found
-        given(awsClient.getAddresses()).willReturn(Map.of(
-                "192.168.1.15", "38.146.24.2",
-                "192.168.1.16", "38.146.28.15"
-        ));
+        given(awsClient.getAddresses()).willReturn(map);
 
         // when
         Iterable<DiscoveryNode> nodes = awsDiscoveryStrategy.discoverNodes();
