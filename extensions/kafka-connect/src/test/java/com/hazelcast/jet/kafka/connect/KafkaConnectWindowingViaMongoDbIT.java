@@ -89,9 +89,29 @@ public class KafkaConnectWindowingViaMongoDbIT extends JetTestSupport {
     }
 
 
-    record ChangeStreamDoc(MyRecord fullDocument) {}
+    private static final class ChangeStreamDoc {
+        public final MyRecord fullDocument;
 
-    record MyRecord(int index) {}
+        private ChangeStreamDoc(MyRecord fullDocument) {
+            this.fullDocument = fullDocument;
+        }
+
+        public MyRecord fullDocument() {
+            return this.fullDocument;
+        }
+    }
+
+    private static final class MyRecord {
+        public final int index;
+
+        public MyRecord(int index) {
+            this.index = index;
+        }
+
+        public int index() {
+            return this.index;
+        }
+    }
 
     @Test
     public void rollingCount() throws InterruptedException {
