@@ -33,7 +33,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import java.util.List;
+
+import java.util.Arrays;
 
 /**
  * Make sure there are no delays when joining the cluster
@@ -79,6 +80,6 @@ public class ClusterJoinDelayTest extends HazelcastTestSupport {
         HazelcastInstance hz1 = fact.newHazelcastInstance(getConfig());
         HazelcastInstance hz2 = fact.newHazelcastInstance(getConfig());
         HazelcastInstance hz3 = fact.newHazelcastInstance(getConfig());
-        assertClusterSizeEventually(numInstances, List.of(hz1, hz2, hz3), 30);
+        assertClusterSizeEventually(numInstances, Arrays.asList(hz1, hz2, hz3), 30);
     }
 }
