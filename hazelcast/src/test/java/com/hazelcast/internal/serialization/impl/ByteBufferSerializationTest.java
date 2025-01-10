@@ -80,11 +80,9 @@ public class ByteBufferSerializationTest {
 
     @Test
     public void test_bufferHasOffset() {
-        ByteBuffer buffer = ByteBuffer.allocate(TEST_BYTES.length + 5)
-                .position(5)
-                .put(TEST_BYTES)
-                .position(5)
-                .slice();
+        ByteBuffer buffer = (ByteBuffer) ByteBuffer.allocate(TEST_BYTES.length + 5).position(5);
+        buffer.put(TEST_BYTES).position(5);
+        buffer = buffer.slice();
 
         test(bufferHasBackingArray ? buffer : buffer.asReadOnlyBuffer());
     }
