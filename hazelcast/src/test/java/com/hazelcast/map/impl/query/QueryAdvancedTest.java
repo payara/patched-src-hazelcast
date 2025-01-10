@@ -22,6 +22,7 @@ import com.hazelcast.config.IndexType;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.core.HazelcastException;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.internal.util.RootCauseMatcher;
 import com.hazelcast.map.IMap;
 import com.hazelcast.map.MapStoreAdapter;
 import com.hazelcast.map.listener.EntryExpiredListener;
@@ -38,8 +39,10 @@ import com.hazelcast.test.HazelcastTestSupport;
 import com.hazelcast.test.TestHazelcastInstanceFactory;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
@@ -51,9 +54,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.hazelcast.internal.util.RootCauseMatcher.rootCause;
 import static com.hazelcast.map.impl.eviction.MapClearExpiredRecordsTask.PROP_CLEANUP_ENABLED;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -61,6 +62,9 @@ import static org.junit.Assert.assertTrue;
 @RunWith(HazelcastParallelClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
 public class QueryAdvancedTest extends HazelcastTestSupport {
+
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
 
     @Override
     protected Config getConfig() {
@@ -523,8 +527,8 @@ public class QueryAdvancedTest extends HazelcastTestSupport {
         Config config = getConfig();
         config.getSerializationConfig().addPortableFactory(666, classId -> new PortableEmployee());
         config.getMapConfig(mapName)
-              .addIndexConfig(new IndexConfig(IndexType.HASH, "notExist"))
-              .addIndexConfig(new IndexConfig(IndexType.HASH, "n"));
+            .addIndexConfig(new IndexConfig(IndexType.HASH, "notExist"))
+            .addIndexConfig(new IndexConfig(IndexType.HASH, "n"));
 
         HazelcastInstance hazelcastInstance = createHazelcastInstance(config);
 
@@ -548,8 +552,8 @@ public class QueryAdvancedTest extends HazelcastTestSupport {
         //A remote predicate can throw Error in case of Usercodeployment and missing sub classes
         //See the issue for actual problem https://github.com/hazelcast/hazelcast/issues/18052
         //We are throwing error to see if the error is delegated to the caller
-        assertThatThrownBy(() -> map.values(new ErrorThrowingPredicate()))
-                .isInstanceOf(HazelcastException.class)
-                .cause().has(rootCause(NoClassDefFoundError.class));
+        expected.expect(HazelcastException.class);
+        expected.expectCause(new RootCauseMatcher(NoClassDefFoundError.class));
+        map.values(new ErrorThrowingPredicate());
     }
 }

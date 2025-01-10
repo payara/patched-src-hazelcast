@@ -17,6 +17,8 @@
 package com.hazelcast.internal.util;
 
 import org.assertj.core.api.Condition;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * Matcher for {@link org.assertj.core.api.Assertions#assertThatThrownBy} to assert the root cause of an exception.
@@ -36,7 +38,7 @@ import org.assertj.core.api.Condition;
  *   }
  * </code></pre>
  */
-public class RootCauseMatcher {
+public class RootCauseMatcher extends BaseMatcher<Throwable> {
 
     private final Class<? extends Throwable> expectedType;
     private final String expectedMessage;
@@ -72,5 +74,18 @@ public class RootCauseMatcher {
             item = item.getCause();
         }
         return item;
+    }
+
+    @Override
+    public boolean matches(Object o) {
+        if (o instanceof Throwable) {
+            return matches((Throwable) o);
+        }
+        return false;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+
     }
 }
