@@ -32,8 +32,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import wiremock.org.apache.commons.lang3.BooleanUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -49,8 +49,11 @@ public class EntryCostEstimatorTest extends HazelcastTestSupport {
     public boolean perEntryStatsEnabled;
 
     @Parameterized.Parameters(name = "perEntryStatsEnabled:{0}")
-    public static Collection<? extends Object> parameters() {
-        return BooleanUtils.values();
+    public static Collection<?> parameters() {
+        return Arrays.asList(new Object[][]{
+            {true},
+            {false},
+        });
     }
 
     protected TestHazelcastInstanceFactory factory = createHazelcastInstanceFactory(2);
