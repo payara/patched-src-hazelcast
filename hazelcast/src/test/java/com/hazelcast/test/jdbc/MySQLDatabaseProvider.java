@@ -23,6 +23,7 @@ import org.testcontainers.containers.Network;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -65,11 +66,10 @@ public class MySQLDatabaseProvider extends JdbcDatabaseProvider<MySQLContainer<?
 
     @SuppressWarnings("resource")
     public static MySQLContainer<?> createContainer() {
-        return new MySQLContainer<>("mysql:" + TEST_MYSQL_VERSION)
-                .withTmpFs(Map.of(
-                        "/var/lib/mysql/", "rw",
-                        "/tmp/", "rw"
-                ));
+        Map<String, String> map = new HashMap<>();
+        map.put("/var/lib/mysql/", "rw");
+        map.put("/tmp/", "rw");
+        return new MySQLContainer<>("mysql:" + TEST_MYSQL_VERSION).withTmpFs(map);
     }
 
     @SuppressWarnings("resource")

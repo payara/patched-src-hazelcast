@@ -25,6 +25,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -43,7 +44,10 @@ public class PhoneHomeParameterCreatorTest {
         phoneHomeParameterCreator.addParam("2", "phonehome");
         Map<String, String> map = phoneHomeParameterCreator.getParameters();
         assertEquals("1=hazelcast&2=phonehome", phoneHomeParameterCreator.build());
-        assertEquals(Map.of("1", "hazelcast", "2", "phonehome"), map);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("1", "hazelcast");
+        map2.put("2", "phonehome");
+        assertEquals(map2, map);
     }
 
     @Test

@@ -50,6 +50,7 @@ import javax.cache.spi.CachingProvider;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -186,7 +187,9 @@ public class PhoneHomeTest extends HazelcastTestSupport {
 
     @Test
     public void pardotIdOverride_withEnvVar() {
-        PhoneHome phoneHome = new PhoneHome(node, "http://example.org", Map.of("HZ_PARDOT_ID", "1234"));
+        Map<String, String> map = new HashMap<>();
+        map.put("HZ_PARDOT_ID", "1234");
+        PhoneHome phoneHome = new PhoneHome(node, "http://example.org", map);
         Map<String, String> params = phoneHome.phoneHome(true);
         assertEquals("1234", params.get("p"));
     }
