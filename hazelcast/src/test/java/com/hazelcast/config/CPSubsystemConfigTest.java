@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -61,7 +62,9 @@ public class CPSubsystemConfigTest extends HazelcastTestSupport {
         CPMapConfig map1 = new CPMapConfig("map1");
         CPMapConfig map2 = new CPMapConfig("map2");
         config.addCPMapConfig(map1).addCPMapConfig(map2);
-        Map<String, CPMapConfig> expected = Map.of(map1.getName(), map1, map2.getName(), map2);
+        Map<String, CPMapConfig> expected = new HashMap<>();
+        expected.put(map1.getName(), map1);
+        expected.put(map2.getName(), map2);
         assertEquals(expected, config.getCpMapConfigs());
     }
 
@@ -70,7 +73,9 @@ public class CPSubsystemConfigTest extends HazelcastTestSupport {
         CPSubsystemConfig config = new CPSubsystemConfig();
         CPMapConfig map1 = new CPMapConfig("map1");
         CPMapConfig map2 = new CPMapConfig("map2");
-        Map<String, CPMapConfig> mapConfigs = Map.of(map1.getName(), map1, map2.getName(), map2);
+        Map<String, CPMapConfig> mapConfigs = new HashMap<>();
+        mapConfigs.put(map1.getName(), map1);
+        mapConfigs.put(map2.getName(), map2);
         config.setCPMapConfigs(mapConfigs);
         assertEquals(mapConfigs, config.getCpMapConfigs());
     }
