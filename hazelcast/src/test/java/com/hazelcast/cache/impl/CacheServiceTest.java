@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -168,7 +169,7 @@ public class CacheServiceTest {
     @Test
     public void testIsNamespaceReferencedWithHotRestart_withCacheConfigs_true() {
         CacheService cacheService = new TestCacheService(mockNodeEngine, true);
-        when(mockConfig.getCacheConfigs()).thenReturn(Map.of());
+        when(mockConfig.getCacheConfigs()).thenReturn(new HashMap<>());
         CompletableFuture<CacheConfig> completableFuture = CompletableFuture.supplyAsync(() -> {
             CacheConfig cacheConfig = newCacheConfig();
             cacheConfig.setUserCodeNamespace("ns1");
@@ -183,7 +184,7 @@ public class CacheServiceTest {
     @Test
     public void testIsNamespaceReferencedWithHotRestart_withNoCacheConfigs_false() {
         CacheService cacheService = new TestCacheService(mockNodeEngine, true);
-        when(mockConfig.getCacheConfigs()).thenReturn(Map.of());
+        when(mockConfig.getCacheConfigs()).thenReturn(new HashMap<>());
         assertFalse(cacheService.isNamespaceReferencedWithHotRestart("ns1"));
     }
 
@@ -196,7 +197,9 @@ public class CacheServiceTest {
         when(cacheConfigMock.getDataPersistenceConfig()).thenReturn(dataPersistenceConfigMock);
         when(cacheConfigMock.getUserCodeNamespace()).thenReturn("ns1");
         when(cacheConfigMock.getDataPersistenceConfig()).thenReturn(dataPersistenceConfigMock);
-        when(mockConfig.getCacheConfigs()).thenReturn(Map.of("test-cache", cacheConfigMock));
+        Map<String, CacheSimpleConfig> map = new HashMap<>();
+        map.put("test-cache", cacheConfigMock);
+        when(mockConfig.getCacheConfigs()).thenReturn(map);
         assertTrue(cacheService.isNamespaceReferencedWithHotRestart("ns1"));
     }
 
