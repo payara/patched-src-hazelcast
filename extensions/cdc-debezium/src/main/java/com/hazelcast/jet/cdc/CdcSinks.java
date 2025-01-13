@@ -247,7 +247,7 @@ public final class CdcSinks {
             FunctionEx<? super ChangeRecord, ? extends K> keyFn,
             FunctionEx<? super ChangeRecord, ? extends V> valueFn
     ) {
-        return new FunctionEx<>() {
+        return new FunctionEx<HazelcastInstance, Processor>() {
 
             private static final long serialVersionUID = 1L;
 

@@ -19,6 +19,7 @@ package com.hazelcast.jet.sql.impl.connector.map;
 import com.hazelcast.cluster.Address;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.function.BiFunctionEx;
+import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.internal.serialization.InternalSerializationService;
 import com.hazelcast.internal.util.PartitioningStrategyUtil;
 import com.hazelcast.jet.core.ProcessorMetaSupplier;
@@ -29,8 +30,10 @@ import com.hazelcast.jet.impl.connector.ReadMapOrCacheP.LocalProcessorSupplier;
 import com.hazelcast.jet.impl.connector.ReadMapOrCacheP.Reader;
 import com.hazelcast.jet.impl.util.FixedCapacityIntArrayList;
 import com.hazelcast.jet.impl.util.Util;
+import com.hazelcast.map.impl.iterator.MapEntriesWithCursor;
 import com.hazelcast.partition.PartitioningStrategy;
 import com.hazelcast.security.permission.MapPermission;
+import com.hazelcast.spi.impl.InternalCompletableFuture;
 import com.hazelcast.sql.impl.expression.Expression;
 import com.hazelcast.sql.impl.expression.ExpressionEvalContext;
 
@@ -141,12 +144,13 @@ public abstract class SpecificPartitionsImapReaderPms<F extends CompletableFutur
     public static ProcessorMetaSupplier mapReader(String mapName,
                                                   @Nullable PartitioningStrategy<?> partitioningStrategy,
                                                   @Nullable List<List<Expression<?>>> requiredPartitionsExprs) {
-        return new SpecificPartitionsImapReaderPms<>(new LocalMapReaderFunction(mapName),
-                partitioningStrategy, requiredPartitionsExprs) {
-            @Override
-            public Permission getRequiredPermission() {
-                return new MapPermission(mapName, ACTION_CREATE, ACTION_READ);
-            }
+        return new SpecificPartitionsImapReaderPms
+            <InternalCompletableFuture<MapEntriesWithCursor>, MapEntriesWithCursor, Map.Entry<Data, Data>>(
+                new LocalMapReaderFunction(mapName), partitioningStrategy, requiredPartitionsExprs) {
+                    @Override
+                    public Permission getRequiredPermission() {
+                        return new MapPermission(mapName, ACTION_CREATE, ACTION_READ);
+                    }
         };
     }
 }

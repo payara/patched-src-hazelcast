@@ -99,7 +99,7 @@ public final class AvroProcessors {
     private static <D> FunctionEx<Processor.Context, DataFileWriter<D>> dataFileWriterFn(
             String directoryName, String jsonSchema, SupplierEx<DatumWriter<D>> datumWriterSupplier
     ) {
-        return new FunctionEx<>() {
+        return new FunctionEx<Processor.Context, DataFileWriter<D>>() {
 
             private static final long serialVersionUID = 1L;
 
@@ -129,7 +129,7 @@ public final class AvroProcessors {
             SupplierEx<? extends DatumReader<D>> datumReaderSupplier,
             BiFunctionEx<String, ? super D, T> mapOutputFn
     ) {
-        return new FunctionEx<>() {
+        return new FunctionEx<Path, Stream<T>>() {
 
             private static final long serialVersionUID = 1L;
 
