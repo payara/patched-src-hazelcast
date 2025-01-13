@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,10 @@ public class InsertProcessorTest extends SqlTestSupport {
     @Test
     public void test_multiInsert() {
         executeInsert(asList(jetRow(1, 1), jetRow(2, 2)), singletonList(jetRow(2L)));
-        assertThat(map).containsExactlyInAnyOrderEntriesOf(Map.of(1, 1, 2, 2));
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 1);
+        map.put(2, 2);
+        assertThat(map).containsExactlyInAnyOrderEntriesOf(map);
     }
 
     @Test

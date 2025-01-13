@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,9 @@ public class CsvResolverTest {
     @Test
     public void test_resolveFields() {
         // given
-        Set<String> headers = Set.of("field1", "field2");
+        Set<String> headers = new HashSet<>();
+        headers.add("field1");
+        headers.add("field2");
 
         // when
         List<MappingField> fields = CsvResolver.resolveFields(headers);

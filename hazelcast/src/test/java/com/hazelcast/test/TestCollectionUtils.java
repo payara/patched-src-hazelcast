@@ -17,8 +17,10 @@
 package com.hazelcast.test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,7 +38,13 @@ public final class TestCollectionUtils {
      */
     public static <T> Set<T> setOf(T... items) {
         List<T> list = Arrays.asList(items);
-        return new HashSet<T>(list);
+        return new HashSet<>(list);
+    }
+
+    public static <K, V> Map<K, V> mapOf(K key, V value) {
+        Map<K, V> map = new HashMap<>();
+        map.put(key, value);
+        return map;
     }
 
     public static Set<Integer> setOfValuesBetween(int from, int to) {

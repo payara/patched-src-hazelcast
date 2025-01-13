@@ -883,13 +883,16 @@ public abstract class SqlTestSupport extends SimpleTestInClusterSupport {
     }
 
     public static class SqlMapping extends SqlStructure<SqlMapping> {
-        private static final Map<Class<? extends SqlConnector>, String> TYPES = Map.of(
-                FileSqlConnector.class, FileSqlConnector.TYPE_NAME,
-                IMapSqlConnector.class, IMapSqlConnector.TYPE_NAME,
-                KafkaSqlConnector.class, KafkaSqlConnector.TYPE_NAME
-        );
+        private static final Map<Class<? extends SqlConnector>, String> TYPES;
         public String externalName;
         public final String type;
+
+        static {
+            TYPES = new HashMap<>();
+            TYPES.put(FileSqlConnector.class, FileSqlConnector.TYPE_NAME);
+            TYPES.put(IMapSqlConnector.class, IMapSqlConnector.TYPE_NAME);
+            TYPES.put(KafkaSqlConnector.class, KafkaSqlConnector.TYPE_NAME);
+        }
 
         public SqlMapping(String name, Class<? extends SqlConnector> connector) {
             super(name);

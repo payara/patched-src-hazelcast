@@ -29,6 +29,7 @@ import com.hazelcast.sql.impl.type.QueryDataType;
 import com.hazelcast.sql.impl.type.QueryDataTypeFamily;
 import com.hazelcast.test.HazelcastParametrizedRunner;
 import com.hazelcast.test.HazelcastSerialParametersRunnerFactory;
+import com.hazelcast.test.TestCollectionUtils;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.avro.Schema;
@@ -896,7 +897,7 @@ public class SqlAvroTest extends KafkaSqlTestSupport {
 
         kafkaTestSupport.assertTopicContentsEventually(
                 mapping.name,
-                Map.of(
+                TestCollectionUtils.mapOf(
                         createRecord(keySchema, copyOfRange(mapping.fields, 0, 1),
                                 copyOfRange(avroValues, 0, 1)),
                         createRecord(valueSchema, copyOfRange(mapping.fields, 1, mapping.fields.length),

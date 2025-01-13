@@ -32,6 +32,7 @@ import com.hazelcast.sql.impl.schema.MappingField;
 import com.hazelcast.sql.impl.schema.map.MapTableField;
 import com.hazelcast.sql.impl.type.QueryDataType;
 import com.hazelcast.sql.impl.type.QueryDataTypeFamily;
+import com.hazelcast.test.TestCollectionUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
@@ -64,7 +65,7 @@ public class MetadataCompactResolverTest {
         InternalSerializationService ss = createSerializationService();
 
         Map<String, String> options =
-                Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
+                TestCollectionUtils.mapOf(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
         // TODO: fix compact nested types support?
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(key, emptyList(), options, ss))
@@ -80,7 +81,7 @@ public class MetadataCompactResolverTest {
         InternalSerializationService ss = createSerializationService();
 
         Map<String, String> options =
-                Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
+            TestCollectionUtils.mapOf(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
         List<MappingField> fields = Arrays.asList(field("object", QueryDataType.OBJECT, prefix + ".object"));
 
@@ -98,7 +99,7 @@ public class MetadataCompactResolverTest {
     public void test_resolveFields(boolean key, String prefix) {
         InternalSerializationService ss = createSerializationService();
         Map<String, String> options =
-                Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
+            TestCollectionUtils.mapOf(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
         List<MappingField> fields = Arrays.asList(
                 field("string", QueryDataType.VARCHAR, prefix + ".string"),
@@ -146,7 +147,7 @@ public class MetadataCompactResolverTest {
         InternalSerializationService ss = createSerializationService();
 
         Map<String, String> options =
-                Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
+            TestCollectionUtils.mapOf(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "testAll");
 
         assertThatThrownBy(() -> MetadataPortableResolver.INSTANCE.resolveAndValidateFields(
                 key,
@@ -183,7 +184,7 @@ public class MetadataCompactResolverTest {
                         field("timestamp", QueryDataType.TIMESTAMP, prefix + ".timestamp"),
                         field("timestampTz", QueryDataType.TIMESTAMP_WITH_TZ_OFFSET_DATE_TIME, prefix + ".timestampTz")
                 ),
-                Map.of(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "test"),
+                TestCollectionUtils.mapOf(key ? OPTION_KEY_COMPACT_TYPE_NAME : OPTION_VALUE_COMPACT_TYPE_NAME, "test"),
                 createSerializationService()
         );
 

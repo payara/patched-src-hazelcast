@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,8 +79,10 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
         var rexLiteral = b.makeLiteral("1");
         RexCall call = (RexCall) b.makeCall(EQUALS, leftInputRef, rexLiteral);
 
-        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, call, Set.of(KEY));
-        assertEquals(Map.of("m", singletonList(Map.of("__key", rexLiteral))), decomposedConds);
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, call,
+            TestCollectionUtils.setOf(KEY));
+        assertEquals(TestCollectionUtils.mapOf("m", singletonList(TestCollectionUtils.mapOf("__key", rexLiteral))),
+            decomposedConds);
     }
 
     @Test
@@ -109,11 +112,12 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 b.makeCall(EQUALS, col2, param0)
         );
 
-        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
-        assertEquals(Map.of("m", singletonList(Map.of(
-                "comp1", param1,
-                "comp2", param0
-                ))), decomposedConds);
+        Map<String, RexDynamicParam> paramMap = new HashMap<>();
+        paramMap.put("comp1", param1);
+        paramMap.put("comp2", param0);
+        Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, filter,
+            TestCollectionUtils.setOf("comp1", "comp2"));
+        assertEquals(TestCollectionUtils.mapOf("m", singletonList(paramMap)), decomposedConds);
     }
 
     @Test

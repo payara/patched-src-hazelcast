@@ -20,13 +20,13 @@ import com.hazelcast.jet.kafka.impl.StreamKafkaP;
 import com.hazelcast.jet.sql.impl.connector.kafka.KafkaTable.KafkaPlanObjectKey;
 import com.hazelcast.sql.impl.schema.TableField;
 import com.hazelcast.sql.impl.type.QueryDataType;
+import com.hazelcast.test.TestCollectionUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import static com.hazelcast.jet.sql.impl.connector.SqlConnector.OPTION_PREFERRED_LOCAL_PARALLELISM;
 import static java.util.Collections.emptyMap;
@@ -63,7 +63,7 @@ public class KafkaTableTest {
                 name1,
                 topic1,
                 Arrays.asList(new TableField(field1, QueryDataType.INT, false)),
-                Map.of("key", value1)
+                TestCollectionUtils.mapOf("key", value1)
         );
         KafkaPlanObjectKey k2 = new KafkaPlanObjectKey(
                 schema2,
@@ -95,7 +95,7 @@ public class KafkaTableTest {
     public void when_preferredLocalParallelism_isDefined_then_parseInt(String plp, Integer expected, boolean shouldThrow) {
         KafkaTable table = new KafkaTable(
                 null, null, null, null, null, null, null,
-                Map.of(OPTION_PREFERRED_LOCAL_PARALLELISM, plp),
+                TestCollectionUtils.mapOf(OPTION_PREFERRED_LOCAL_PARALLELISM, plp),
                 null, null, null, null, null
         );
 

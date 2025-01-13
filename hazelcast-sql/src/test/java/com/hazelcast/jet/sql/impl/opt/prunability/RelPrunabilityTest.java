@@ -36,6 +36,7 @@ import com.hazelcast.map.IMap;
 import com.hazelcast.sql.impl.extract.QueryPath;
 import com.hazelcast.sql.impl.schema.TableField;
 import com.hazelcast.sql.impl.type.QueryDataType;
+import com.hazelcast.test.TestCollectionUtils;
 import org.apache.calcite.rel.metadata.RelMetadataQuery;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rex.RexLiteral;
@@ -46,6 +47,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +117,8 @@ public class RelPrunabilityTest extends OptimizerTestSupport {
         query = HazelcastRelMetadataQuery.reuseOrCreate(RelMetadataQuery.instance());
         Map<String, List<Map<String, RexNode>>> prunability = query.extractPrunability(root);
         final RexLiteral expectedLiteral = HazelcastRexBuilder.INSTANCE.makeLiteral(10, REL_TYPE_BIGINT);
-        assertEquals(Map.of(MAP_NAME, singletonList(Map.of("__key", expectedLiteral))), prunability);
+        assertEquals(TestCollectionUtils.mapOf(MAP_NAME,
+            singletonList(TestCollectionUtils.mapOf("__key", expectedLiteral))), prunability);
     }
 
     @Test
@@ -127,7 +130,8 @@ public class RelPrunabilityTest extends OptimizerTestSupport {
         query = HazelcastRelMetadataQuery.reuseOrCreate(RelMetadataQuery.instance());
         Map<String, List<Map<String, RexNode>>> prunability = query.extractPrunability(root);
         final RexLiteral expectedLiteral = HazelcastRexBuilder.INSTANCE.makeLiteral(10, REL_TYPE_BIGINT);
-        assertEquals(Map.of(MAP_NAME, singletonList(Map.of("comp1", expectedLiteral))), prunability);
+        assertEquals(TestCollectionUtils.mapOf(MAP_NAME,
+            singletonList(TestCollectionUtils.mapOf("comp1", expectedLiteral))), prunability);
     }
 
     @Test
@@ -144,7 +148,8 @@ public class RelPrunabilityTest extends OptimizerTestSupport {
         query = HazelcastRelMetadataQuery.reuseOrCreate(RelMetadataQuery.instance());
         Map<String, List<Map<String, RexNode>>> prunability = query.extractPrunability(root);
         final RexLiteral expectedLiteral = HazelcastRexBuilder.INSTANCE.makeLiteral(10, REL_TYPE_BIGINT);
-        assertEquals(Map.of(MAP_NAME, singletonList(Map.of("comp1", expectedLiteral))), prunability);
+        assertEquals(TestCollectionUtils.mapOf(MAP_NAME,
+            singletonList(TestCollectionUtils.mapOf("comp1", expectedLiteral))), prunability);
     }
 
     @Test
@@ -257,7 +262,8 @@ public class RelPrunabilityTest extends OptimizerTestSupport {
         Map<String, List<Map<String, RexNode>>> prunability = query.extractPrunability(root);
         final RexLiteral l = HazelcastRexBuilder.INSTANCE.makeLiteral(10, REL_TYPE_BIGINT);
         assertEquals(
-                Map.of(MAP_NAME, asList(Map.of("comp1", l), Map.of("comp1", l))),
+                TestCollectionUtils.mapOf(MAP_NAME,
+                    asList(TestCollectionUtils.mapOf("comp1", l), TestCollectionUtils.mapOf("comp1", l))),
                 prunability);
     }
 
@@ -279,7 +285,7 @@ public class RelPrunabilityTest extends OptimizerTestSupport {
 
         query = HazelcastRelMetadataQuery.reuseOrCreate(RelMetadataQuery.instance());
         Map<String, List<Map<String, RexNode>>> prunability = query.extractPrunability(root);
-        assertEquals(Map.of(), prunability);
+        assertEquals(new HashMap<>(), prunability);
     }
 
     static class CompoundKey {

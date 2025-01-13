@@ -16,8 +16,10 @@
 
 package com.hazelcast.jet.sql.impl.connector.kafka;
 
+import com.google.common.collect.ImmutableMap;
 import com.hazelcast.jet.kafka.HazelcastKafkaAvroDeserializer;
 import com.hazelcast.jet.kafka.HazelcastKafkaAvroSerializer;
+import com.hazelcast.test.TestCollectionUtils;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import junitparams.JUnitParamsRunner;
@@ -41,6 +43,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -70,40 +73,40 @@ public class PropertiesResolverTest {
     @Test
     public void test_consumerProperties_absentFormat() {
         assertThat(resolveConsumerProperties(emptyMap()))
-                .containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(
+                    KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
     }
 
     @Test
     public void test_producerProperties_absentFormat() {
         assertThat(resolveProducerProperties(emptyMap()))
-                .containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(
+                    KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
     }
 
     @Test
     public void when_consumerProperties_formatIsUnknown_then_itIsIgnored() {
         // key
-        Map<String, String> keyOptions = Map.of(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        Map<String, String> keyOptions = TestCollectionUtils.mapOf(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
         assertThat(resolveConsumerProperties(keyOptions)).isEmpty();
 
         // value
-        Map<String, String> valueOptions = Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, UNKNOWN_FORMAT
-        );
+        Map<String, String> valueOptions = new HashMap<>();
+        valueOptions.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        valueOptions.put(OPTION_VALUE_FORMAT, UNKNOWN_FORMAT);
         assertThat(resolveConsumerProperties(valueOptions)).isEmpty();
     }
 
     @Test
     public void when_producerProperties_formatIsUnknown_then_itIsIgnored() {
         // key
-        Map<String, String> keyOptions = Map.of(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        Map<String, String> keyOptions = TestCollectionUtils.mapOf(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
         assertThat(resolveProducerProperties(keyOptions)).isEmpty();
 
         // value
-        Map<String, String> valueOptions = Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, UNKNOWN_FORMAT
-        );
+        Map<String, String> valueOptions = new HashMap<>();
+        valueOptions.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        valueOptions.put(OPTION_VALUE_FORMAT, UNKNOWN_FORMAT);
         assertThat(resolveProducerProperties(valueOptions)).isEmpty();
     }
 
@@ -128,17 +131,17 @@ public class PropertiesResolverTest {
     @Parameters(method = "consumerValues")
     public void test_consumerProperties_java(String clazz, String deserializer) {
         // key
-        assertThat(resolveConsumerProperties(Map.of(
+        assertThat(resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, JAVA_FORMAT,
                 OPTION_KEY_CLASS, clazz
-        ))).containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, deserializer));
+        ))).containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_DESERIALIZER, deserializer));
 
         // value
-        assertThat(resolveConsumerProperties(Map.of(
+        assertThat(resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, JAVA_FORMAT,
                 OPTION_VALUE_CLASS, clazz)
-        )).containsExactlyEntriesOf(Map.of(VALUE_DESERIALIZER, deserializer));
+        )).containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_DESERIALIZER, deserializer));
     }
 
     @SuppressWarnings("unused")
@@ -162,17 +165,17 @@ public class PropertiesResolverTest {
     @Parameters(method = "producerValues")
     public void test_producerProperties_java(String clazz, String serializer) {
         // key
-        assertThat(resolveProducerProperties(Map.of(
+        assertThat(resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, JAVA_FORMAT,
                 OPTION_KEY_CLASS, clazz
-        ))).containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, serializer));
+        ))).containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_SERIALIZER, serializer));
 
         // value
-        assertThat(resolveProducerProperties(Map.of(
+        assertThat(resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, JAVA_FORMAT,
                 OPTION_VALUE_CLASS, clazz)
-        )).containsExactlyEntriesOf(Map.of(VALUE_SERIALIZER, serializer));
+        )).containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_SERIALIZER, serializer));
     }
 
     @SuppressWarnings("unused")
@@ -196,17 +199,17 @@ public class PropertiesResolverTest {
     @Parameters(method = "classes")
     public void when_consumerProperties_javaPropertyIsDefined_then_itsNotOverwritten(String clazz) {
         // key
-        Map<String, String> keyOptions = Map.of(
+        Map<String, String> keyOptions = ImmutableMap.of(
                 OPTION_KEY_FORMAT, JAVA_FORMAT,
                 OPTION_KEY_CLASS, clazz,
                 KEY_DESERIALIZER, "deserializer"
         );
 
         assertThat(resolveConsumerProperties(keyOptions))
-                .containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, "deserializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_DESERIALIZER, "deserializer"));
 
         // value
-        Map<String, String> valueOptions = Map.of(
+        Map<String, String> valueOptions = ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, JAVA_FORMAT,
                 OPTION_VALUE_CLASS, clazz,
@@ -214,24 +217,24 @@ public class PropertiesResolverTest {
         );
 
         assertThat(resolveConsumerProperties(valueOptions))
-                .containsExactlyEntriesOf(Map.of(VALUE_DESERIALIZER, "deserializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_DESERIALIZER, "deserializer"));
     }
 
     @Test
     @Parameters(method = "classes")
     public void when_producerProperties_javaPropertyIsDefined_then_itsNotOverwritten(String clazz) {
         // key
-        Map<String, String> keyOptions = Map.of(
+        Map<String, String> keyOptions = ImmutableMap.of(
                 OPTION_KEY_FORMAT, JAVA_FORMAT,
                 OPTION_KEY_CLASS, clazz,
                 KEY_SERIALIZER, "serializer"
         );
 
         assertThat(resolveProducerProperties(keyOptions))
-                .containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, "serializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_SERIALIZER, "serializer"));
 
         // value
-        Map<String, String> valueOptions = Map.of(
+        Map<String, String> valueOptions = ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, JAVA_FORMAT,
                 OPTION_VALUE_CLASS, clazz,
@@ -239,24 +242,24 @@ public class PropertiesResolverTest {
         );
 
         assertThat(resolveProducerProperties(valueOptions))
-                .containsExactlyEntriesOf(Map.of(VALUE_SERIALIZER, "serializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_SERIALIZER, "serializer"));
     }
 
     @Test
     public void test_consumerProperties_avro() {
         // key
-        assertThat(PropertiesResolver.resolveConsumerProperties(Map.of(
-                OPTION_KEY_FORMAT, AVRO_FORMAT
-        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        assertThat(PropertiesResolver.resolveConsumerProperties(
+            TestCollectionUtils.mapOf(OPTION_KEY_FORMAT, AVRO_FORMAT), DUMMY_SCHEMA, null))
+            .containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 KEY_DESERIALIZER, HazelcastKafkaAvroDeserializer.class.getCanonicalName(),
                 OPTION_KEY_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
 
         // value
-        assertThat(PropertiesResolver.resolveConsumerProperties(Map.of(
+        assertThat(PropertiesResolver.resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, AVRO_FORMAT
-        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 VALUE_DESERIALIZER, HazelcastKafkaAvroDeserializer.class.getCanonicalName(),
                 OPTION_VALUE_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
@@ -265,20 +268,20 @@ public class PropertiesResolverTest {
     @Test
     public void test_consumerProperties_avro_schemaRegistry() {
         // key
-        assertThat(resolveConsumerProperties(Map.of(
+        assertThat(resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, AVRO_FORMAT,
                 "schema.registry.url", "http://localhost:8081"
-        ))).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ))).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 KEY_DESERIALIZER, KafkaAvroDeserializer.class.getCanonicalName(),
                 "schema.registry.url", "http://localhost:8081"
         ));
 
         // value
-        assertThat(resolveConsumerProperties(Map.of(
+        assertThat(resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, AVRO_FORMAT,
                 "schema.registry.url", "http://localhost:8081"
-        ))).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ))).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 VALUE_DESERIALIZER, KafkaAvroDeserializer.class.getCanonicalName(),
                 "schema.registry.url", "http://localhost:8081"
         ));
@@ -287,18 +290,18 @@ public class PropertiesResolverTest {
     @Test
     public void test_producerProperties_avro() {
         // key
-        assertThat(PropertiesResolver.resolveProducerProperties(Map.of(
+        assertThat(PropertiesResolver.resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, AVRO_FORMAT
-        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 KEY_SERIALIZER, HazelcastKafkaAvroSerializer.class.getCanonicalName(),
                 OPTION_KEY_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
 
         // value
-        assertThat(PropertiesResolver.resolveProducerProperties(Map.of(
+        assertThat(PropertiesResolver.resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, AVRO_FORMAT
-        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 VALUE_SERIALIZER, HazelcastKafkaAvroSerializer.class.getCanonicalName(),
                 OPTION_VALUE_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
@@ -307,20 +310,20 @@ public class PropertiesResolverTest {
     @Test
     public void test_producerProperties_avro_schemaRegistry() {
         // key
-        assertThat(resolveProducerProperties(Map.of(
+        assertThat(resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, AVRO_FORMAT,
                 "schema.registry.url", "http://localhost:8081"
-        ))).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ))).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 KEY_SERIALIZER, KafkaAvroSerializer.class.getCanonicalName(),
                 "schema.registry.url", "http://localhost:8081"
         ));
 
         // value
-        assertThat(resolveProducerProperties(Map.of(
+        assertThat(resolveProducerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, AVRO_FORMAT,
                 "schema.registry.url", "http://localhost:8081"
-        ))).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ))).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 VALUE_SERIALIZER, KafkaAvroSerializer.class.getCanonicalName(),
                 "schema.registry.url", "http://localhost:8081"
         ));
@@ -329,20 +332,20 @@ public class PropertiesResolverTest {
     @Test
     public void when_consumerProperties_avroPropertyIsDefined_then_itsNotOverwritten() {
         // key
-        assertThat(PropertiesResolver.resolveConsumerProperties(Map.of(
+        assertThat(PropertiesResolver.resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, AVRO_FORMAT,
                 KEY_DESERIALIZER, "deserializer"
-        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 KEY_DESERIALIZER, "deserializer",
                 OPTION_KEY_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
 
         // value
-        assertThat(PropertiesResolver.resolveConsumerProperties(Map.of(
+        assertThat(PropertiesResolver.resolveConsumerProperties(ImmutableMap.of(
                 OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
                 OPTION_VALUE_FORMAT, AVRO_FORMAT,
                 VALUE_DESERIALIZER, "deserializer"
-        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(Map.of(
+        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(ImmutableMap.of(
                 VALUE_DESERIALIZER, "deserializer",
                 OPTION_VALUE_AVRO_SCHEMA, DUMMY_SCHEMA
         ));
@@ -351,93 +354,97 @@ public class PropertiesResolverTest {
     @Test
     public void when_producerProperties_avroPropertyIsDefined_then_itsNotOverwritten() {
         // key
-        assertThat(PropertiesResolver.resolveProducerProperties(Map.of(
-                OPTION_KEY_FORMAT, AVRO_FORMAT,
-                KEY_SERIALIZER, "serializer"
-        ), DUMMY_SCHEMA, null)).containsExactlyInAnyOrderEntriesOf(Map.of(
-                KEY_SERIALIZER, "serializer",
-                OPTION_KEY_AVRO_SCHEMA, DUMMY_SCHEMA
-        ));
+        Map<String, String> map1 = new HashMap<>();
+        map1.put(OPTION_KEY_FORMAT, AVRO_FORMAT);
+        map1.put(KEY_SERIALIZER, "serializer");
+
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put(KEY_SERIALIZER, "serializer");
+        map2.put(OPTION_KEY_AVRO_SCHEMA, DUMMY_SCHEMA);
+        assertThat(PropertiesResolver.resolveProducerProperties(map1, DUMMY_SCHEMA, null))
+            .containsExactlyInAnyOrderEntriesOf(map2);
 
         // value
-        assertThat(PropertiesResolver.resolveProducerProperties(Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, AVRO_FORMAT,
-                VALUE_SERIALIZER, "serializer"
-        ), null, DUMMY_SCHEMA)).containsExactlyInAnyOrderEntriesOf(Map.of(
-                VALUE_SERIALIZER, "serializer",
-                OPTION_VALUE_AVRO_SCHEMA, DUMMY_SCHEMA
-        ));
+        Map<String, String> map3 = new HashMap<>();
+        map3.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        map3.put(OPTION_VALUE_FORMAT, AVRO_FORMAT);
+        map3.put(VALUE_SERIALIZER, "serializer");
+
+        Map<String, Object> map4 = new HashMap<>();
+        map4.put(VALUE_SERIALIZER, "serializer");
+        map4.put(OPTION_VALUE_AVRO_SCHEMA, DUMMY_SCHEMA);
+        assertThat(PropertiesResolver.resolveProducerProperties(map3, null, DUMMY_SCHEMA))
+            .containsExactlyInAnyOrderEntriesOf(map4);
     }
 
     @Test
     public void test_consumerProperties_json() {
         // key
-        assertThat(resolveConsumerProperties(Map.of(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT)))
-                .containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
+        assertThat(resolveConsumerProperties(TestCollectionUtils.mapOf(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT)))
+                .containsExactlyEntriesOf(
+                    TestCollectionUtils.mapOf(KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
 
         // value
-        assertThat(resolveConsumerProperties(Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT
-        ))).containsExactlyEntriesOf(Map.of(VALUE_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
+        Map<String, String> map = new HashMap<>();
+        map.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        map.put(OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT);
+        assertThat(resolveProducerProperties(map)).containsExactlyEntriesOf(
+            TestCollectionUtils.mapOf(VALUE_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
     }
 
     @Test
     public void test_producerProperties_json() {
         // key
-        assertThat(resolveProducerProperties(Map.of(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT)))
-                .containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
+        assertThat(resolveProducerProperties(TestCollectionUtils.mapOf(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT)))
+                .containsExactlyEntriesOf(
+                    TestCollectionUtils.mapOf(KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
 
         // value
-        assertThat(resolveProducerProperties(Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT
-        ))).containsExactlyEntriesOf(Map.of(VALUE_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
+        Map<String, String> map = new HashMap<>();
+        map.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        map.put(OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT);
+        assertThat(resolveProducerProperties(map)).containsExactlyEntriesOf(
+            TestCollectionUtils.mapOf(VALUE_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
     }
 
     @Test
     public void when_consumerProperties_jsonPropertyIsDefined_then_itsNotOverwritten() {
         // key
-        Map<String, String> keyOptions = Map.of(
-                OPTION_KEY_FORMAT, JSON_FLAT_FORMAT,
-                KEY_DESERIALIZER, "deserializer"
-        );
+        Map<String, String> keyOptions = new HashMap<>();
+        keyOptions.put(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT);
+        keyOptions.put(KEY_DESERIALIZER, "deserializer");
 
         assertThat(resolveConsumerProperties(keyOptions))
-                .containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, "deserializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_DESERIALIZER, "deserializer"));
 
         // value
-        Map<String, String> valueOptions = Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT,
-                VALUE_DESERIALIZER, "deserializer"
-        );
+        Map<String, String> valueOptions = new HashMap<>();
+        valueOptions.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        valueOptions.put(OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT);
+        valueOptions.put(VALUE_DESERIALIZER, "deserializer");
 
         assertThat(resolveConsumerProperties(valueOptions))
-                .containsExactlyEntriesOf(Map.of(VALUE_DESERIALIZER, "deserializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_DESERIALIZER, "deserializer"));
     }
 
     @Test
     public void when_producerProperties_jsonPropertyIsDefined_then_itsNotOverwritten() {
         // key
-        Map<String, String> keyOptions = Map.of(
-                OPTION_KEY_FORMAT, JSON_FLAT_FORMAT,
-                KEY_SERIALIZER, "serializer"
-        );
+        Map<String, String> keyOptions = new HashMap<>();
+        keyOptions.put(OPTION_KEY_FORMAT, JSON_FLAT_FORMAT);
+        keyOptions.put(KEY_SERIALIZER, "serializer");
 
         assertThat(resolveProducerProperties(keyOptions))
-                .containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, "serializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(KEY_SERIALIZER, "serializer"));
 
         // value
-        Map<String, String> valueOptions = Map.of(
-                OPTION_KEY_FORMAT, UNKNOWN_FORMAT,
-                OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT,
-                VALUE_SERIALIZER, "serializer"
-        );
+        Map<String, String> valueOptions = new HashMap<>();
+        valueOptions.put(OPTION_KEY_FORMAT, UNKNOWN_FORMAT);
+        valueOptions.put(OPTION_VALUE_FORMAT, JSON_FLAT_FORMAT);
+        valueOptions.put(VALUE_SERIALIZER, "serializer");
 
         assertThat(resolveProducerProperties(valueOptions))
-                .containsExactlyEntriesOf(Map.of(VALUE_SERIALIZER, "serializer"));
+                .containsExactlyEntriesOf(TestCollectionUtils.mapOf(VALUE_SERIALIZER, "serializer"));
     }
 
     private static Properties resolveConsumerProperties(Map<String, String> options) {
@@ -450,13 +457,15 @@ public class PropertiesResolverTest {
 
     @Test
     public void when_consumerProperties_preferredLocalParallelismPropertyIsDefined_then_itIsIgnored() {
-        assertThat(resolveConsumerProperties(Map.of(OPTION_PREFERRED_LOCAL_PARALLELISM, "-1")))
-                .containsExactlyEntriesOf(Map.of(KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
+        assertThat(resolveConsumerProperties(TestCollectionUtils.mapOf(OPTION_PREFERRED_LOCAL_PARALLELISM, "-1")))
+                .containsExactlyEntriesOf(
+                    TestCollectionUtils.mapOf(KEY_DESERIALIZER, ByteArrayDeserializer.class.getCanonicalName()));
     }
 
     @Test
     public void when_producerProperties_preferredLocalParallelismPropertyIsDefined_then_itIsIgnored() {
-        assertThat(resolveProducerProperties(Map.of(OPTION_PREFERRED_LOCAL_PARALLELISM, "-1")))
-                .containsExactlyEntriesOf(Map.of(KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
+        assertThat(resolveProducerProperties(TestCollectionUtils.mapOf(OPTION_PREFERRED_LOCAL_PARALLELISM, "-1")))
+                .containsExactlyEntriesOf(
+                    TestCollectionUtils.mapOf(KEY_SERIALIZER, ByteArraySerializer.class.getCanonicalName()));
     }
 }

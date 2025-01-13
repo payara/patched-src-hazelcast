@@ -25,6 +25,7 @@ import com.hazelcast.jet.sql.impl.connector.test.TestAllTypesSqlConnector;
 import com.hazelcast.map.IMap;
 import com.hazelcast.sql.SqlService;
 import com.hazelcast.sql.impl.schema.Mapping;
+import com.hazelcast.test.TestCollectionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -345,7 +346,7 @@ public class SqlPojoTest extends SqlTestSupport {
                         OffsetDateTime.ofInstant(ofEpochMilli(1586953414200L), systemDefault()),
                         OffsetDateTime.of(2020, 4, 15, 12, 23, 34, 200_000_000, UTC),
                         OffsetDateTime.of(2020, 4, 15, 12, 23, 34, 200_000_000, UTC),
-                        Map.of(42, 43),
+                        TestCollectionUtils.mapOf(42, 43),
                         null
                 )));
     }

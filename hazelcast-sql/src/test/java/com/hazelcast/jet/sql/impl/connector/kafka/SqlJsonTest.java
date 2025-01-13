@@ -18,6 +18,7 @@ package com.hazelcast.jet.sql.impl.connector.kafka;
 
 import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.jet.sql.impl.connector.test.TestAllTypesSqlConnector;
+import com.hazelcast.test.TestCollectionUtils;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -60,7 +61,7 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " VALUES (null, null)",
-                Map.of("{\"id\":null}", "{\"name\":null}")
+                TestCollectionUtils.mapOf("{\"id\":null}", "{\"name\":null}")
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
@@ -79,7 +80,7 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " (value_name, key_name) VALUES ('Bob', 'Alice')",
-                Map.of("{\"name\":\"Alice\"}", "{\"name\":\"Bob\"}")
+                TestCollectionUtils.mapOf("{\"name\":\"Alice\"}", "{\"name\":\"Bob\"}")
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
@@ -162,7 +163,7 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
                         LocalDate.of(2020, 4, 15),
                         LocalDateTime.of(2020, 4, 15, 12, 23, 34, 1_000_000),
                         OffsetDateTime.of(2020, 4, 15, 12, 23, 34, 200_000_000, UTC),
-                        Map.of("42", 43), // JSON serializer stores maps as JSON objects, the key is converted to a string
+                        TestCollectionUtils.mapOf("42", 43), // JSON serializer stores maps as JSON objects, the key is converted to a string
                         null
                 ))
         );
@@ -185,7 +186,7 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " VALUES ('[1,2,3]', '[4,5,6]')",
-                Map.of("[1,2,3]", "[4,5,6]")
+                TestCollectionUtils.mapOf("[1,2,3]", "[4,5,6]")
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
@@ -245,8 +246,8 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
         assertRowsEventuallyInAnyOrder(
                 "SELECT __key, this FROM " + name,
                 Arrays.asList(new Row(
-                        Map.of("id", 1),
-                        Map.of("name", "Alice")
+                        TestCollectionUtils.mapOf("id", 1),
+                        TestCollectionUtils.mapOf("name", "Alice")
                 ))
         );
     }
@@ -266,7 +267,7 @@ public class SqlJsonTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " (value_name, key_name) VALUES ('Bob', 'Alice')",
-                Map.of("{\"name\":\"Alice\"}", "{\"name\":\"Bob\"}")
+                TestCollectionUtils.mapOf("{\"name\":\"Alice\"}", "{\"name\":\"Bob\"}")
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,

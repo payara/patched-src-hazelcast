@@ -25,6 +25,7 @@ import com.hazelcast.sql.impl.SqlErrorCode;
 import com.hazelcast.sql.impl.expression.RowValue;
 import com.hazelcast.sql.impl.type.QueryDataTypeFamily;
 import com.hazelcast.test.HazelcastParallelClassRunner;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Test;
@@ -47,7 +48,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -813,7 +813,7 @@ public class ConvertersTest {
         assertEquals(new SqlCustomClass(1), converter.asObject(new SqlCustomClass(1)));
 
         // Others
-        assertEquals(Map.of("k", 1), converter.asMap(Map.of("k", 1)));
+        assertEquals(TestCollectionUtils.mapOf("k", 1), converter.asMap(TestCollectionUtils.mapOf("k", 1)));
         assertEquals(new HazelcastJsonValue("[1,2,3]"), converter.asJson("[1,2,3]"));
         assertEquals(new RowValue(Arrays.asList(1, 2, 3)), converter.asRow(new RowValue(Arrays.asList(1, 2, 3))));
 
@@ -854,7 +854,7 @@ public class ConvertersTest {
 
         checkConverterConversions(converter, VARCHAR, OBJECT, MAP);
 
-        assertEquals("{k=1}", converter.asVarchar(Map.of("k", 1)));
+        assertEquals("{k=1}", converter.asVarchar(TestCollectionUtils.mapOf("k", 1)));
 
         checkConverterSelf(converter);
     }

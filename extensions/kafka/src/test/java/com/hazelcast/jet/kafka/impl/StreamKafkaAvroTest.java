@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -64,10 +65,13 @@ public class StreamKafkaAvroTest extends SimpleTestInClusterSupport {
             .optionalString("value")
             .endRecord();
 
-    private static final Map<String, String> AVRO_SCHEMA_PROPERTIES = Map.of(
-            OPTION_VALUE_AVRO_SCHEMA, VALUE_SCHEMA.toString(),
-            OPTION_KEY_AVRO_SCHEMA, KEY_SCHEMA.toString()
-    );
+    private static final Map<String, String> AVRO_SCHEMA_PROPERTIES;
+
+    static {
+        AVRO_SCHEMA_PROPERTIES = new HashMap<>();
+        AVRO_SCHEMA_PROPERTIES.put(OPTION_VALUE_AVRO_SCHEMA, VALUE_SCHEMA.toString());
+        AVRO_SCHEMA_PROPERTIES.put(OPTION_KEY_AVRO_SCHEMA, KEY_SCHEMA.toString());
+    }
 
     private static KafkaTestSupport kafkaTestSupport;
 
@@ -123,9 +127,11 @@ public class StreamKafkaAvroTest extends SimpleTestInClusterSupport {
                 .writeTo(KafkaSinks.kafka(createProperties(), topicName));
         instance().getJet().newJob(p).join();
 
+        Map<GenericData.Record, GenericData.Record> map = new HashMap<>();
+        map.put(toGenericRecord(1, KEY_SCHEMA), toGenericRecord("value", VALUE_SCHEMA));
         kafkaTestSupport.assertTopicContentsEventually(
                 topicName,
-                Map.of(toGenericRecord(1, KEY_SCHEMA), toGenericRecord("value", VALUE_SCHEMA)),
+                map,
                 HazelcastKafkaAvroDeserializer.class,
                 HazelcastKafkaAvroDeserializer.class,
                 AVRO_SCHEMA_PROPERTIES

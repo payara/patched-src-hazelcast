@@ -30,6 +30,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,11 +97,14 @@ public class DataConnectionsTableTest {
         when(connectorCache.forType("Kafka")).thenReturn(new KafkaSqlConnector());
 
         // given
+        Map<String, String> map = new HashMap<>();
+        map.put(OPTION_BOOTSTRAP_SERVERS, "value");
+        map.put("password", "secret");
         DataConnectionCatalogEntry dc = new DataConnectionCatalogEntry(
                 "dc-name",
                 "Kafka",
                 false,
-                Map.of(OPTION_BOOTSTRAP_SERVERS, "value", "password", "secret")
+                map
         );
 
         DataConnectionsTable dcTable = new DataConnectionsTable(

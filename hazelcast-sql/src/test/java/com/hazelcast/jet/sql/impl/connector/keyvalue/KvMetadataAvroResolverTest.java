@@ -25,6 +25,7 @@ import com.hazelcast.sql.impl.schema.map.MapTableField;
 import com.hazelcast.sql.impl.type.QueryDataType;
 import com.hazelcast.test.HazelcastParametrizedRunner;
 import com.hazelcast.test.HazelcastSerialParametersRunnerFactory;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.apache.avro.Schema;
@@ -37,6 +38,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Parameterized.UseParametersRunnerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -112,7 +114,7 @@ public class KvMetadataAvroResolverTest {
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                 isKey,
                 Arrays.asList(field("field", QueryDataType.INT)),
-                Map.of(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
+                TestCollectionUtils.mapOf(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
                         Schema.create(Schema.Type.INT).toString()),
                 null
         )).hasMessage("Schema must be an Avro record");
@@ -120,16 +122,14 @@ public class KvMetadataAvroResolverTest {
 
     @Test
     public void when_inlineSchemaUsedWithSchemaRegistry_then_throws() {
+        Map<String, String> map = new HashMap<>();
+        map.put(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
+            SchemaBuilder.record("jet.sql").fields().optionalInt("field").endRecord().toString());
+        map.put("schema.registry.url", "http://localhost:8081");
         assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                 isKey,
                 Arrays.asList(field("field", QueryDataType.INT)),
-                Map.of(
-                        isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
-                                SchemaBuilder.record("jet.sql").fields()
-                                        .optionalInt("field")
-                                        .endRecord().toString(),
-                        "schema.registry.url", "http://localhost:8081"
-                ),
+                map,
                 null
         )).hasMessage("Inline schema cannot be used with schema registry");
     }
@@ -147,7 +147,7 @@ public class KvMetadataAvroResolverTest {
             assertThatThrownBy(() -> INSTANCE.resolveAndValidateFields(
                     isKey,
                     emptyList(),
-                    Map.of(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
+                    TestCollectionUtils.mapOf(isKey ? OPTION_KEY_AVRO_SCHEMA : OPTION_VALUE_AVRO_SCHEMA,
                             SchemaBuilder.record("jet.sql").fields()
                                     .name("field").type(schema).noDefault()
                                     .endRecord().toString()),

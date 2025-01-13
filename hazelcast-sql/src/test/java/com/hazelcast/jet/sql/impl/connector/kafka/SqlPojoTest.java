@@ -24,6 +24,7 @@ import com.hazelcast.jet.sql.impl.connector.kafka.model.JavaSerializer;
 import com.hazelcast.jet.sql.impl.connector.kafka.model.Person;
 import com.hazelcast.jet.sql.impl.connector.kafka.model.PersonId;
 import com.hazelcast.jet.sql.impl.connector.test.TestAllTypesSqlConnector;
+import com.hazelcast.test.TestCollectionUtils;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.IntegerSerializer;
@@ -85,7 +86,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " VALUES (null, null)",
-                Map.of(new PersonId(), new Person())
+                TestCollectionUtils.mapOf(new PersonId(), new Person())
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
@@ -104,7 +105,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " VALUES (1, 'Alice')",
-                Map.of(new PersonId(1), new Person(null, "Alice"))
+                TestCollectionUtils.mapOf(new PersonId(1), new Person(null, "Alice"))
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT * FROM " + name,
@@ -126,7 +127,7 @@ public class SqlPojoTest extends KafkaSqlTestSupport {
         assertTopicEventually(
                 name,
                 "INSERT INTO " + name + " (value_id, key_id) VALUES (2, 1)",
-                Map.of(new PersonId(1), new Person(2, null))
+                TestCollectionUtils.mapOf(new PersonId(1), new Person(2, null))
         );
         assertRowsEventuallyInAnyOrder(
                 "SELECT  key_id, value_id FROM " + name,

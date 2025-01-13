@@ -45,37 +45,34 @@ public class KafkaIntegrationSqlTest extends KafkaSqlTestSupport {
                 "  (1, 'ABCD', 5.5, 10),\n" +
                 "  (2, 'EFGH', 14, 20);");
 
-        assertMapContents(mapName, Map.of(
-                1, new HazelcastJsonValue("{\"ticker\":\"ABCD\",\"price\":\"5.5\",\"amount\":10}"),
-                2, new HazelcastJsonValue("{\"ticker\":\"EFGH\",\"price\":\"14\",\"amount\":20}"))
-        );
+        Map<Integer, HazelcastJsonValue> map1 = new HashMap<>();
+        map1.put(1, new HazelcastJsonValue("{\"ticker\":\"ABCD\",\"price\":\"5.5\",\"amount\":10}"));
+        map1.put(2, new HazelcastJsonValue("{\"ticker\":\"EFGH\",\"price\":\"14\",\"amount\":20}"));
+        assertMapContents(mapName, map1);
 
         executeSql("CREATE JOB testJob\n" +
                 "AS\n" +
                 "SINK INTO " + topicName + "\n" +
                 "SELECT __key, ticker, price, amount FROM " + mapName);
 
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("ticker", "ABCD");
+        map2.put("price", "5.5");
+        map2.put("amount", 10);
+
+        Map<String, Object> map3 = new HashMap<>();
+        map3.put("ticker", "EFGH");
+        map3.put("price", "14");
+        map3.put("amount", 20);
         assertRowsEventuallyInAnyOrder(
                 "SELECT __key,this FROM " + topicName,
-                Arrays.asList(new Row(
-                        1,
-                        Map.of(
-                                "ticker", "ABCD",
-                                "price", "5.5",
-                                "amount", 10)
-                ), new Row(
-                        2,
-                        Map.of(
-                                "ticker", "EFGH",
-                                "price", "14",
-                                "amount", 20)
-                ))
-        );
+                Arrays.asList(new Row(1, map2), new Row(2, map3)));
 
         try (KafkaConsumer<Integer, String> consumer = kafkaTestSupport.createConsumer(topicName)) {
-            assertTopicContentsEventually(consumer, Map.of(
-                    1, "{\"ticker\":\"ABCD\",\"price\":\"5.5\",\"amount\":10}",
-                    2, "{\"ticker\":\"EFGH\",\"price\":\"14\",\"amount\":20}"));
+            Map<Integer, String> map4 = new HashMap<>();
+            map4.put(1, "{\"ticker\":\"ABCD\",\"price\":\"5.5\",\"amount\":10}");
+            map4.put(2, "{\"ticker\":\"EFGH\",\"price\":\"14\",\"amount\":20}");
+            assertTopicContentsEventually(consumer, map4);
         }
     }
 

@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,17 +76,20 @@ public class MetadataResolversTest {
 
     @Test
     public void when_formatIsNotSupported_then_throws() {
-        assertThatThrownBy(() -> resolvers.resolveAndValidateFields(
-                emptyList(),
-                Map.of(OPTION_FORMAT, "some-other-format", OPTION_PATH, "/path")
-        )).isInstanceOf(QueryException.class)
+        Map<String, String> map = new HashMap<>();
+        map.put(OPTION_FORMAT, "some-other-format");
+        map.put(OPTION_PATH, "/path");
+        assertThatThrownBy(() -> resolvers.resolveAndValidateFields(emptyList(), map)).isInstanceOf(QueryException.class)
           .hasMessageContaining("Unsupported serialization format");
     }
 
     @Test
     public void test_resolveAndValidateFields() {
         // given
-        Map<String, String> options = Map.of(OPTION_FORMAT, FORMAT, OPTION_PATH, "/path", OPTION_GLOB, "*");
+        Map<String, String> options = new HashMap<>();
+        options.put(OPTION_FORMAT, FORMAT);
+        options.put(OPTION_PATH, "/path");
+        options.put(OPTION_GLOB, "*");
 
         given(resolver.resolveAndValidateFields(emptyList(), options))
                 .willReturn(singletonList(new MappingField("field", QueryDataType.VARCHAR)));
@@ -101,7 +105,10 @@ public class MetadataResolversTest {
     public void test_resolveMetadata() {
         // given
         List<MappingField> resolvedFields = singletonList(new MappingField("field", QueryDataType.VARCHAR));
-        Map<String, String> options = Map.of(OPTION_FORMAT, FORMAT, OPTION_PATH, "/path", OPTION_GLOB, "*");
+        Map<String, String> options = new HashMap<>();
+        options.put(OPTION_FORMAT, FORMAT);
+        options.put(OPTION_PATH, "/path");
+        options.put(OPTION_GLOB, "*");
 
         given(resolver.resolveMetadata(resolvedFields, options)).willReturn(metadata);
 

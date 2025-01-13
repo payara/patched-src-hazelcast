@@ -73,6 +73,7 @@ import com.hazelcast.sql.impl.schema.map.PartitionedMapTable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -262,11 +263,13 @@ public class IMapSqlConnector implements SqlConnector {
 
             // We need some low-level data which are not passed to SqlConnector, this code should be refactored.
             DagBuildContextImpl contextImpl = (DagBuildContextImpl) context;
+            Map<String, Table> innerMap = new HashMap<>();
+            innerMap.put(table.getSqlName(), table);
             Map<String, List<Map<String, Expression<?>>>> relPrunability =
                 CalciteSqlOptimizerImpl.partitionStrategyCandidates(contextImpl.getRel(),
                     contextImpl.getParameterMetadata(),
                     // expect only single map in the rel
-                    Map.of(table.getSqlName(), table));
+                    innerMap);
             partitionPruningCandidates = relPrunability.get(table.getSqlName());
         }
 

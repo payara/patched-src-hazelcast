@@ -21,14 +21,12 @@ import com.hazelcast.internal.serialization.impl.DefaultSerializationServiceBuil
 import com.hazelcast.spi.impl.NodeEngine;
 import com.hazelcast.sql.impl.expression.ExpressionEvalContext;
 import com.hazelcast.test.HazelcastParallelClassRunner;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
-
-import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +59,7 @@ public class PojoUpsertTargetDescriptorTest {
     public void test_serialization() {
         PojoUpsertTargetDescriptor original = new PojoUpsertTargetDescriptor(
                 "com.hazelcast.class",
-                Map.of("field", int.class.getName())
+                TestCollectionUtils.mapOf("field", int.class.getName())
         );
 
         // when

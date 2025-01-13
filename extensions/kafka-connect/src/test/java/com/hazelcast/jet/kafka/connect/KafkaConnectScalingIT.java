@@ -53,6 +53,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -99,13 +100,14 @@ public class KafkaConnectScalingIT extends JetTestSupport {
     @SuppressWarnings("resource")
     @Before
     public void setUpContainer() {
+        Map<String, String> map = new HashMap<>();
+        map.put("/var/lib/mysql/", "rw");
+        map.put("/tmp/", "rw");
+
         mysql = new MySQLContainer<>("mysql:" + TEST_MYSQL_VERSION)
                 .withUsername(USERNAME).withPassword(PASSWORD)
                 .withLogConsumer(new Slf4jLogConsumer(LOGGER).withPrefix("Docker"))
-                .withTmpFs(Map.of(
-                        "/var/lib/mysql/", "rw",
-                        "/tmp/", "rw"
-                ));
+                .withTmpFs(map);
         mysql.start();
     }
 

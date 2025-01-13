@@ -20,14 +20,13 @@ import com.hazelcast.jet.pipeline.file.FileFormat;
 import com.hazelcast.jet.sql.impl.connector.file.FileTable.FilePlanObjectKey;
 import com.hazelcast.sql.impl.schema.TableField;
 import com.hazelcast.sql.impl.type.QueryDataType;
+import com.hazelcast.test.TestCollectionUtils;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
@@ -59,7 +58,7 @@ public class FileTableTest {
                 schema1,
                 name1,
                 Arrays.asList(new TableField(field1, QueryDataType.INT, false)),
-                new ProcessorMetaSupplierProvider(Map.of("key", "value"), format1)
+                new ProcessorMetaSupplierProvider(TestCollectionUtils.mapOf("key", "value"), format1)
         );
         FilePlanObjectKey k2 = new FilePlanObjectKey(
                 schema2,

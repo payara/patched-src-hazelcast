@@ -31,7 +31,7 @@ import org.apache.avro.SchemaBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -81,20 +81,23 @@ public final class KvMetadataAvroResolver implements KvMetadataResolver {
                 .and().stringType()
                 .endUnion();
 
-        public static final Map<Schema.Type, QueryDataType> AVRO_TO_SQL = new EnumMap<>(Map.of(
-                Schema.Type.BOOLEAN, QueryDataType.BOOLEAN,
-                Schema.Type.INT, QueryDataType.INT,
-                Schema.Type.LONG, QueryDataType.BIGINT,
-                Schema.Type.FLOAT, QueryDataType.REAL,
-                Schema.Type.DOUBLE, QueryDataType.DOUBLE,
-                Schema.Type.STRING, QueryDataType.VARCHAR,
-                Schema.Type.UNION, QueryDataType.OBJECT,
-                Schema.Type.NULL, QueryDataType.OBJECT
-        ));
+        public static final Map<Schema.Type, QueryDataType> AVRO_TO_SQL;
 
         private static final Map<QueryDataTypeFamily, List<Schema.Type>> CONVERSIONS =
                 CONVERSION_PREFS.entrySet().stream().collect(
                         toMap(e -> getConverter(e.getKey()).getTypeFamily(), Entry::getValue));
+
+        static {
+            AVRO_TO_SQL = new HashMap<>();
+            AVRO_TO_SQL.put(Schema.Type.BOOLEAN, QueryDataType.BOOLEAN);
+            AVRO_TO_SQL.put(Schema.Type.INT, QueryDataType.INT);
+            AVRO_TO_SQL.put(Schema.Type.LONG, QueryDataType.BIGINT);
+            AVRO_TO_SQL.put(Schema.Type.FLOAT, QueryDataType.REAL);
+            AVRO_TO_SQL.put(Schema.Type.DOUBLE, QueryDataType.DOUBLE);
+            AVRO_TO_SQL.put(Schema.Type.STRING, QueryDataType.VARCHAR);
+            AVRO_TO_SQL.put(Schema.Type.UNION, QueryDataType.OBJECT);
+            AVRO_TO_SQL.put(Schema.Type.NULL, QueryDataType.OBJECT);
+        }
     }
 
     private KvMetadataAvroResolver() { }

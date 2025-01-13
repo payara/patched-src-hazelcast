@@ -20,6 +20,7 @@ import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.jet.sql.SqlTestSupport;
 import com.hazelcast.jet.sql.impl.connector.test.TestAllTypesSqlConnector;
 import com.hazelcast.sql.SqlService;
+import com.hazelcast.test.TestCollectionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
-import java.util.Map;
 
 import static com.hazelcast.jet.pipeline.file.JsonFileFormat.FORMAT_JSON;
 import static com.hazelcast.jet.sql.impl.connector.SqlConnector.JAVA_FORMAT;
@@ -66,7 +66,7 @@ public class SqlJsonTest extends SqlTestSupport {
         assertMapEventually(
                 name,
                 "SINK INTO " + name + " VALUES (null, null)",
-                Map.of(new HazelcastJsonValue("{\"id\":null}"), new HazelcastJsonValue("{\"name\":null}"))
+                TestCollectionUtils.mapOf(new HazelcastJsonValue("{\"id\":null}"), new HazelcastJsonValue("{\"name\":null}"))
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,
@@ -85,7 +85,7 @@ public class SqlJsonTest extends SqlTestSupport {
         assertMapEventually(
                 name,
                 "SINK INTO " + name + " (value_name, key_name) VALUES ('Bob', 'Alice')",
-                Map.of(new HazelcastJsonValue("{\"name\":\"Alice\"}"), new HazelcastJsonValue("{\"name\":\"Bob\"}"))
+                TestCollectionUtils.mapOf(new HazelcastJsonValue("{\"name\":\"Alice\"}"), new HazelcastJsonValue("{\"name\":\"Bob\"}"))
         );
         assertRowsAnyOrder(
                 "SELECT * FROM " + name,

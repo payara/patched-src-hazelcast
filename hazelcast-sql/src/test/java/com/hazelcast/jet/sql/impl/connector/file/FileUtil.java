@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.hazelcast.internal.util.ExceptionUtil.sneakyThrow;
@@ -117,6 +118,8 @@ final class FileUtil {
         Schema enumSchema = SchemaBuilder.enumeration("enum").symbols("symbol");
         Schema fixedSchema = SchemaBuilder.fixed("fixed").size(1);
 
+        Map<String, Integer> map = new HashMap<>();
+        map.put("key", 71);
         AVRO_COMPLEX_TYPES = new GenericRecordBuilder(SchemaBuilder.record("complex")
                 .fields()
                 .requiredBytes("bytes")
@@ -127,7 +130,7 @@ final class FileUtil {
                 .name("fixed").type(fixedSchema).noDefault()
                 .endRecord()
         ).set("bytes", ByteBuffer.wrap(new byte[]{(byte) 19}))
-         .set("map", Map.of("key", 71))
+         .set("map", map)
          .set("record", new GenericRecordBuilder(recordSchema).set("field", 23).build())
          .set("array", new GenericData.Array<>(arraySchema, Arrays.asList(53)))
          .set("enum", new GenericData.EnumSymbol(enumSchema, "symbol"))

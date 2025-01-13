@@ -24,6 +24,7 @@ import com.hazelcast.jet.pipeline.file.FileSourceBuilder;
 import com.hazelcast.jet.pipeline.file.FileSources;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,22 +35,17 @@ public class JsonFileFormatTest extends BaseFileFormatTest {
     @Test
     public void shouldReadJsonFile() {
         FileSourceBuilder<Map<String, Object>> source = FileSources.files(currentDir + "/src/test/resources")
-                                                                   .glob("file.jsonl")
-                                                                   .format(FileFormat.json());
+            .glob("file.jsonl")
+            .format(FileFormat.json());
 
-        assertItemsInSource(source,
-                collected -> assertThat(collected).usingRecursiveFieldByFieldElementComparator()
-                                                  .containsOnly(
-                                                          Map.of(
-                                                                  "name", "Frantisek",
-                                                                  "favoriteNumber", 7
-                                                          ),
-                                                          Map.of(
-                                                                  "name", "Ali",
-                                                                  "favoriteNumber", 42
-                                                          )
-                                                  )
-        );
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "Frantisek");
+        map1.put("favoriteNumber", 7);
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("name", "Ali");
+        map2.put("favoriteNumber", 42);
+        assertItemsInSource(source, collected -> assertThat(collected).usingRecursiveFieldByFieldElementComparator()
+            .containsOnly(map1, map2));
     }
 
     @Test

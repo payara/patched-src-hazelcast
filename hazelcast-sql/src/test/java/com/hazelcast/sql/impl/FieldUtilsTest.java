@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,12 +34,11 @@ public class FieldUtilsTest {
 
     @Test
     public void test_getEnumConstants() {
-        assertThat(FieldUtils.getEnumConstants(EnumLikeClass.class))
-                .containsExactlyInAnyOrderEntriesOf(Map.of(
-                        "VALUE1", EnumLikeClass.VALUE1,
-                        "VALUE2", EnumLikeClass.VALUE2,
-                        "VALUE3", EnumLikeClass.VALUE3
-                ));
+        Map<String, EnumLikeClass> map = new HashMap<>();
+        map.put("VALUE1", EnumLikeClass.VALUE1);
+        map.put("VALUE2", EnumLikeClass.VALUE2);
+        map.put("VALUE3", EnumLikeClass.VALUE3);
+        assertThat(FieldUtils.getEnumConstants(EnumLikeClass.class)).containsExactlyInAnyOrderEntriesOf(map);
     }
 
     @SuppressWarnings("unused")

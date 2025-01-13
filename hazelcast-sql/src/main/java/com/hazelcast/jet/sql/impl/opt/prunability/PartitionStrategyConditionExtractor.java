@@ -76,7 +76,9 @@ public class PartitionStrategyConditionExtractor {
         }
 
         // TODO: possibly include catalog and schema name?
-        return Map.of(table.getSqlName(), variants);
+        Map<String, List<Map<String, RexNode>>> map = new HashMap<>();
+        map.put(table.getSqlName(), variants);
+        return map;
     }
 
     public List<Map<String, RexNode>> extractSubCondition(
@@ -102,7 +104,9 @@ public class PartitionStrategyConditionExtractor {
             case EQUALS:
                 Map.Entry<String, RexNode> entry = extractEqualityCondition(table, call, partitioningColumns);
                 if (entry != null) {
-                    result.add(Map.ofEntries(entry));
+                    Map<String, RexNode> map = new HashMap<>();
+                    map.put(entry.getKey(), entry.getValue());
+                    result.add(map);
                 }
                 break;
             default:
