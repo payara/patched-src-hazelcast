@@ -97,7 +97,7 @@ class HazelcastServerCommandLineTest {
                     .setTrimQuotes(true).setExecutionExceptionHandler(new ExceptionHandler());
             cmd.execute("start");
 
-            String string = outputStreamCaptor.toString(StandardCharsets.UTF_8);
+            String string = outputStreamCaptor.toString(StandardCharsets.UTF_8.name());
             assertThat(string).contains("org.apache.logging.log4j.core.config.ConfigurationException: "
                     + "No type attribute provided for Layout on Appender STDOUT");
         }

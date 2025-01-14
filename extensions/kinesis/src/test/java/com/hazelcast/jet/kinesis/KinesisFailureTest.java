@@ -222,8 +222,12 @@ public class KinesisFailureTest extends AbstractKinesisTest {
     @Test
     @Category(SerialTest.class)
     public void keyTooLong() {
-        Entry<String, byte[]> valid = entry("*".repeat(MAXIMUM_KEY_LENGTH), new byte[0]);
-        Entry<String, byte[]> invalid = entry("*".repeat(MAXIMUM_KEY_LENGTH + 1), new byte[0]);
+        StringBuilder asterisks = new StringBuilder();
+        for (int i = 0; i < MAXIMUM_KEY_LENGTH; ++i) {
+            asterisks.append("*");
+        }
+        Entry<String, byte[]> valid = entry(asterisks.toString(), new byte[0]);
+        Entry<String, byte[]> invalid = entry(asterisks.append("*").toString(), new byte[0]);
         invalidInputToSink(valid, invalid, "Key too long");
     }
 

@@ -758,7 +758,11 @@ public class SqlOrderByTest extends HazelcastTestSupport {
         // create data with different lexicographical and length-first order
         for (int i = 0; i < BATCH_FETCH_DATA_SIZE ; ++i) {
             char c = (char) (65 + i);
-            map.put(String.valueOf(c).repeat(BATCH_FETCH_DATA_SIZE + 2 - i), "value");
+            StringBuilder cBuilder = new StringBuilder();
+            for (int j = 0; j < BATCH_FETCH_DATA_SIZE + 2 - i; ++j) {
+                cBuilder.append(c);
+            }
+            map.put(cBuilder.toString(), "value");
         }
 
         assertSqlResultUnique("select __key from strange where this='value' order by this", BATCH_FETCH_DATA_SIZE, true);

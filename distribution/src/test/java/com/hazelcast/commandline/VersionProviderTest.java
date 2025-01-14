@@ -62,7 +62,8 @@ public class VersionProviderTest {
                 if (Files.exists(log4j2ConfigurationFile)) {
                     try {
                         System.out.println("\"log4j2.configurationFile\" contents:");
-                        System.out.println(Files.readString(log4j2ConfigurationFile, StandardCharsets.UTF_8));
+                        System.out.println(
+                            new String(Files.readAllBytes(log4j2ConfigurationFile), StandardCharsets.UTF_8));
                     } catch (IOException ioException) {
                         throw new UncheckedIOException(ioException);
                     }

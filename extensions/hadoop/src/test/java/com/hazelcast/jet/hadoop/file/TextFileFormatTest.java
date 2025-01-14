@@ -22,6 +22,7 @@ import com.hazelcast.jet.pipeline.file.FileSources;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -37,7 +38,8 @@ public class TextFileFormatTest extends BaseFileFormatTest {
                                                       .glob("file.txt")
                                                       .format(FileFormat.text());
 
-        String expected = Files.readString(Paths.get(currentDir, "/src/test/resources", "file.txt"));
+        String expected = new String(Files.readAllBytes(
+            Paths.get(currentDir, "/src/test/resources", "file.txt")), StandardCharsets.UTF_8);
 
         assertItemsInSource(source, expected);
     }
