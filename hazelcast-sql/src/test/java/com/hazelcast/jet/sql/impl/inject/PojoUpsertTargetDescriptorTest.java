@@ -18,7 +18,6 @@ package com.hazelcast.jet.sql.impl.inject;
 
 import com.hazelcast.internal.serialization.InternalSerializationService;
 import com.hazelcast.internal.serialization.impl.DefaultSerializationServiceBuilder;
-import com.hazelcast.spi.impl.NodeEngine;
 import com.hazelcast.sql.impl.expression.ExpressionEvalContext;
 import com.hazelcast.test.HazelcastParallelClassRunner;
 import com.hazelcast.test.TestCollectionUtils;
@@ -30,8 +29,6 @@ import org.junit.runner.RunWith;
 
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(HazelcastParallelClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
@@ -45,11 +42,8 @@ public class PojoUpsertTargetDescriptorTest {
     public void test_create() {
         PojoUpsertTargetDescriptor descriptor = new PojoUpsertTargetDescriptor(Object.class.getName(), emptyMap());
 
-        ExpressionEvalContext evalContextMock = mock(Answers.RETURNS_MOCKS);
-        NodeEngine nodeEngine = mock(Answers.RETURNS_MOCKS);
-        when(evalContextMock.getNodeEngine()).thenReturn(nodeEngine);
         // when
-        UpsertTarget target = descriptor.create(evalContextMock);
+        UpsertTarget target = descriptor.create((ExpressionEvalContext) SERIALIZATION_SERVICE);
 
         // then
         assertThat(target).isInstanceOf(PojoUpsertTarget.class);
