@@ -66,12 +66,16 @@ public class HazelcastOracleDialect extends OracleSqlDialect implements TypeReso
 
     @Override
     public QueryDataType resolveType(String columnTypeName, int precision, int scale) {
-        return switch (columnTypeName.toUpperCase(Locale.ROOT)) {
-            case "NUMBER" -> resolveNumber(precision, scale);
-            case "BINARY_FLOAT" -> QueryDataType.REAL;
-            case "BINARY_DOUBLE" -> QueryDataType.DOUBLE;
-            default -> DefaultTypeResolver.resolveType(columnTypeName, precision, scale);
-        };
+        switch (columnTypeName.toUpperCase(Locale.ROOT)) {
+            case "NUMBER":
+                return resolveNumber(precision, scale);
+            case "BINARY_FLOAT":
+                return QueryDataType.REAL;
+            case "BINARY_DOUBLE":
+                return QueryDataType.DOUBLE;
+            default:
+                return DefaultTypeResolver.resolveType(columnTypeName, precision, scale);
+        }
     }
 
     private static QueryDataType resolveNumber(int precision, int scale) {

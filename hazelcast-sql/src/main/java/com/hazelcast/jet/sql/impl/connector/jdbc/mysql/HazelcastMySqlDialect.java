@@ -71,14 +71,24 @@ public class HazelcastMySqlDialect extends MysqlSqlDialect implements TypeResolv
     @Override
     @SuppressWarnings("ReturnCount")
     public QueryDataType resolveType(String columnTypeName, int precision, int scale) {
-        return switch (columnTypeName.toUpperCase(Locale.ROOT)) {
-            case "TINYTEXT", "MEDIUMTEXT", "LONGTEXT" -> QueryDataType.VARCHAR;
-            case "TINYINT UNSIGNED" -> QueryDataType.SMALLINT;
-            case "SMALLINT UNSIGNED", "MEDIUMINT", "MEDIUMINT UNSIGNED", "YEAR" -> QueryDataType.INT;
-            case "INT UNSIGNED" -> QueryDataType.BIGINT;
-            case "BIGINT UNSIGNED" -> QueryDataType.DECIMAL;
-
-            default -> DefaultTypeResolver.resolveType(columnTypeName, precision, scale);
-        };
+        switch (columnTypeName.toUpperCase(Locale.ROOT)) {
+            case "TINYTEXT":
+            case "MEDIUMTEXT":
+            case "LONGTEXT":
+                return QueryDataType.VARCHAR;
+            case "TINYINT UNSIGNED":
+                return QueryDataType.SMALLINT;
+            case "SMALLINT UNSIGNED":
+            case "MEDIUMINT":
+            case "MEDIUMINT UNSIGNED":
+            case "YEAR":
+                return QueryDataType.INT;
+            case "INT UNSIGNED":
+                return QueryDataType.BIGINT;
+            case "BIGINT UNSIGNED":
+                return QueryDataType.DECIMAL;
+            default:
+                return DefaultTypeResolver.resolveType(columnTypeName, precision, scale);
+        }
     }
 }
