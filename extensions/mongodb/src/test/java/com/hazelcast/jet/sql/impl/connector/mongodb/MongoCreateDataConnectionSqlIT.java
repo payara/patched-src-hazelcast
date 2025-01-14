@@ -76,7 +76,8 @@ public class MongoCreateDataConnectionSqlIT extends MongoSqlIT {
 
         try (MongoClient client = dataConnection.getClient()) {
             Object impl = ReflectionUtils.getFieldValueReflectively(client, "delegate");
-            MongoClientSettings settings = (MongoClientSettings) ReflectionUtils.getFieldValueReflectively(impl, "settings");
+            MongoClientSettings settings = (MongoClientSettings) ReflectionUtils.getFieldValueReflectively(impl,
+                "settings");
             assertThat(settings.getConnectionPoolSettings().getMinSize()).isEqualTo(1337);
             assertThat(settings.getConnectionPoolSettings().getMaxSize()).isEqualTo(2023);
         }
@@ -95,7 +96,7 @@ public class MongoCreateDataConnectionSqlIT extends MongoSqlIT {
     private void testCreatesConnectionEvenWhenUnreachable(boolean shared) {
         String dataConnName = randomName();
         String options = String.format("OPTIONS ('connectionString' = '%s', 'database' = 'fakeNonExisting') ",
-                "mongodb://non-existing-address:1234/?connectTimeoutMS=20&socketTimeoutMS=20&serverSelectionTimeoutMS=20");
+            "mongodb://non-existing-address:1234/?connectTimeoutMS=20&socketTimeoutMS=20&serverSelectionTimeoutMS=20");
 
         String sharedString = shared ? " SHARED " : " ";
         instance().getSql().execute("CREATE DATA CONNECTION " + dataConnName + " TYPE Mongo " + sharedString + options)

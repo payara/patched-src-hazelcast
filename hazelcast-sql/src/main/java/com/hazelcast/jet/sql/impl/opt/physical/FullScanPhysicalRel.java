@@ -48,6 +48,7 @@ import org.apache.calcite.rex.RexNode;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -143,7 +144,7 @@ public class FullScanPhysicalRel extends FullScan implements HazelcastPhysicalSc
     @Override
     public RelWriter explainTerms(RelWriter pw) {
         final HazelcastTable hazelcastTable = OptUtils.extractHazelcastTable(this);
-        final java.util.Map<String, List<java.util.Map<String, RexNode>>> candidates = OptUtils.metadataQuery(this).extractPrunability(this);
+        final Map<String, List<Map<String, RexNode>>> candidates = OptUtils.metadataQuery(this).extractPrunability(this);
         final boolean isPrunable = !candidates.isEmpty();
         String partitioningKey = "";
         String partitioningKeyValues = "";

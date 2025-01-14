@@ -96,7 +96,8 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
 
     @Test
     public void should_filter_items() throws Exception {
-        SourceConnectorWrapper sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
+        SourceConnectorWrapper sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(),
+            0, context);
         readKafkaConnectP = new ReadKafkaConnectP<>(noEventTime(), rec -> {
             Integer value = (Integer) rec.value();
             if (value % 2 == 0) {
@@ -120,9 +121,10 @@ public class ReadKafkaConnectPTest extends HazelcastTestSupport {
     @ValueSource(booleans = { true, false })
     public void should_produce_watermarks(boolean isActive) throws Exception {
 
-        SourceConnectorWrapper sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(), 0, context);
-        EventTimePolicy<Object> policy = EventTimePolicy.eventTimePolicy(o -> System.currentTimeMillis(), limitingRealTimeLag(0),
-                1, 0, 1);
+        SourceConnectorWrapper sourceConnectorWrapper = new SourceConnectorWrapper(minimalProperties(),
+            0, context);
+        EventTimePolicy<Object> policy = EventTimePolicy.eventTimePolicy(o -> System.currentTimeMillis(),
+            limitingRealTimeLag(0), 1, 0, 1);
         readKafkaConnectP = new ReadKafkaConnectP<>(policy, rec -> (Integer) rec.value());
         readKafkaConnectP.setActive(isActive);
         readKafkaConnectP.setSourceConnectorWrapper(sourceConnectorWrapper);

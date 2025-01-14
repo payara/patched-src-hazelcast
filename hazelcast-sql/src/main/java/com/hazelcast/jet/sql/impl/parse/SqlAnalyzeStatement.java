@@ -29,6 +29,7 @@ import org.apache.calcite.sql.validate.SqlValidator;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.hazelcast.jet.config.JobConfigArguments.KEY_JOB_IS_SUSPENDABLE;

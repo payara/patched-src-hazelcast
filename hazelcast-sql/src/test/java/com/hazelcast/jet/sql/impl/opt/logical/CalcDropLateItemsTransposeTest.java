@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.Set;
 
 import static com.hazelcast.jet.impl.util.Util.getNodeEngine;

@@ -104,7 +104,7 @@ public class KafkaConnectWindowingViaMongoDbIT extends JetTestSupport {
     private static final class MyRecord {
         public final int index;
 
-        public MyRecord(int index) {
+        MyRecord(int index) {
             this.index = index;
         }
 

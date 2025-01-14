@@ -94,7 +94,8 @@ public class PartitionStrategyConditionExtractor {
                     if (!(operand instanceof RexCall)) {
                         return emptyList();
                     }
-                    Map.Entry<String, RexNode> condition = extractEqualityCondition(table, (RexCall) operand, partitioningColumns);
+                    Map.Entry<String, RexNode> condition = extractEqualityCondition(table,
+                        (RexCall) operand, partitioningColumns);
                     if (condition != null) {
                         variant.put(condition.getKey(), condition.getValue());
                     }

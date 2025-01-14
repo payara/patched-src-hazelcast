@@ -88,10 +88,12 @@ public class SqlMappingTest extends SqlTestSupport {
             .execute("SELECT * FROM map")).getMessage();
         assertThat(message).isEqualToNormalizingNewlines(format(expectedDdl, ""));
 
-        message = assertThrows(HazelcastSqlException.class, () -> client().getSql().execute("SELECT * FROM public.map")).getMessage();
+        message = assertThrows(HazelcastSqlException.class, () -> client().getSql()
+            .execute("SELECT * FROM public.map")).getMessage();
         assertThat(message).isEqualToNormalizingNewlines(format(expectedDdl, " within 'hazelcast.public'"));
 
-        message = assertThrows(HazelcastSqlException.class, () -> client().getSql().execute("SELECT * FROM hazelcast.public.map")).getMessage();
+        message = assertThrows(HazelcastSqlException.class, () -> client().getSql()
+            .execute("SELECT * FROM hazelcast.public.map")).getMessage();
         assertThat(message).isEqualToNormalizingNewlines(format(expectedDdl, " within 'hazelcast.public'"));
     }
 
