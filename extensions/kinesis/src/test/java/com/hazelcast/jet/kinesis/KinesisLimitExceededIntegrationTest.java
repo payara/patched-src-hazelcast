@@ -157,7 +157,7 @@ public class KinesisLimitExceededIntegrationTest extends AbstractKinesisTest {
         assertTrueEventually(() -> {
             IList<String> list = hz().getList("result");
             List<Integer> cleanList = list.stream().distinct().map(Integer::valueOf).sorted().collect(toList());
-            Integer max = cleanList.stream().max(Integer::compareTo).orElseThrow();
+            Integer max = cleanList.stream().max(Integer::compareTo).orElseThrow(RuntimeException::new);
 
             List<Integer> expected = IntStream.range(0, max + 1).boxed().collect(toList());
 
