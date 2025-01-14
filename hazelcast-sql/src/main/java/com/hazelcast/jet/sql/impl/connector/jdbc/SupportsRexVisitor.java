@@ -25,17 +25,21 @@ import org.apache.calcite.rex.RexVisitorImpl;
 import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlOperator;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class SupportsRexVisitor extends RexVisitorImpl<Boolean> {
 
-    private static final Set<String> OTHER_SUPPORTED = Set.of(
-            "||",
-            "NOT LIKE",
-            "LENGTH",
-            "LOWER",
-            "UPPER"
-    );
+    private static final Set<String> OTHER_SUPPORTED;
+
+    static {
+        OTHER_SUPPORTED = new HashSet<>();
+        OTHER_SUPPORTED.add("||");
+        OTHER_SUPPORTED.add("NOT LIKE");
+        OTHER_SUPPORTED.add("LENGTH");
+        OTHER_SUPPORTED.add("LOWER");
+        OTHER_SUPPORTED.add("UPPER");
+    }
 
     protected SupportsRexVisitor() {
         super(true);

@@ -46,6 +46,7 @@ import org.bson.conversions.Bson;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,7 +74,13 @@ import static java.util.Collections.singletonList;
  */
 public abstract class MongoSqlConnectorBase implements SqlConnector {
 
-    protected static final Set<String> ALLOWED_OBJECT_TYPES = Set.of("Collection", "ChangeStream");
+    protected static final Set<String> ALLOWED_OBJECT_TYPES;
+
+    static {
+        ALLOWED_OBJECT_TYPES = new HashSet<>();
+        ALLOWED_OBJECT_TYPES.add("Collection");
+        ALLOWED_OBJECT_TYPES.add("ChangeStream");
+    }
 
     @Nonnull
     @Override
@@ -189,7 +196,8 @@ public abstract class MongoSqlConnectorBase implements SqlConnector {
         final boolean forceReadTotalParallelismOne = table.isforceReadTotalParallelismOne();
         if (table.isStreaming()) {
             BsonTimestamp startAt = Options.startAtTimestamp(table.getOptions());
-            SelectProcessorSupplier ps = new SelectProcessorSupplier(table, filter, projections, startAt, eventTimePolicyProvider);
+            SelectProcessorSupplier ps = new SelectProcessorSupplier(table, filter, projections,
+                startAt, eventTimePolicyProvider);
             supplier = wrap(context, ps, forceReadTotalParallelismOne);
         } else {
             SelectProcessorSupplier ps = new SelectProcessorSupplier(table, filter, projections);

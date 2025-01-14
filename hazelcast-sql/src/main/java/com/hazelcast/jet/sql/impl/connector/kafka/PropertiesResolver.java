@@ -23,6 +23,7 @@ import com.hazelcast.jet.kafka.impl.HazelcastJsonValueDeserializer;
 import com.hazelcast.jet.kafka.impl.HazelcastJsonValueSerializer;
 import com.hazelcast.jet.sql.impl.connector.keyvalue.JavaClassNameResolver;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -45,13 +46,7 @@ final class PropertiesResolver {
     static final String VALUE_SERIALIZER = "value.serializer";
     static final String VALUE_DESERIALIZER = "value.deserializer";
 
-    private static final Set<String> NON_KAFKA_OPTIONS = Set.of(
-            OPTION_KEY_FORMAT,
-            OPTION_KEY_CLASS,
-            OPTION_VALUE_FORMAT,
-            OPTION_VALUE_CLASS,
-            OPTION_PREFERRED_LOCAL_PARALLELISM
-    );
+    private static final Set<String> NON_KAFKA_OPTIONS;
 
     // using strings instead of canonical names to not fail without Kafka on the classpath
 
@@ -84,6 +79,15 @@ final class PropertiesResolver {
 
     private static final String JSON_SERIALIZER = HazelcastJsonValueSerializer.class.getName();
     private static final String JSON_DESERIALIZER = HazelcastJsonValueDeserializer.class.getName();
+
+    static {
+        NON_KAFKA_OPTIONS = new HashSet<>();
+        NON_KAFKA_OPTIONS.add(OPTION_KEY_FORMAT);
+        NON_KAFKA_OPTIONS.add(OPTION_KEY_CLASS);
+        NON_KAFKA_OPTIONS.add(OPTION_VALUE_FORMAT);
+        NON_KAFKA_OPTIONS.add(OPTION_VALUE_CLASS);
+        NON_KAFKA_OPTIONS.add(OPTION_PREFERRED_LOCAL_PARALLELISM);
+    }
 
     private PropertiesResolver() { }
 

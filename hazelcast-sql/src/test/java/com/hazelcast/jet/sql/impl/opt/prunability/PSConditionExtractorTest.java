@@ -19,12 +19,18 @@ package com.hazelcast.jet.sql.impl.opt.prunability;
 import com.hazelcast.jet.sql.impl.opt.OptimizerTestSupport;
 import com.hazelcast.jet.sql.impl.validate.types.HazelcastTypeFactory;
 import com.hazelcast.sql.impl.extract.QueryPath;
+import com.hazelcast.sql.impl.schema.Table;
 import com.hazelcast.sql.impl.schema.map.PartitionedMapTable;
 import com.hazelcast.test.HazelcastParallelClassRunner;
+import com.hazelcast.test.TestCollectionUtils;
 import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.apache.calcite.rex.RexBuilder;
 import org.apache.calcite.rex.RexCall;
+import org.apache.calcite.rex.RexDynamicParam;
+import org.apache.calcite.rex.RexInputRef;
+import org.apache.calcite.rex.RexLiteral;
+import org.apache.calcite.rex.RexNode;
 import org.apache.calcite.sql.type.SqlTypeName;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +41,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static com.hazelcast.jet.sql.impl.validate.HazelcastSqlOperatorTable.AND;
 import static com.hazelcast.jet.sql.impl.validate.HazelcastSqlOperatorTable.EQUALS;
@@ -148,7 +153,7 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
         );
 
         Map<String, java.util.List<Map<String, RexNode>>> decomposedConds =
-            extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
+            extractor.extractCondition(table, filter, TestCollectionUtils.setOf("comp1", "comp2"));
         assertEquals(0, decomposedConds.size());
     }
 
@@ -177,7 +182,7 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
         );
 
         Map<String, java.util.List<Map<String, RexNode>>> decomposedConds =
-            extractor.extractCondition(table, filter, Set.of("comp1", "comp2"));
+            extractor.extractCondition(table, filter, TestCollectionUtils.setOf("comp1", "comp2"));
         assertEquals(0, decomposedConds.size());
     }
 }

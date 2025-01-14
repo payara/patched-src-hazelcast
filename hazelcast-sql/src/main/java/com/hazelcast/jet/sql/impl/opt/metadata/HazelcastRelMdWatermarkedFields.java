@@ -83,7 +83,9 @@ public final class HazelcastRelMdWatermarkedFields
         if (watermarkedFieldIndex < 0) {
             return null;
         }
-        return new WatermarkedFields(Set.of(watermarkedFieldIndex));
+        Set<Integer> set = new HashSet<>();
+        set.add(watermarkedFieldIndex);
+        return new WatermarkedFields(set);
     }
 
     @SuppressWarnings("unused")

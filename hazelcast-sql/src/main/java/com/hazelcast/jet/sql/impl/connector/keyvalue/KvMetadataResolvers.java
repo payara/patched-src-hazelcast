@@ -28,6 +28,7 @@ import com.hazelcast.sql.impl.schema.MappingField;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +56,15 @@ public class KvMetadataResolvers {
 
     // A string of characters (excluding a `.`), optionally prefixed with "__key." or "this."
     private static final Pattern EXT_NAME_PATTERN = Pattern.compile("((" + KEY + "|" + VALUE + ")\\.)?[^.]+");
-    private static final Set<String> NESTED_FIELDS_SUPPORTED_FORMATS = Set.of(
-            SqlConnector.JAVA_FORMAT, SqlConnector.PORTABLE_FORMAT,
-            SqlConnector.COMPACT_FORMAT, SqlConnector.AVRO_FORMAT);
+    private static final Set<String> NESTED_FIELDS_SUPPORTED_FORMATS;
+
+    static {
+        NESTED_FIELDS_SUPPORTED_FORMATS = new HashSet<>();
+        NESTED_FIELDS_SUPPORTED_FORMATS.add(SqlConnector.JAVA_FORMAT);
+        NESTED_FIELDS_SUPPORTED_FORMATS.add(SqlConnector.PORTABLE_FORMAT);
+        NESTED_FIELDS_SUPPORTED_FORMATS.add(SqlConnector.COMPACT_FORMAT);
+        NESTED_FIELDS_SUPPORTED_FORMATS.add(SqlConnector.AVRO_FORMAT);
+    }
 
     private final Map<String, KvMetadataResolver> keyResolvers;
     private final Map<String, KvMetadataResolver> valueResolvers;

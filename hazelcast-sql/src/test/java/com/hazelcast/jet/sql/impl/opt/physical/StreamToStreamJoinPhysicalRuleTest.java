@@ -18,6 +18,7 @@ package com.hazelcast.jet.sql.impl.opt.physical;
 
 import com.hazelcast.jet.sql.impl.opt.OptimizerTestSupport;
 import com.hazelcast.jet.sql.impl.validate.types.HazelcastTypeFactory;
+import com.hazelcast.test.TestCollectionUtils;
 import org.apache.calcite.avatica.util.TimeUnit;
 import org.apache.calcite.rex.RexBuilder;
 import org.apache.calcite.rex.RexInputRef;
@@ -31,7 +32,6 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static com.hazelcast.jet.sql.impl.opt.physical.StreamToStreamJoinPhysicalRule.tryExtractTimeBound;
 import static com.hazelcast.jet.sql.impl.validate.HazelcastSqlOperatorTable.CAST;
@@ -126,7 +126,7 @@ public class StreamToStreamJoinPhysicalRuleTest extends OptimizerTestSupport {
 
     public Map<Integer, Map<Integer, Long>> call(RexNode expr) {
         Map<Integer, Map<Integer, Long>> map = new HashMap<>();
-        tryExtractTimeBound(expr, Set.of(0, 2), map);
+        tryExtractTimeBound(expr, TestCollectionUtils.setOf(0, 2), map);
         return map;
     }
 }

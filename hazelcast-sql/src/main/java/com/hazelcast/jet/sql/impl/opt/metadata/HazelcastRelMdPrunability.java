@@ -90,7 +90,8 @@ public final class HazelcastRelMdPrunability
 
         final Set<String> partitioningColumns;
         if (targetTable.partitioningAttributes().isEmpty()) {
-            partitioningColumns = Set.of(QueryPath.KEY);
+            partitioningColumns = new HashSet<>();
+            partitioningColumns.add(QueryPath.KEY);
         } else {
             // PartitioningColumns contains field names rather than columns names,
             // we have to convert it to column names if EXTERNAL NAME is used.
