@@ -75,7 +75,7 @@ public class MongoSqlConnector extends MongoSqlConnectorBase {
                                                           })
                                                           .collect(toList());
 
-        String[] fieldNamesArray = fieldNames.toArray(String[]::new);
+        String[] fieldNamesArray = fieldNames.toArray(new String[0]);
         if (hasInput) {
             return context.getDag().newUniqueVertex(
                     "Update(" + table.getSqlName() + ")",
