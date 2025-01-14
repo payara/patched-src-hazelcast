@@ -30,8 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.stream.Collectors.toUnmodifiableList;
+import java.util.stream.Collectors;
 
 public class HazelcastObjectType extends RelDataTypeImpl {
     private final String name;
@@ -180,7 +179,10 @@ public class HazelcastObjectType extends RelDataTypeImpl {
     @Override
     public List<String> getFieldNames() {
         if (fieldNames == null) {
-            fieldNames = getFieldList().stream().map(RelDataTypeField::getName).collect(toUnmodifiableList());
+            fieldNames = getFieldList()
+                .stream()
+                .map(RelDataTypeField::getName)
+                .collect(Collectors.toList());
         }
         return fieldNames;
     }

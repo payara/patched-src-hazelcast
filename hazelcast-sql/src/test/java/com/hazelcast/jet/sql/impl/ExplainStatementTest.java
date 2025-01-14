@@ -34,6 +34,7 @@ import org.junit.runner.RunWith;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -413,7 +414,7 @@ public class ExplainStatementTest extends SqlTestSupport {
 
     @Test
     public void test_scanPruningWithoutMemberPruning() {
-        instance().getConfig().addMapConfig(new MapConfig("testMap").setPartitioningAttributeConfigs(Arrays.asList(
+        instance().getConfig().addMapConfig(new MapConfig("testMap").setPartitioningAttributeConfigs(asList(
                 new PartitioningAttributeConfig("comp1"),
                 new PartitioningAttributeConfig("comp2")
         )));
@@ -436,7 +437,7 @@ public class ExplainStatementTest extends SqlTestSupport {
                 "WHERE a.c1 = 1 AND a.c2 = ? and b.c1 = 1 AND b.c2 = ? " +
                 "GROUP BY b.c2 ORDER BY b.c2", instance().getSql())
                 .stream().map(row -> ((String) row.getValues()[0]).trim())
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
         assertThat(plan).as("At least one of the IMap scans should be pruned")
                 .anySatisfy(row ->
                         assertThat(row)
