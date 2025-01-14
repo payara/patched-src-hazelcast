@@ -99,7 +99,8 @@ public class HazelcastOracleDialect extends OracleSqlDialect implements TypeReso
 
     @Override
     public void setObject(PreparedStatement ps, Object obj, int j) throws SQLException {
-        if (obj instanceof LocalDate localDate) {
+        if (obj instanceof LocalDate) {
+            LocalDate localDate = (LocalDate) obj;
             Date date = Date.valueOf(localDate);
             ps.setDate(j + 1, date);
         } else {

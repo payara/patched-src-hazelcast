@@ -63,7 +63,7 @@ public class RelationsStorage extends AbstractRelationsStorage {
     @Override
     public Mapping getMapping(String name) {
         Object object = storage().get(name);
-        return object instanceof Mapping mapping ? mapping : null;
+        return object instanceof Mapping ? (Mapping) object : null;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RelationsStorage extends AbstractRelationsStorage {
     @Override
     public Type getType(final String name) {
         Object object = storage().get(name);
-        return object instanceof Type type ? type : null;
+        return object instanceof Type ? (Type) object : null;
     }
 
     @Override
