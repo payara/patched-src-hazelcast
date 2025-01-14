@@ -32,6 +32,7 @@ import com.hazelcast.sql.impl.type.QueryDataType;
 import com.hazelcast.sql.impl.type.QueryDataTypeFamily;
 import com.hazelcast.sql.impl.type.QueryDataTypeUtils;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,6 @@ import static com.hazelcast.jet.sql.impl.connector.keyvalue.KvMetadataResolver.g
 import static com.hazelcast.jet.sql.impl.connector.keyvalue.KvMetadataResolver.maybeAddDefaultField;
 import static com.hazelcast.sql.impl.extract.QueryPath.KEY;
 import static com.hazelcast.sql.impl.extract.QueryPath.VALUE;
-import static java.util.Map.entry;
 
 /**
  * A utility for key-value connectors that use Java serialization
@@ -173,10 +173,11 @@ public final class KvMetadataJavaResolver implements KvMetadataResolver {
         Map<QueryPath, MappingField> fieldsByPath = extractFields(resolvedFields, isKey);
 
         Entry<QueryDataType, Class<?>> entry = getTopLevelType(fieldsByPath)
-                .<Entry<QueryDataType, Class<?>>>map(type -> entry(type, loadClass(type.getObjectTypeMetadata())))
+                .<Entry<QueryDataType, Class<?>>>map(
+                    type -> new AbstractMap.SimpleEntry<>(type, loadClass(type.getObjectTypeMetadata())))
                 .orElseGet(() -> {
                     Class<?> typeClass = loadClass(options, isKey);
-                    return entry(QueryDataTypeUtils.resolveTypeForClass(typeClass), typeClass);
+                    return new AbstractMap.SimpleEntry<>(QueryDataTypeUtils.resolveTypeForClass(typeClass), typeClass);
                 });
         QueryDataType type = entry.getKey();
         Class<?> typeClass = entry.getValue();

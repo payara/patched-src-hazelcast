@@ -52,6 +52,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -159,13 +160,13 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         mappedValueStage
                 .mapUsingService(nonSharedService(Context::globalProcessorIndex),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, Integer>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processors));
 
         mappedValueStage
                 .mapUsingService(nonSharedService(ctx -> ctx.hazelcastInstance().getName()),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, String>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processorInstances));
 
@@ -233,13 +234,13 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         mappedValueStage
                 .mapUsingService(nonSharedService(Context::globalProcessorIndex),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, Integer>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processors));
 
         mappedValueStage
                 .mapUsingService(nonSharedService(ctx -> ctx.hazelcastInstance().getName()),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, String>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processorInstances));
 
@@ -311,13 +312,13 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         mappedValueStage
                 .mapUsingService(nonSharedService(Context::globalProcessorIndex),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, Integer>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processors));
 
         mappedValueStage
                 .mapUsingService(nonSharedService(ctx -> ctx.hazelcastInstance().getName()),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, String>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processorInstances));
 
@@ -405,7 +406,7 @@ public class KafkaConnectScalingIT extends JetTestSupport {
 
         mappedValueStage
                 .mapUsingService(nonSharedService(ctx -> ctx.hazelcastInstance().getName()),
-                        (ctx, item) -> Map.entry(item, ctx))
+                        (ctx, item) -> (Entry<String, String>) new AbstractMap.SimpleEntry<>(item, ctx))
                 .setLocalParallelism(localParallelism)
                 .writeTo(map(processorInstances));
 

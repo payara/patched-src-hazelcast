@@ -57,6 +57,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
@@ -343,7 +344,7 @@ public class KafkaConnectJdbcIT extends JetTestSupport {
                             TestUtil::convertToStringWithJustIndexForMongo))
                     .withIngestionTimestamps()
                     .setLocalParallelism(1)
-                    .map(e -> Map.entry(e, e))
+                    .map(e -> (Map.Entry<String, String>) new AbstractMap.SimpleEntry<>(e, e))
                     .writeTo(map(itemsMap));
 
             logger.info("Creating a job");
