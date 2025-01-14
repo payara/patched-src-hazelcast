@@ -36,7 +36,6 @@ import org.apache.kafka.connect.source.SourceRecord;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Collection;
@@ -284,7 +283,6 @@ public class ReadKafkaConnectP<T> extends AbstractProcessor implements DynamicMe
             @Nonnull FunctionEx<SourceRecord, T> projectionFn,
             @Nullable RetryStrategy retryStrategy) {
         return new ReadKafkaConnectProcessorSupplier() {
-            @Serial
             private static final long serialVersionUID = 1L;
 
             @Nonnull
