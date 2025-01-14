@@ -17,6 +17,7 @@
 package com.hazelcast.jet.sql.impl.connector.map;
 
 import com.hazelcast.instance.impl.TestUtil;
+import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.internal.serialization.impl.AbstractSerializationService;
 import com.hazelcast.jet.sql.SqlTestSupport;
 import com.hazelcast.jet.sql.impl.connector.keyvalue.KvRowProjector;
@@ -61,7 +62,7 @@ public class QueryUtilTest extends SqlTestSupport {
     public void when_serializedObject_then_deserializedCorrect() {
         AbstractSerializationService service = (AbstractSerializationService) TestUtil.getNode(instance()).getSerializationService();
 
-        var evalContextMock = mock(ExpressionEvalContext.class);
+        ExpressionEvalContext evalContextMock = mock(ExpressionEvalContext.class);
         when(evalContextMock.getSerializationService()).thenReturn(mock());
         when(evalContextMock.getArguments()).thenReturn(emptyList());
         when(evalContextMock.getNodeEngine()).thenReturn(mock());
@@ -76,8 +77,8 @@ public class QueryUtilTest extends SqlTestSupport {
         );
         DataSerializable projection = (DataSerializable) QueryUtil.toProjection(supplier, evalContextMock);
 
-        var data = service.toData(projection);
-        var actual = service.toObject(data);
+        Data data = service.toData(projection);
+        Object actual = service.toObject(data);
 
         assertThat(actual)
                 .usingRecursiveComparison()

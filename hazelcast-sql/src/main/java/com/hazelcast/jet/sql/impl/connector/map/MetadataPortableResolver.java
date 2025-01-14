@@ -27,6 +27,7 @@ import com.hazelcast.jet.sql.impl.inject.PortableUpsertTargetDescriptor;
 import com.hazelcast.nio.serialization.ClassDefinition;
 import com.hazelcast.nio.serialization.ClassDefinitionBuilder;
 import com.hazelcast.nio.serialization.FieldType;
+import com.hazelcast.nio.serialization.Portable;
 import com.hazelcast.nio.serialization.PortableId;
 import com.hazelcast.sql.impl.QueryException;
 import com.hazelcast.sql.impl.extract.GenericQueryTargetDescriptor;
@@ -112,7 +113,7 @@ public final class MetadataPortableResolver implements KvMetadataResolver {
             SerializationServiceV1 ss = (SerializationServiceV1) serializationService;
             // Try to create a Portable instance with the default constructor,
             // register its ClassDefinition, and throw object away.
-            var tempPortableObj = ss.getPortableSerializer()
+            Portable tempPortableObj = ss.getPortableSerializer()
                     .createNewPortableInstance(portableId.getFactoryId(), portableId.getClassId());
             if (tempPortableObj != null) {
                 try {

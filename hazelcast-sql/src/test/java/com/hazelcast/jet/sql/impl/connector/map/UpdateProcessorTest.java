@@ -17,11 +17,13 @@
 package com.hazelcast.jet.sql.impl.connector.map;
 
 import com.hazelcast.instance.impl.TestUtil;
+import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.internal.serialization.impl.AbstractSerializationService;
 import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.core.test.TestSupport;
 import com.hazelcast.jet.sql.SqlTestSupport;
 import com.hazelcast.jet.sql.impl.inject.PrimitiveUpsertTargetDescriptor;
+import com.hazelcast.map.EntryProcessor;
 import com.hazelcast.sql.impl.QueryUtils;
 import com.hazelcast.sql.impl.expression.ColumnExpression;
 import com.hazelcast.sql.impl.expression.ConstantExpression;
@@ -119,7 +121,7 @@ public class UpdateProcessorTest extends SqlTestSupport {
     public void when_serializedObject_then_deserializedCorrect() {
         AbstractSerializationService service = (AbstractSerializationService) TestUtil.getNode(instance()).getSerializationService();
 
-        var evalContextMock = mock(UntrustedExpressionEvalContext.class);
+        UntrustedExpressionEvalContext evalContextMock = mock(UntrustedExpressionEvalContext.class);
         when(evalContextMock.getSerializationService()).thenReturn(mock());
         Subject subject = new Subject(true, emptySet(), emptySet(), emptySet());
         when(evalContextMock.subject()).thenReturn(subject);
@@ -130,8 +132,8 @@ public class UpdateProcessorTest extends SqlTestSupport {
                 emptyList()
         ).get(evalContextMock);
 
-        var data = service.toData(processor);
-        var actual = service.toObject(data);
+        Data data = service.toData(processor);
+        Object actual = service.toObject(data);
 
         assertThat(actual)
                 .usingRecursiveComparison()

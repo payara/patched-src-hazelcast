@@ -17,6 +17,7 @@
 package com.hazelcast.jet.sql.impl.connector.kafka;
 
 import com.hazelcast.core.HazelcastJsonValue;
+import com.hazelcast.sql.SqlResult;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -25,7 +26,6 @@ import org.junit.Test;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -77,7 +77,7 @@ public class KafkaIntegrationSqlTest extends KafkaSqlTestSupport {
     }
 
     private static void assertMapContents(String mapName, Map<Integer, HazelcastJsonValue> expected) {
-        var mapContents = new HashMap<>(instance().getMap(mapName));
+        Map<Object, Object> mapContents = new HashMap<>(instance().getMap(mapName));
         assertTrueEventually(() -> assertThat(mapContents).containsAllEntriesOf(expected));
     }
 
@@ -116,7 +116,7 @@ public class KafkaIntegrationSqlTest extends KafkaSqlTestSupport {
     private void executeSql(String query) {
         logger.info("Execute sql: " + query);
         try {
-            try (var ignored = sqlService.execute(query)) {
+            try (SqlResult ignored = sqlService.execute(query)) {
                 //nop
             }
         } catch (Exception ex) {

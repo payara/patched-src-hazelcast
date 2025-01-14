@@ -84,7 +84,8 @@ public class SqlMappingTest extends SqlTestSupport {
                 + "  'valueJavaClass'='java.lang.Integer'\n"
                 + ")";
 
-        var message = assertThrows(HazelcastSqlException.class, () -> client().getSql().execute("SELECT * FROM map")).getMessage();
+        String message = assertThrows(HazelcastSqlException.class, () -> client().getSql()
+            .execute("SELECT * FROM map")).getMessage();
         assertThat(message).isEqualToNormalizingNewlines(format(expectedDdl, ""));
 
         message = assertThrows(HazelcastSqlException.class, () -> client().getSql().execute("SELECT * FROM public.map")).getMessage();

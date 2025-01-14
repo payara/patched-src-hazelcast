@@ -66,7 +66,7 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
 
     @Test
     public void test_singleEquals() {
-        var table = partitionedTable(
+        Table table = partitionedTable(
                 "m",
                 asList(
                         mapField(KEY, INT, QueryPath.KEY_PATH),
@@ -75,8 +75,8 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
                 10, emptyList(), true).getTarget();
 
         RexBuilder b = new RexBuilder(typeFactory);
-        var leftInputRef = b.makeInputRef(typeFactory.createSqlType(INTEGER), 0);
-        var rexLiteral = b.makeLiteral("1");
+        RexInputRef leftInputRef = b.makeInputRef(typeFactory.createSqlType(INTEGER), 0);
+        RexLiteral rexLiteral = b.makeLiteral("1");
         RexCall call = (RexCall) b.makeCall(EQUALS, leftInputRef, rexLiteral);
 
         Map<String, java.util.List<Map<String, RexNode>>> decomposedConds = extractor.extractCondition(table, call,
@@ -99,12 +99,12 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
         RexBuilder b = new RexBuilder(typeFactory);
-        var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
-        var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
-        var col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
-        var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexDynamicParam param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexDynamicParam param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
+        RexDynamicParam param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexInputRef col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexInputRef col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
+        RexInputRef col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
         RexCall filter = (RexCall) b.makeCall(AND,
                 b.makeCall(EQUALS, col0, param2),
@@ -134,12 +134,12 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
         RexBuilder b = new RexBuilder(typeFactory);
-        var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
-        var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
-        var col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
-        var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexDynamicParam param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexDynamicParam param1 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
+        RexDynamicParam param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexInputRef col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexInputRef col1 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 1);
+        RexInputRef col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
         RexCall filter = (RexCall) b.makeCall(OR,
                 b.makeCall(EQUALS, col0, param2),
@@ -166,10 +166,10 @@ public class PSConditionExtractorTest extends OptimizerTestSupport {
 
         // comp0 = ?2 AND comp1 = ?1 AND comp2 = ?0
         RexBuilder b = new RexBuilder(typeFactory);
-        var param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
-        var col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
-        var col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexDynamicParam param0 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexDynamicParam param2 = b.makeDynamicParam(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
+        RexInputRef col0 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 0);
+        RexInputRef col2 = b.makeInputRef(typeFactory.createSqlType(SqlTypeName.BIGINT), 2);
 
         RexCall filter = (RexCall) b.makeCall(AND,
                 b.makeCall(EQUALS, col0, param2),

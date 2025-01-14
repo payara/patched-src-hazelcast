@@ -16,6 +16,7 @@
 
 package com.hazelcast.sql.impl;
 
+import com.hazelcast.config.JavaSerializationFilterConfig;
 import com.hazelcast.internal.serialization.ReflectionClassNameFilter;
 import com.hazelcast.internal.util.Preconditions;
 import com.hazelcast.internal.util.counters.Counter;
@@ -90,7 +91,7 @@ public class SqlServiceImpl implements InternalSqlService {
         long queryTimeout = nodeEngine.getConfig().getSqlConfig().getStatementTimeoutMillis();
         assert queryTimeout >= 0L;
         this.queryTimeout = queryTimeout;
-        var reflectionConfig = nodeEngine.getConfig().getSqlConfig().getJavaReflectionFilterConfig();
+        JavaSerializationFilterConfig reflectionConfig = nodeEngine.getConfig().getSqlConfig().getJavaReflectionFilterConfig();
         this.reflectionClassNameFilter = isNull(reflectionConfig) ? null : new ReflectionClassNameFilter(reflectionConfig);
     }
 

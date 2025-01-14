@@ -152,7 +152,7 @@ public class StreamKafkaAvroTest extends SimpleTestInClusterSupport {
     }
 
     private static GenericData.Record toGenericRecord(Object value, Schema schema) {
-        var field = schema.getFields().get(0).name();
+        String field = schema.getFields().get(0).name();
         return new GenericRecordBuilder(schema).set(field, value).build();
     }
 }

@@ -19,6 +19,7 @@ package com.hazelcast.jet.sql.impl.schema;
 import com.hazelcast.jet.sql.SqlTestSupport;
 import com.hazelcast.map.IMap;
 import com.hazelcast.sql.SqlResult;
+import com.hazelcast.sql.SqlService;
 import com.hazelcast.sql.impl.QueryException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -232,13 +233,13 @@ public class GetDdlTest extends SqlTestSupport {
     public void when_updateWithGetDdl_then_success() {
         createMapping("main", Integer.class, String.class);
         createMapping("target", Integer.class, String.class);
-        var sql = client().getSql();
+        SqlService sql = client().getSql();
         sql.executeUpdate("INSERT INTO main VALUES(1, 'initial')");
 
         sql.executeUpdate("UPDATE main SET this = GET_DDL('relation', 'target') WHERE __key < 2");
 
-        try (var result = sql.execute("SELECT * FROM main WHERE __key = 1")) {
-            String ddl = result.stream().findFirst().orElseThrow().getObject("this");
+        try (SqlResult result = sql.execute("SELECT * FROM main WHERE __key = 1")) {
+            String ddl = result.stream().findFirst().orElseThrow(() -> new RuntimeException()).getObject("this");
             assertThat(ddl).startsWith("CREATE OR REPLACE EXTERNAL MAPPING \"hazelcast\".\"public\".\"target\" EXTERNAL NAME \"target\"");
         }
     }

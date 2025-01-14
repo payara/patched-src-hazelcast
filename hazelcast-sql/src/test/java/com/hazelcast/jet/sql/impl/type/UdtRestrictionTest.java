@@ -16,9 +16,11 @@
 
 package com.hazelcast.jet.sql.impl.type;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.config.JavaSerializationFilterConfig;
 import com.hazelcast.jet.sql.SqlTestSupport;
 import com.hazelcast.jet.sql.impl.connector.map.IMapSqlConnector;
+import com.hazelcast.sql.SqlResult;
 import com.hazelcast.sql.SqlService;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,7 +47,7 @@ public class UdtRestrictionTest extends SqlTestSupport {
 
     @BeforeClass
     public static void setup() {
-        var config = smallInstanceConfig();
+        Config config = smallInstanceConfig();
         JavaSerializationFilterConfig reflectionConfig = new JavaSerializationFilterConfig();
         reflectionConfig.setDefaultsDisabled(true);
         reflectionConfig.getBlacklist().addClasses(DENIED_CLASS.getName());
@@ -140,7 +142,7 @@ public class UdtRestrictionTest extends SqlTestSupport {
     }
 
     private void execute(String sql) {
-        try (var ignore = sqlService.execute(sql)) { }
+        try (SqlResult ignore = sqlService.execute(sql)) { }
     }
 
     public static class AllowedClass implements Serializable {

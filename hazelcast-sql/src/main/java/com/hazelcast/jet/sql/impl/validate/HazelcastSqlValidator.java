@@ -585,7 +585,7 @@ public class HazelcastSqlValidator extends SqlValidatorImplBridge {
         if (!ssc.isSecurityEnabled()) {
             return true;
         }
-        var permission = new MapPermission(map, ActionConstants.ACTION_READ);
+        MapPermission permission = new MapPermission(map, ActionConstants.ACTION_READ);
         try {
             ssc.checkPermission(permission);
             return true;

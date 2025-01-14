@@ -431,7 +431,7 @@ public class ExplainStatementTest extends SqlTestSupport {
         // complicated query that should not be eligible for member pruning
         // but at least one side of the join should execute full scan that is eligible for scan partition pruning
         // - it does not matter if nested loops or hash join is used.
-        var plan = allRows("EXPLAIN SELECT max(b.this), b.c2 " +
+        List<String> plan = allRows("EXPLAIN SELECT max(b.this), b.c2 " +
                 "FROM test a join test b on a.c1 = b.c2 " +
                 "WHERE a.c1 = 1 AND a.c2 = ? and b.c1 = 1 AND b.c2 = ? " +
                 "GROUP BY b.c2 ORDER BY b.c2", instance().getSql())

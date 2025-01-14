@@ -390,7 +390,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
 
     @Test
     public void when_eventsInAllPartitions_then_watermarkOutputImmediately() throws Exception {
-        var processor = createProcessor(properties(), 1, r -> entry(r.key(), r.value()), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 1,
+            r -> entry(r.key(), r.value()), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext());
 
@@ -410,7 +411,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
     public void when_noAssignedPartitionAndAddedLater_then_resumesFromIdle() throws Exception {
         // we ask to create 5th out of 5 processors, but we have only 4 partitions and 1 topic
         // --> our processor will have nothing assigned
-        var processor = createProcessor(properties(), 1, r -> entry(r.key(), r.value()), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 1,
+            r -> entry(r.key(), r.value()), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext()
                 .setTotalParallelism(INITIAL_PARTITION_COUNT + 1)
@@ -433,7 +435,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
     @Test
     public void when_eventsInSinglePartition_then_watermarkAfterIdleTime() throws Exception {
         // When
-        var processor = createProcessor(properties(), 2, r -> entry(r.key(), r.value()), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 2,
+            r -> entry(r.key(), r.value()), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext());
         kafkaTestSupport.produceSync(topic1Name, 10, "foo");
@@ -449,7 +452,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
 
     @Test
     public void when_snapshotSaved_then_offsetsRestored() throws Exception {
-        var processor = createProcessor(properties(), 2, r -> entry(r.key(), r.value()), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 2,
+            r -> entry(r.key(), r.value()), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext().setProcessingGuarantee(EXACTLY_ONCE));
 
@@ -557,7 +561,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
     public void when_partitionAdded_then_consumedFromBeginning() throws Exception {
         Properties properties = properties();
         properties.setProperty("metadata.max.age.ms", "100");
-        var processor = createProcessor(properties, 2, r -> entry(r.key(), r.value()), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties, 2,
+            r -> entry(r.key(), r.value()), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext());
 
@@ -586,7 +591,7 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
                 throw new AssertionError("Unable to receive 10 items, events so far: " + receivedEvents, e);
             }
         }
-        var expected = range(1, 11).mapToObj(i -> entry(i, Integer.toString(i))).collect(toSet());
+        Set<Entry<Integer, String>> expected = range(1, 11).mapToObj(i -> entry(i, Integer.toString(i))).collect(toSet());
         assertThat(receivedEvents).containsExactlyInAnyOrderElementsOf(expected);
     }
 
@@ -639,7 +644,7 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
                 throw new AssertionError("Unable to receive 10 items, events so far: " + receivedEvents, e);
             }
         }
-        var expected = range(2, 12).mapToObj(i -> entry(i, Integer.toString(i))).collect(toSet());
+        Set<Entry<Integer, String>> expected = range(2, 12).mapToObj(i -> entry(i, Integer.toString(i))).collect(toSet());
         assertThat(receivedEvents).containsExactlyInAnyOrderElementsOf(expected);
     }
 
@@ -743,7 +748,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
 
     @Test
     public void when_noAssignedPartitions_then_emitIdleMsgImmediately() throws Exception {
-        var processor = createProcessor(properties(), 2, r -> entry(r.key(), r.value()), 100_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 2,
+            r -> entry(r.key(), r.value()), 100_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         TestProcessorContext context = new TestProcessorContext()
                 // Set global parallelism to higher number than number of partitions
@@ -759,7 +765,8 @@ public class StreamKafkaPTest extends SimpleTestInClusterSupport {
     @Test
     public void when_customProjection_then_used() throws Exception {
         // When
-        var processor = createProcessor(properties(), 2, r -> r.key() + "=" + r.value(), 10_000);
+        StreamKafkaP<Integer, String, Object> processor = createProcessor(properties(), 2,
+            r -> r.key() + "=" + r.value(), 10_000);
         TestOutbox outbox = new TestOutbox(new int[]{10}, 10);
         processor.init(outbox, new TestProcessorContext());
         kafkaTestSupport.produceSync(topic1Name, 0, "0");
