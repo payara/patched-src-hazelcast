@@ -204,11 +204,6 @@
         NOTE: There is a slightly different setting for IBM OpenJ9, see the specific profile
         -->
         <javaModuleArgs>
-            --add-exports java.base/jdk.internal.ref=${hazelcast.module.name}
-            --add-opens jdk.management/com.sun.management.internal=${hazelcast.module.name}
-            --add-opens java.base/sun.nio.ch=${hazelcast.module.name}
-            --add-opens java.base/java.lang=${hazelcast.module.name}
-            --add-opens java.management/sun.management=${hazelcast.module.name}
         </javaModuleArgs>
     </properties>
     <licenses>
