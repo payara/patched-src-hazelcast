@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AsyncServerSocketOptionsTest {
 
-    private static final Option<Boolean> SUPPORTED_OPTION = SO_REUSEPORT;
+    private static final Option<Boolean> SUPPORTED_OPTION = SO_REUSEADDR;
     private final List<Reactor> reactors = new ArrayList<>();
 
     public abstract ReactorBuilder newReactorBuilder();
