@@ -193,7 +193,7 @@ public final class ClientAuthenticationCodec {
         public @Nullable java.util.List<java.lang.Integer> tpcPorts;
 
         /**
-         * Returns the token to use while authenticating TPC channels
+         * Returns the token to use while authenticating TPC channels 
          * or null if TPC is disabled.
          */
         public @Nullable byte[] tpcToken;
