@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.hazelcast.jet</groupId>
         <artifactId>hazelcast-jet-extensions</artifactId>
-        <version>5.3.8-payara-1-SNAPSHOT</version>
+        <version>5.3.8-payara-2-SNAPSHOT</version>
     </parent>
 
     <build>
@@ -56,6 +56,26 @@
                             <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
                             <outputDirectory>${project.build.directory}/generated-sources/protobuf/java</outputDirectory>
                             <clearOutputDirectory>false</clearOutputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Disable test which requires a load of extra libraries to be present (python, gcc, more) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludes>com.hazelcast.jet.python.PythonServiceTest</excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>singlejvm</id>
+                        <configuration>
+                            <excludes>com.hazelcast.jet.python.PythonServiceTest</excludes>
                         </configuration>
                     </execution>
                 </executions>
