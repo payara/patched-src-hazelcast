@@ -446,6 +446,11 @@
                                         It is a test dependency and can be ignored.
                                         -->
                                         <exclude>com.tngtech.archunit:archunit</exclude>
+                                        <!--
+                                        paranamer:2.8.3 (pulled in transitively via jackson-module-scala -> kafka_2.13)
+                                        is compiled with JDK 11 but is test-scope only and can be ignored.
+                                        -->
+                                        <exclude>com.thoughtworks.paranamer:paranamer</exclude>
                                     </excludes>
                                     <ignoreClasses>
                                         <!--
