@@ -18,11 +18,13 @@ package com.hazelcast.client.config;
 
 import com.hazelcast.client.util.RandomLB;
 import com.hazelcast.client.util.RoundRobinLB;
+import com.hazelcast.config.ClassFilter;
 import com.hazelcast.config.CredentialsFactoryConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.InstanceTrackingConfig;
 import com.hazelcast.config.InvalidConfigurationException;
+import com.hazelcast.config.JavaSerializationFilterConfig;
 import com.hazelcast.config.NativeMemoryConfig;
 import com.hazelcast.config.NearCacheConfig;
 import com.hazelcast.config.PersistentMemoryConfig;
@@ -833,6 +835,54 @@ public class YamlClientConfigBuilderTest extends AbstractClientConfigBuilderTest
         assertThatThrownBy(() -> CompactTestUtil.verifySerializationServiceBuilds(config))
                 .isInstanceOf(InvalidConfigurationException.class)
                 .hasMessageContaining("Cannot load");
+    }
+
+    @Override
+    public void testCompactSerialization_zeroConfigRestrictions() {
+        String yaml =
+                "hazelcast-client:\n"
+                + "  serialization:\n"
+                + "    compact-serialization:\n"
+                + "      zero-config-filter:\n"
+                + "        whitelist:\n"
+                + "          class:\n"
+                + "          - com.acme.MyClass\n"
+                + "          package:\n"
+                + "          - com.acme.package\n"
+                + "          prefix:\n"
+                + "          - com.acme.prefix.\n"
+                + "        blacklist:\n"
+                + "          class:\n"
+                + "          - com.acme.MyClass2\n"
+                + "          package:\n"
+                + "          - com.acme.package2\n"
+                + "          prefix:\n"
+                + "          - com.acme.prefix2.\n"
+                ;
+
+        SerializationConfig config = buildConfig(yaml).getSerializationConfig();
+        CompactTestUtil.verifySerializationServiceBuilds(config);
+        ClassFilter expectedWhitelist = new ClassFilter().addClasses("com.acme.MyClass").addPackages("com.acme.package")
+                                                         .addPrefixes("com.acme.prefix.");
+        ClassFilter expectedBlacklist = new ClassFilter().addClasses("com.acme.MyClass2").addPackages("com.acme.package2")
+                                                         .addPrefixes("com.acme.prefix2.");
+        CompactTestUtil.assertZeroConfigFilter(config,
+                new JavaSerializationFilterConfig().setWhitelist(expectedWhitelist).setBlacklist(expectedBlacklist));
+    }
+
+    @Override
+    public void testCompactSerialization_zeroConfigDefaultsDisabled() {
+        String yaml =
+                "hazelcast-client:\n"
+                + "  serialization:\n"
+                + "    compact-serialization:\n"
+                + "      zero-config-filter:\n"
+                + "        defaults-disabled: true\n"
+                ;
+
+        SerializationConfig config = buildConfig(yaml).getSerializationConfig();
+        CompactTestUtil.verifySerializationServiceBuilds(config);
+        CompactTestUtil.assertZeroConfigFilter(config, new JavaSerializationFilterConfig().setDefaultsDisabled(true));
     }
 
     @Test

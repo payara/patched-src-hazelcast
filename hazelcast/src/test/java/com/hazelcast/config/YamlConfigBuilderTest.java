@@ -3190,6 +3190,54 @@ public class YamlConfigBuilderTest extends AbstractConfigBuilderTest {
     }
 
     @Override
+    public void testCompactSerialization_zeroConfigRestrictions() {
+        String yaml =
+                "hazelcast:\n"
+                + "  serialization:\n"
+                + "    compact-serialization:\n"
+                + "      zero-config-filter:\n"
+                + "        whitelist:\n"
+                + "          class:\n"
+                + "          - com.acme.MyClass\n"
+                + "          package:\n"
+                + "          - com.acme.package\n"
+                + "          prefix:\n"
+                + "          - com.acme.prefix.\n"
+                + "        blacklist:\n"
+                + "          class:\n"
+                + "          - com.acme.MyClass2\n"
+                + "          package:\n"
+                + "          - com.acme.package2\n"
+                + "          prefix:\n"
+                + "          - com.acme.prefix2.\n"
+                ;
+
+        SerializationConfig config = buildConfig(yaml).getSerializationConfig();
+        CompactTestUtil.verifySerializationServiceBuilds(config);
+        ClassFilter expectedWhitelist = new ClassFilter().addClasses("com.acme.MyClass").addPackages("com.acme.package")
+                                                         .addPrefixes("com.acme.prefix.");
+        ClassFilter expectedBlacklist = new ClassFilter().addClasses("com.acme.MyClass2").addPackages("com.acme.package2")
+                                                         .addPrefixes("com.acme.prefix2.");
+        CompactTestUtil.assertZeroConfigFilter(config,
+                new JavaSerializationFilterConfig().setWhitelist(expectedWhitelist).setBlacklist(expectedBlacklist));
+    }
+
+    @Override
+    public void testCompactSerialization_zeroConfigDefaultsDisabled() {
+        String yaml =
+                "hazelcast:\n"
+                + "  serialization:\n"
+                + "    compact-serialization:\n"
+                + "      zero-config-filter:\n"
+                + "        defaults-disabled: true\n"
+                ;
+
+        SerializationConfig config = buildConfig(yaml).getSerializationConfig();
+        CompactTestUtil.verifySerializationServiceBuilds(config);
+        CompactTestUtil.assertZeroConfigFilter(config, new JavaSerializationFilterConfig().setDefaultsDisabled(true));
+    }
+
+    @Override
     @Test
     public void testAllowOverrideDefaultSerializers() {
         final String yaml = ""

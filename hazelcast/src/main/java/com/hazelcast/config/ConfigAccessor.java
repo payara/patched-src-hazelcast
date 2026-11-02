@@ -45,4 +45,12 @@ public final class ConfigAccessor {
     public static boolean isInstanceTrackingEnabledSet(Config config) {
         return config.getInstanceTrackingConfig().isEnabledSet;
     }
+
+    public static ClassFilter getWhitelistOrNull(JavaSerializationFilterConfig filter) {
+        return filter.getWhitelistOrNull();
+    }
+
+    public static ClassFilter getBlacklistOrNull(JavaSerializationFilterConfig filter) {
+        return filter.getBlacklistOrNull();
+    }
 }

@@ -48,11 +48,13 @@ import com.hazelcast.nio.serialization.Portable;
 import com.hazelcast.nio.serialization.Serializer;
 import com.hazelcast.partition.PartitioningStrategy;
 
+import javax.annotation.Nonnull;
 import java.io.Externalizable;
 import java.io.Serializable;
 import java.nio.ByteOrder;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -125,8 +127,9 @@ public abstract class AbstractSerializationService implements InternalSerializat
         this.allowOverrideDefaultSerializers = builder.allowOverrideDefaultSerializers;
         CompactSerializationConfig compactSerializationCfg = builder.compactSerializationConfig == null
                 ? new CompactSerializationConfig() : builder.compactSerializationConfig;
-        compactStreamSerializer = new CompactStreamSerializer(this, compactSerializationCfg,
-                managedContext, builder.schemaService, classLoader);
+        compactStreamSerializer = new CompactStreamSerializer(cls -> serializerForClass(cls, false).getClass(),
+                compactSerializationCfg, managedContext, builder.schemaService, classLoader,
+                builder.reflectiveCompactSerializationRestrictions);
         this.compactWithSchemaSerializerAdapter = new CompactWithSchemaStreamSerializerAdapter(compactStreamSerializer);
         this.compactSerializerAdapter = new CompactStreamSerializerAdapter(compactStreamSerializer);
     }
@@ -732,6 +735,8 @@ public abstract class AbstractSerializationService implements InternalSerializat
         private boolean allowOverrideDefaultSerializers;
         private CompactSerializationConfig compactSerializationConfig;
         private SchemaService schemaService;
+        private ExtraReflectiveCompactSerializationRestrictions reflectiveCompactSerializationRestrictions
+                = ExtraReflectiveCompactSerializationRestrictions.NO_RESTRICTIONS;
 
         protected Builder() {
         }
@@ -817,6 +822,12 @@ public abstract class AbstractSerializationService implements InternalSerializat
 
         public final T withSchemaService(SchemaService schemaService) {
             this.schemaService = schemaService;
+            return self();
+        }
+
+        public final T withReflectiveCompactSerializationRestrictions(
+                @Nonnull ExtraReflectiveCompactSerializationRestrictions restrictions) {
+            this.reflectiveCompactSerializationRestrictions = Objects.requireNonNull(restrictions);
             return self();
         }
     }
