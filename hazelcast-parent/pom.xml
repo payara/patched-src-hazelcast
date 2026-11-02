@@ -23,7 +23,7 @@
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast-parent</artifactId>
     <packaging>pom</packaging>
-    <version>5.7.0</version>
+    <version>5.7.0-payara-2-SNAPSHOT</version>
 
     <name>Hazelcast Parent POM</name>
     <description>Provides a base configuration for Hazelcast Platform builds</description>
@@ -101,7 +101,7 @@
         <grpc.version>1.73.0</grpc.version>
         <hadoop.version>3.4.3</hadoop.version>
         <jackson.version>3.1.2</jackson.version>
-        <jackson2.version>2.21.2</jackson2.version>
+        <jackson2.version>2.21.8</jackson2.version>
         <jackson.annotation.version>2.21</jackson.annotation.version>
         <jline.version>3.30.9</jline.version>
         <json-surfer.version>0.13</json-surfer.version>
@@ -1355,6 +1355,67 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>patched-project-release</id>
+            <distributionManagement>
+                <repository>
+                    <id>payara-nexus-artifacts</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-artifacts/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>payara-nexus-snapshots</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <!--
             Explicitly enables annotation processing. Since JDK 23 it's required to activate annotation processing, otherwise
