@@ -23,7 +23,7 @@
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast-root</artifactId>
     <packaging>pom</packaging>
-    <version>3.12.13-payara-2-SNAPSHOT</version>
+    <version>3.12.13-payara-3-SNAPSHOT</version>
     <name>Hazelcast Root</name>
     <description>Hazelcast In-Memory DataGrid</description>
     <url>http://www.hazelcast.com/</url>
@@ -84,7 +84,7 @@
         <log4j2.version>2.3</log4j2.version>
         <slf4j.api.version>1.7.25</slf4j.api.version>
 
-        <jackson.version>2.21.2</jackson.version>
+        <jackson.version>2.21.8</jackson.version>
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>2.19.0</mockito.version>
@@ -357,12 +357,12 @@
             <id>patched-project-release</id>
             <distributionManagement>
                 <repository>
-                    <id>payara-nexus-artifacts</id>
-                    <url>https://nexus.dev.payara.fish/repository/payara-artifacts/</url>
+                    <id>payara-nexus-enterprise-artifacts</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-enterprise-artifacts-private/</url>
                 </repository>
                 <snapshotRepository>
-                    <id>payara-nexus-snapshots</id>
-                    <url>https://nexus.dev.payara.fish/repository/payara-snapshots/</url>
+                    <id>payara-nexus-enterprise-snapshots</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-enterprise-snapshots-private/</url>
                 </snapshotRepository>
             </distributionManagement>
             <build>
